@@ -18,7 +18,7 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 import "../js/twemoji.js" as Emoji
@@ -305,11 +305,11 @@ Item {
                     }
                 }
 
-                Separator {
+                Rectangle {
                     id: profileSeparator
                     width: parent.width
                     color: Theme.primaryColor
-                    horizontalAlignment: Qt.AlignHCenter
+                    //horizontalAlignment: Qt.AlignHCenter
                 }
             }
 
@@ -344,11 +344,11 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             running: profileTimelineLoadingIndicator.visible
-            size: BusyIndicatorSize.Large
+            //size: BusyIndicatorSize.Large
         }
     }
 
-    SilicaListView {
+    ListView {
         id: profileTimelineListView
 
         header: profileListHeaderComponent
@@ -367,7 +367,7 @@ Item {
         delegate: Tweet {
             tweetModel: modelData
         }
-        VerticalScrollDecorator {}
+        //VerticalScrollDecorator {}
     }
 
 

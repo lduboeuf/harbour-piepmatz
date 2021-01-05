@@ -17,7 +17,8 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "pages"
 import "components"
 
@@ -25,6 +26,9 @@ ApplicationWindow
 {
 
     id: appWindow
+    visible: true
+    height: 520
+    width: 320
 
     property bool isWifi: accountModel.isWiFi();
     property string linkPreviewMode: accountModel.getLinkPreviewMode();
@@ -64,10 +68,16 @@ ApplicationWindow
         SettingsPage {}
     }
 
+    StackView {
+        id: pageStack
+        anchors.fill: parent
+        initialItem: accountModel.isLinked() ? overviewPage : welcomePage
+    }
+
     //initialPage: ( wagnis.isRegistered() && wagnis.hasFeature("contribution") ) ? (accountModel.isLinked() ? overviewPage : welcomePage) : registrationPage
-    initialPage: accountModel.isLinked() ? overviewPage : welcomePage
-    cover: Qt.resolvedUrl("pages/CoverPage.qml")
-    allowedOrientations: defaultAllowedOrientations
+    //initialPage: accountModel.isLinked() ? overviewPage : welcomePage
+    //cover: Qt.resolvedUrl("pages/CoverPage.qml")
+    //allowedOrientations: defaultAllowedOrientations
 
 }
 

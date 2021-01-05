@@ -17,14 +17,15 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.2
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 
 Page {
     id: welcomePage
-    allowedOrientations: Orientation.All
+    //allowedOrientations: Orientation.All
+    title: qsTr("Welcome to Piepmatz!")
 
     Column {
-        y: ( parent.height - ( errorInfoLabel.height + wunderfitzErrorImage.height + errorOkButton.height + ( 3 * Theme.paddingSmall ) ) ) / 2
+        y: ( parent.height - ( errorToolTip.height + wunderfitzErrorImage.height + errorOkButton.height + ( 3 * Theme.paddingSmall ) ) ) / 2
         width: parent.width
         id: pinErrorColumn
         spacing: Theme.paddingSmall
@@ -44,8 +45,8 @@ Page {
             width: 1/2 * parent.width
         }
 
-        InfoLabel {
-            id: errorInfoLabel
+        ToolTip {
+            id: errorToolTip
             font.pixelSize: Theme.fontSizeLarge
             text: ""
         }
@@ -86,7 +87,7 @@ Page {
             width: 1/2 * parent.width
         }
 
-        InfoLabel {
+        ToolTip {
             id: enterPinLabel
             font.pixelSize: Theme.fontSizeLarge
             text: qsTr("Please enter the Twitter PIN:")
@@ -118,7 +119,7 @@ Page {
     }
 
     Column {
-        y: ( parent.height - ( wunderfitzLinkingErrorImage.height + linkingErrorInfoLabel.height + errorOkButton.height + ( 3 * Theme.paddingSmall ) ) ) / 2
+        y: ( parent.height - ( wunderfitzLinkingErrorImage.height + linkingErrorToolTip.height + errorOkButton.height + ( 3 * Theme.paddingSmall ) ) ) / 2
         width: parent.width
         id: linkingErrorColumn
         spacing: Theme.paddingSmall
@@ -138,8 +139,8 @@ Page {
             width: 1/2 * parent.width
         }
 
-        InfoLabel {
-            id: linkingErrorInfoLabel
+        ToolTip {
+            id: linkingErrorToolTip
             font.pixelSize: Theme.fontSizeLarge
             text: qsTr("Unable to authenticate you with the entered PIN.")
         }
@@ -173,7 +174,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: welcomeFlickable
         anchors.fill: parent
         contentHeight: column.height
@@ -190,7 +191,7 @@ Page {
                 enterPinColumn.opacity = 1
             }
             onPinRequestError: {
-                errorInfoLabel.text = errorMessage
+                errorToolTip.text = errorMessage
                 welcomeFlickable.visible = false
                 pinErrorColumn.visible = true
                 welcomeFlickable.opacity = 0
@@ -216,13 +217,10 @@ Page {
             width: parent.width
             spacing: Theme.paddingLarge
 
-            PageHeader {
-                title: qsTr("Welcome to Piepmatz!")
-            }
 
             Image {
                 id: wunderfitzImage
-                source: "../../images/" + accountModel.getImagePath() + "piepmatz.svg"
+                source: Qt.resolvedUrl("../../images/" + accountModel.getImagePath() + "piepmatz.svg")
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -233,7 +231,7 @@ Page {
 
             Label {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
+                //x: parent.paddingSmall
                 width: parent.width - ( 2 * Theme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Please login to Twitter to continue.")
@@ -255,7 +253,8 @@ Page {
 
             Label {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
+               // anchors.horizontalCenter: parent
+                //x: Theme.horizontalPageMargin
                 width: parent.width - ( 2 * Theme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("If you don't have a Twitter account yet, please sign up first.")

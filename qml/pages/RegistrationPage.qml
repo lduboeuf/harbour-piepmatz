@@ -17,13 +17,15 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.2
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../js/functions.js" as Functions
 import "../components"
 
 Page {
     id: registrationPage
-    allowedOrientations: Orientation.All
+    title: qsTr("Welcome to Piepmatz!")
+
+    //allowedOrientations: Orientation.All
 
     focus: true
     Keys.onDownPressed: {
@@ -111,7 +113,7 @@ Page {
     }
 
 
-    SilicaFlickable {
+    Flickable {
         id: registrationFlickable
         anchors.fill: parent
         contentHeight: termsOfUseColumn.height
@@ -124,9 +126,7 @@ Page {
             width: parent.width
             spacing: Theme.paddingLarge
 
-            PageHeader {
-                title: qsTr("Welcome to Piepmatz!")
-            }
+
 
             Image {
                 id: piepmatzImage
@@ -139,7 +139,7 @@ Page {
                 width: 1/2 * parent.width
             }
 
-            SectionHeader {
+            Label {
                 text: qsTr("Committed to Free Software")
             }
 
@@ -265,7 +265,7 @@ Page {
     }
 
 
-    SilicaFlickable {
+    Flickable {
         id: registrationErrorFlickable
         anchors.fill: parent
         contentHeight: registrationErrorColumn.height
@@ -289,7 +289,7 @@ Page {
                 width: 1/2 * parent.width
             }
 
-            InfoLabel {
+            ToolTip {
                 text: qsTr("Registration Error")
             }
 
@@ -332,7 +332,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: registrationInvalidFlickable
         anchors.fill: parent
         contentHeight: registrationInvalidColumn.height
@@ -355,7 +355,7 @@ Page {
                 width: 1/2 * parent.width
             }
 
-            InfoLabel {
+            ToolTip {
                 text: qsTr("Registration Invalid")
             }
 
@@ -398,7 +398,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: contributionFlickable
         anchors.fill: parent
         contentHeight: contributionColumn.height
@@ -421,9 +421,9 @@ Page {
             width: parent.width
             spacing: Theme.paddingLarge
 
-            PageHeader {
-                title: qsTr("Development Contribution")
-            }
+//            header: {
+//                title: qsTr("Development Contribution")
+//            }
 
             Image {
                 source: "../../images/" + accountModel.getImagePath() + "piepmatz.svg"
@@ -435,7 +435,7 @@ Page {
                 width: 1/2 * parent.width
             }
 
-            SectionHeader {
+            Label {
                 text: qsTr("Please contribute to Piepmatz")
             }
 
@@ -499,26 +499,27 @@ Page {
                 }
             }
 
-            ComboBox {
-                id: contributionComboBox
-                label: qsTr("Contribution")
-                description: qsTr("Choose your contribution here")
-                menu: ContextMenu {
-                     MenuItem {
-                        text: qsTr("Piepmatz S - 3,33 €")
-                     }
-                     MenuItem {
-                        text: qsTr("Piepmatz M - 5,55 €")
-                     }
-                     MenuItem {
-                        text: qsTr("Piepmatz L - 7,77 €")
-                     }
-                     MenuItem {
-                        text: qsTr("Piepmatz XL - 9,99 €")
-                     }
-                }
-                currentIndex: 1
-            }
+//            ComboBox {
+//                id: contributionComboBox
+//                editText: qsTr("Contribution")
+//                textRole: "key"
+//                description: qsTr("Choose your contribution here")
+//                menu: Menu {
+//                     MenuItem {
+//                        text: qsTr("Piepmatz S - 3,33 €")
+//                     }
+//                     MenuItem {
+//                        text: qsTr("Piepmatz M - 5,55 €")
+//                     }
+//                     MenuItem {
+//                        text: qsTr("Piepmatz L - 7,77 €")
+//                     }
+//                     MenuItem {
+//                        text: qsTr("Piepmatz XL - 9,99 €")
+//                     }
+//                }
+//                currentIndex: 1
+//            }
 
             Button {
                 text: qsTr("Purchase Contribution Key")
@@ -550,6 +551,7 @@ Page {
                     Qt.openUrlExternally(purchaseLink);
                 }
             }
+
 
             SectionHeader {
                 text: qsTr("Validate your contribution key")
@@ -591,9 +593,9 @@ Page {
                 TextField {
                     id: contributionKeyTextField
                     width: parent.width
-                    labelVisible: false
+                    //labelVisible: false
                     placeholderText: "abcd-efgh-1234-5678"
-                    EnterKey.iconSource: "image://theme/icon-m-enter-close"
+                    //EnterKey.iconSource: "image://theme/icon-m-enter-close"
                 }
 
                 Text {
@@ -658,7 +660,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: contributionInvalidFlickable
         anchors.fill: parent
         contentHeight: contributionInvalidColumn.height
@@ -681,7 +683,7 @@ Page {
                 width: 1/2 * parent.width
             }
 
-            InfoLabel {
+            ToolTip {
                 text: qsTr("Contribution not validated!")
             }
 
@@ -725,7 +727,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: contributionValidFlickable
         anchors.fill: parent
         contentHeight: contributionValidColumn.height
@@ -748,7 +750,7 @@ Page {
                 width: 1/2 * parent.width
             }
 
-            InfoLabel {
+            ToolTip {
                 text: qsTr("Thank You!")
             }
 

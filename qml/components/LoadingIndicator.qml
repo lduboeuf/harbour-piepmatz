@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 
 Item {
 
@@ -42,7 +42,7 @@ Item {
         spacing: Theme.paddingMedium
         anchors.verticalCenter: parent.verticalCenter
 
-        InfoLabel {
+        ToolTip {
             id: loadingLabel
             text: qsTr("Loading...")
         }
@@ -51,7 +51,8 @@ Item {
             id: loadingBusyIndicator
             anchors.horizontalCenter: parent.horizontalCenter
             running: loadingIndicator.visible
-            size: BusyIndicatorSize.Large
+
+            //size: BusyIndicatorSize.Large
         }
     }
 

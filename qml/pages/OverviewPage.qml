@@ -19,8 +19,8 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 import QtMultimedia 5.0
-import Sailfish.Silica 1.0
-import Nemo.Notifications 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
+//import Nemo.Notifications 1.0
 
 
 import "../components"
@@ -28,9 +28,8 @@ import "../js/functions.js" as Functions
 import "../js/twemoji.js" as Emoji
 
 Page {
-
     id: overviewPage
-    allowedOrientations: Orientation.All
+    //allowedOrientations: Orientation.All
     focus: true
 
     Keys.onPressed: {
@@ -607,7 +606,7 @@ Page {
             width: 1/2 * parent.width
         }
 
-        InfoLabel {
+        ToolTip {
             id: accountVerificationLabel
             text: qsTr("Saying hello to Twitter...")
         }
@@ -616,13 +615,14 @@ Page {
             id: accountVerificationIndicator
             anchors.horizontalCenter: parent.horizontalCenter
             running: true
-            size: BusyIndicatorSize.Large
+
+           // size: BusyIndicatorSize.Large
         }
 
     }
 
     Column {
-        y: ( parent.height - ( verificationFailedImage.height + verificationFailedInfoLabel.height + verifyAgainButton.height + reauthenticateButton.height + ( 4 * Theme.paddingSmall ) ) ) / 2
+        y: ( parent.height - ( verificationFailedImage.height + verificationFailedToolTip.height + verifyAgainButton.height + reauthenticateButton.height + ( 4 * Theme.paddingSmall ) ) ) / 2
         width: parent.width
         id: verificationFailedColumn
         spacing: Theme.paddingSmall
@@ -641,8 +641,8 @@ Page {
             width: 1/2 * parent.width
         }
 
-        InfoLabel {
-            id: verificationFailedInfoLabel
+        ToolTip {
+            id: verificationFailedToolTip
             font.pixelSize: Theme.fontSizeLarge
             text: qsTr("Piepmatz could not log you in!")
         }
@@ -677,14 +677,14 @@ Page {
 
     }
 
-    SilicaFlickable {
+    Flickable {
         id: overviewContainer
         anchors.fill: parent
         visible: false
         contentHeight: parent.height
         contentWidth: parent.width
 
-        PullDownMenu {
+        Menu {
             MenuItem {
                 text: qsTr("About Piepmatz")
                 onClicked: pageStack.push(aboutPage)
@@ -712,7 +712,7 @@ Page {
 
         Component {
             id: pushUpMenuComponent
-            PushUpMenu {
+            Menu {
                 MenuItem {
                     text: qsTr("Refresh")
                     onClicked: Functions.updatePiepmatz()
@@ -740,6 +740,7 @@ Page {
             Behavior on opacity { NumberAnimation {} }
             width: parent.width
             height: parent.height
+
 
             Row {
                 id: overviewRow
@@ -791,7 +792,7 @@ Page {
                             Behavior on opacity { NumberAnimation {} }
                             anchors.verticalCenter: parent.verticalCenter
 
-                            InfoLabel {
+                            ToolTip {
                                 id: homeProgressLabel
                                 text: qsTr("Loading timeline...")
                             }
@@ -800,11 +801,12 @@ Page {
                                 id: homeProgressIndicator
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 running: !homeView.loaded
-                                size: BusyIndicatorSize.Large
+                                //size: BusyIndicatorSize.Large
                             }
                         }
 
-                        SilicaListView {
+
+                        ListView {
                             id: homeListView
                             opacity: homeView.loaded ? 1 : 0
                             Behavior on opacity { NumberAnimation {} }
@@ -826,11 +828,11 @@ Page {
                                 timelineModel.setCurrentTweetId(homeListView.itemAt(homeListView.contentX, ( homeListView.contentY + Math.round(overviewPage.height / 2))).tweetModel.id_str);
                             }
 
-                            onQuickScrollAnimatingChanged: {
-                                if (!quickScrollAnimating) {
-                                    timelineModel.setCurrentTweetId(homeListView.itemAt(homeListView.contentX, ( homeListView.contentY + Math.round(overviewPage.height / 2))).tweetModel.id_str);
-                                }
-                            }
+//                            onQuickScrollAnimatingChanged: {
+//                                if (!quickScrollAnimating) {
+//                                    timelineModel.setCurrentTweetId(homeListView.itemAt(homeListView.contentX, ( homeListView.contentY + Math.round(overviewPage.height / 2))).tweetModel.id_str);
+//                                }
+//                            }
 
                             onCurrentIndexChanged: {
                                 timelineModel.setCurrentTweetId(currentItem.tweetModel.id_str);
@@ -838,7 +840,7 @@ Page {
 
                             footer: homeTimelineFooterComponent;
 
-                            VerticalScrollDecorator {}
+                            //VerticalScrollDecorator {}
                         }
 
                         Component {
@@ -851,7 +853,7 @@ Page {
                                     id: homeTimelineLoadMoreButton
                                     Behavior on opacity { NumberAnimation {} }
                                     text: qsTr("Load more tweets")
-                                    preferredWidth: Theme.buttonWidthLarge
+                                    //preferredWidth: Theme.buttonWidthLarge
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     opacity: visible ? 1 : 0
@@ -870,7 +872,7 @@ Page {
                                     visible: false
                                     opacity: visible ? 1 : 0
                                     running: visible
-                                    size: BusyIndicatorSize.Medium
+                                    //size: BusyIndicatorSize.Medium
                                 }
                                 Connections {
                                     target: timelineModel
@@ -900,21 +902,21 @@ Page {
 
                         property bool updateInProgress : false;
 
-                        Notification {
-                            id: mentionsNotification
-                            appName: "Piepmatz"
-                            appIcon: "/usr/share/icons/hicolor/256x256/apps/harbour-piepmatz.png"
-                        }
-                        Notification {
-                            id: retweetsNotification
-                            appName: "Piepmatz"
-                            appIcon: "/usr/share/icons/hicolor/256x256/apps/harbour-piepmatz.png"
-                        }
-                        Notification {
-                            id: followersNotification
-                            appName: "Piepmatz"
-                            appIcon: "/usr/share/icons/hicolor/256x256/apps/harbour-piepmatz.png"
-                        }
+//                        Notification {
+//                            id: mentionsNotification
+//                            appName: "Piepmatz"
+//                            appIcon: "/usr/share/icons/hicolor/256x256/apps/harbour-piepmatz.png"
+//                        }
+//                        Notification {
+//                            id: retweetsNotification
+//                            appName: "Piepmatz"
+//                            appIcon: "/usr/share/icons/hicolor/256x256/apps/harbour-piepmatz.png"
+//                        }
+//                        Notification {
+//                            id: followersNotification
+//                            appName: "Piepmatz"
+//                            appIcon: "/usr/share/icons/hicolor/256x256/apps/harbour-piepmatz.png"
+//                        }
 
                         Connections {
 
@@ -991,7 +993,7 @@ Page {
                             }
                         }
 
-                        SilicaListView {
+                        ListView {
                             anchors {
                                 fill: parent
                             }
@@ -1015,7 +1017,7 @@ Page {
                                 }
                             }
 
-                            VerticalScrollDecorator {}
+                            //VerticalScrollDecorator {}
                         }
 
                         Column {
@@ -1047,11 +1049,11 @@ Page {
 
                         property bool updateInProgress : false;
 
-                        Notification {
-                            id: messagesNotification
-                            appName: "Piepmatz"
-                            appIcon: "/usr/share/icons/hicolor/256x256/apps/harbour-piepmatz.png"
-                        }
+//                        Notification {
+//                            id: messagesNotification
+//                            appName: "Piepmatz"
+//                            appIcon: "/usr/share/icons/hicolor/256x256/apps/harbour-piepmatz.png"
+//                        }
 
                         Connections {
 
@@ -1079,7 +1081,7 @@ Page {
                             }
                         }
 
-                        SilicaListView {
+                        ListView {
                             anchors {
                                 fill: parent
                             }
@@ -1088,12 +1090,12 @@ Page {
                             clip: true
 
                             model: directMessagesModel
-                            delegate: ListItem {
+                            delegate: ItemDelegate {
 
                                 id: messageContactItem
 
-                                contentHeight: messageContactRow.height + messageContactSeparator.height + 2 * Theme.paddingMedium
-                                contentWidth: parent.width
+                                height: messageContactRow.height + messageContactSeparator.height + 2 * Theme.paddingMedium
+                               width: parent.width
 
                                 onClicked: {
                                     pageStack.push(Qt.resolvedUrl("../pages/ConversationPage.qml"), { "conversationModel" : display, "myUserId": overviewPage.myUser.id_str, "configuration": overviewPage.configuration });
@@ -1242,7 +1244,7 @@ Page {
 
                                 }
 
-                                Separator {
+                                Rectangle {
                                     id: messageContactSeparator
 
                                     anchors {
@@ -1252,13 +1254,13 @@ Page {
 
                                     width: parent.width
                                     color: Theme.primaryColor
-                                    horizontalAlignment: Qt.AlignHCenter
+                                    //horizontalAlignment: Qt.AlignHCenter
                                 }
 
                             }
 
 
-                            VerticalScrollDecorator {}
+                           // VerticalScrollDecorator {}
                         }
 
                         Column {
@@ -1310,10 +1312,10 @@ Page {
                                 width: 1/3 * parent.width
                             }
 
-                            InfoLabel {
+                            ToolTip {
                                 id: messagesNoResultsText
                                 text: qsTr("No direct messages in the last 30 days")
-                                color: Theme.primaryColor
+                               // color: Theme.primaryColor
                                 font.pixelSize: Theme.fontSizeLarge
                                 width: parent.width - 2 * Theme.horizontalPageMargin
                             }
@@ -1402,7 +1404,7 @@ Page {
                             width: parent.width
                             height: searchField.height
 
-                            SearchField {
+                            TextField {
                                 id: searchField
                                 width: parent.width - ( saveSearchButton.visible ? saveSearchButton.width : 0)
                                 placeholderText: qsTr("Search on Twitter...")
@@ -1410,8 +1412,8 @@ Page {
                                     top: parent.top
                                 }
 
-                                EnterKey.iconSource: "image://theme/icon-m-enter-close"
-                                EnterKey.onClicked: {
+                                //Keys.iconSource: "image://theme/icon-m-enter-close"
+                                Keys.onPressed: {
                                     resetFocus();
                                 }
 
@@ -1423,9 +1425,14 @@ Page {
                                 }
                             }
 
-                            IconButton {
+                            ToolButton {
                                 id: saveSearchButton
-                                icon.source: "image://theme/icon-m-add"
+                                contentItem: Image {
+                                    source: "image://theme/icon-m-add"
+
+                                }
+
+                               //icon.source: "image://theme/icon-m-add"
                                 anchors.verticalCenter: parent.verticalCenter
                                 visible: (searchField.text !== "")
                                 onClicked: {
@@ -1462,10 +1469,10 @@ Page {
                                     }
                                 }
                             }
-                            Separator {
+                            Rectangle {
                                 width: Theme.fontSizeMedium
                                 color: Theme.primaryColor
-                                horizontalAlignment: Qt.AlignHCenter
+                               // horizontalAlignment: Qt.AlignHCenter
                                 anchors.top: parent.top
                                 anchors.topMargin: Theme.paddingSmall
                                 transform: Rotation { angle: 90 }
@@ -1534,7 +1541,7 @@ Page {
                             }
                         }
 
-                        SilicaListView {
+                        ListView {
                             anchors {
                                 top: searchTypeRow.bottom
                             }
@@ -1553,10 +1560,10 @@ Page {
                                 tweetModel: display
                                 userId: overviewPage.myUser.id_str
                             }
-                            VerticalScrollDecorator {}
+                           //VerticalScrollDecorator {}
                         }
 
-                        SilicaListView {
+                        ListView {
                             anchors {
                                 top: searchTypeRow.bottom
                             }
@@ -1574,7 +1581,7 @@ Page {
                             delegate: User {
                                 userModel: display
                             }
-                            VerticalScrollDecorator {}
+                           // VerticalScrollDecorator {}
                         }
 
                         Column {
@@ -1592,10 +1599,10 @@ Page {
                                 id: searchInProgressIndicator
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 running: ( searchColumn.usersSearchInProgress || searchColumn.tweetSearchInProgress )
-                                size: BusyIndicatorSize.Medium
+                               // size: BusyIndicatorSize.Medium
                             }
 
-                            InfoLabel {
+                            ToolTip {
                                 id: searchInProgressIndicatorLabel
                                 text: qsTr("Searching...")
                                 font.pixelSize: Theme.fontSizeLarge
@@ -1632,16 +1639,16 @@ Page {
                                 width: 1/3 * parent.width
                             }
 
-                            InfoLabel {
+                            ToolTip {
                                 id: searchNoResultsText
                                 text: ( searchField.text === "" || searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) ? qsTr("What are you looking for?") : qsTr("No results found")
-                                color: Theme.primaryColor
+                                //color: Theme.primaryColor
                                 font.pixelSize: Theme.fontSizeLarge
                                 width: parent.width - 2 * Theme.horizontalPageMargin
                             }
                         }
 
-                        SilicaListView {
+                        ListView {
                             anchors {
                                 top: searchTypeRow.bottom
                             }
@@ -1656,9 +1663,9 @@ Page {
                             clip: true
 
                             model: trendsModel
-                            delegate: ListItem {
-                                contentHeight: trendRow.height
-                                contentWidth: parent.width
+                            delegate: ItemDelegate {
+                                height: trendRow.height
+                                width: parent.width
                                 Row {
                                     id: trendRow
                                     width: parent.width - ( 2 * Theme.horizontalPageMargin )
@@ -1696,10 +1703,10 @@ Page {
                                 }
                             }
 
-                            VerticalScrollDecorator {}
+                            //VerticalScrollDecorator {}
                         }
 
-                        SilicaListView {
+                        ListView {
                             anchors {
                                 top: searchTypeRow.bottom
                             }
@@ -1714,22 +1721,22 @@ Page {
                             clip: true
 
                             model: savedSearchesModel
-                            delegate: ListItem {
+                            delegate: ItemDelegate {
                                 id: savedSearchListItem
-                                contentHeight: savedQuery.height
-                                contentWidth: parent.width
-                                menu: ContextMenu {
-                                    MenuItem {
-                                        onClicked: {
-                                            savedSearchRemorseItem.execute(savedSearchListItem, qsTr("Deleting"), function() { savedSearchesModel.removeSavedSearch(display.id_str); } );
-                                        }
-                                        text: qsTr("Delete")
-                                    }
-                                }
+                                height: savedQuery.height
+                                width: parent.width
+//                                menu: ContextMenu {
+//                                    MenuItem {
+//                                        onClicked: {
+//                                            savedSearchRemorseItem.execute(savedSearchListItem, qsTr("Deleting"), function() { savedSearchesModel.removeSavedSearch(display.id_str); } );
+//                                        }
+//                                        text: qsTr("Delete")
+//                                    }
+//                                }
 
-                                RemorseItem {
-                                    id: savedSearchRemorseItem
-                                }
+//                                RemorseItem {
+//                                    id: savedSearchRemorseItem
+//                                }
 
                                 Row {
                                     id: savedQuery
@@ -1758,7 +1765,7 @@ Page {
                                 }
                             }
 
-                            VerticalScrollDecorator {}
+                            //VerticalScrollDecorator {}
                         }
 
                     }
@@ -1827,10 +1834,10 @@ Page {
                                     }
                                 }
                             }
-                            Separator {
+                            Rectangle {
                                 width: Theme.fontSizeMedium
                                 color: Theme.primaryColor
-                                horizontalAlignment: Qt.AlignHCenter
+                                //horizontalAlignment: Qt.AlignHCenter
                                 anchors.top: parent.top
                                 anchors.topMargin: Theme.paddingSmall
                                 transform: Rotation { angle: 90 }
@@ -1856,7 +1863,7 @@ Page {
                             }
                         }
 
-                        SilicaListView {
+                        ListView {
                             anchors {
                                 top: listsTypeRow.bottom
                             }
@@ -1875,10 +1882,10 @@ Page {
                                 listModel: display
                             }
 
-                            VerticalScrollDecorator {}
+                            //VerticalScrollDecorator {}
                         }
 
-                        SilicaListView {
+                        ListView {
                             anchors {
                                 top: listsTypeRow.bottom
                             }
@@ -1897,7 +1904,7 @@ Page {
                                 listModel: display
                             }
 
-                            VerticalScrollDecorator {}
+                            //VerticalScrollDecorator {}
                         }
 
                         Column {
@@ -1949,10 +1956,10 @@ Page {
                                 width: 1/3 * parent.width
                             }
 
-                            InfoLabel {
+                            ToolTip {
                                 id: listsNoResultsText
                                 text: qsTr("No lists found")
-                                color: Theme.primaryColor
+                               // color: Theme.primaryColor
                                 font.pixelSize: Theme.fontSizeLarge
                                 width: parent.width - 2 * Theme.horizontalPageMargin
                             }
@@ -2040,6 +2047,7 @@ Page {
                             slideshowVisibleTimer.start();
                         }
                     }
+
                 }
 
                 Item {
@@ -2049,11 +2057,11 @@ Page {
                     visible: overviewPage.isLandscape
                     property bool squeezed: height < ( ( Theme.iconSizeMedium + Theme.fontSizeTiny ) * 6 ) ? true : false
 
-                    Separator {
+                    Rectangle {
                         id: navigatorColumnSeparator
                         width: parent.height
                         color: Theme.primaryColor
-                        horizontalAlignment: Qt.AlignHCenter
+                        //horizontalAlignment: Qt.AlignHCenter
                         anchors.top: parent.top
                         anchors.topMargin: Theme.paddingSmall
                         transform: Rotation { angle: 90 }
@@ -2143,15 +2151,21 @@ Page {
                 width: parent.width
                 height: overviewPage.isPortrait ? getNavigationRowSize() : 0
                 visible: overviewPage.isPortrait
+
+                Rectangle {
+                    color:"blue"
+                    anchors.fill: parent
+                }
+
                 Column {
                     id: navigationRowSeparatorColumn
                     width: parent.width
                     height: Theme.paddingMedium
-                    Separator {
+                    Rectangle {
                         id: navigationRowSeparator
                         width: parent.width
                         color: Theme.primaryColor
-                        horizontalAlignment: Qt.AlignHCenter
+                        //horizontalAlignment: Qt.AlignHCenter
                     }
                 }
 

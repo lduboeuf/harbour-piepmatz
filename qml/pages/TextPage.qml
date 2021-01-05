@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../js/functions.js" as Functions
 import "../components"
 
@@ -117,7 +117,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: textContainer
         contentHeight: column.height
         anchors.fill: parent

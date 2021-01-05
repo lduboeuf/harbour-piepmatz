@@ -12,11 +12,33 @@
 # The name of your application
 TARGET = harbour-piepmatz
 
-CONFIG += sailfishapp c++11
+CONFIG += c++11
 
-QT += core dbus positioning sql
+QT += core quick dbus positioning sql
 
 LIBS += -lcrypto
+
+
+sailfishapp {
+    DEFINES += Q_OS_SAILFISH
+    OTHER_FILES += qml/harbour-piepmatz.qml \
+        qml/pages/CoverPage.qml \
+        rpm/harbour-piepmatz.changes.in \
+        rpm/harbour-piepmatz.spec \
+        rpm/harbour-piepmatz.yaml \
+        translations/*.ts \
+        harbour-piepmatz.desktop
+
+    DISTFILES += \
+        qml/pages/*.qml \
+        qml/components/*.qml
+}else{
+
+    RESOURCES += \
+        emojis.qrc \
+        qml.qrc
+}
+
 
 include(src/o2/o2.pri)
 #include(src/wagnis/wagnis.pri)
@@ -24,6 +46,7 @@ include(src/QGumboParser/QGumboParser.pri)
 
 SOURCES += src/harbour-piepmatz.cpp \
     src/accountmodel.cpp \
+    src/theme.cpp \
     src/twitterapi.cpp \
     src/timelinemodel.cpp \
     src/covermodel.cpp \
@@ -45,13 +68,7 @@ SOURCES += src/harbour-piepmatz.cpp \
     src/imagemetadataresponsehandler.cpp \
     src/contentextractor.cpp
 
-OTHER_FILES += qml/harbour-piepmatz.qml \
-    qml/pages/CoverPage.qml \
-    rpm/harbour-piepmatz.changes.in \
-    rpm/harbour-piepmatz.spec \
-    rpm/harbour-piepmatz.yaml \
-    translations/*.ts \
-    harbour-piepmatz.desktop
+
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
@@ -106,6 +123,7 @@ INSTALLS += 86.png 108.png 128.png 172.png 256.png \
 
 HEADERS += \
     src/accountmodel.h \
+    src/theme.h \
     src/twitterapi.h \
     src/timelinemodel.h \
     src/covermodel.h \
@@ -127,6 +145,10 @@ HEADERS += \
     src/imagemetadataresponsehandler.h \
     src/contentextractor.h
 
-DISTFILES += \
-    qml/pages/*.qml \
-    qml/components/*.qml
+
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
+

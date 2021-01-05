@@ -18,11 +18,11 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 
-ListItem {
+ItemDelegate {
 
     id: singleTweet
 
@@ -30,8 +30,8 @@ ListItem {
     property string userId : accountModel.getCurrentAccount().id_str;
     property bool isRetweetMention : false;
 
-    contentHeight: tweetElement.height
-    contentWidth: parent.width
+    height: tweetElement.height
+    width: parent.width
 
     Connections {
         target: twitterApi
@@ -44,7 +44,7 @@ ListItem {
         }
     }
 
-    menu: ContextMenu {
+    Menu {
         MenuItem {
             visible: ( tweetModel.retweeted_status ? false : ( tweetModel.user.id_str === singleTweet.userId ) )
             onClicked: {
@@ -79,9 +79,9 @@ ListItem {
         }
     }
 
-    RemorseItem {
-        id: tweetRemorseItem
-    }
+//    RemorseItem {
+//        id: tweetRemorseItem
+//    }
 
     TweetElement {
         id: tweetElement

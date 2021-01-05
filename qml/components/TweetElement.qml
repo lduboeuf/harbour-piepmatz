@@ -18,7 +18,7 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 import "../js/twemoji.js" as Emoji
@@ -296,10 +296,10 @@ Item {
                         opacity: visible ? 1 : 0
                         Behavior on opacity { NumberAnimation {} }
                         spacing: Theme.paddingSmall
-                        Separator {
+                        Rectangle {
                             width: parent.width
                             color: Theme.primaryColor
-                            horizontalAlignment: Qt.AlignHCenter
+                            //horizontalAlignment: Qt.AlignHCenter
                         }
 
                         Item {
@@ -374,10 +374,10 @@ Item {
                             linkColor: Theme.highlightColor
                         }
 
-                        Separator {
+                        Rectangle {
                             width: parent.width
                             color: Theme.primaryColor
-                            horizontalAlignment: Qt.AlignHCenter
+                            //horizontalAlignment: Qt.AlignHCenter
                         }
                     }
                 }
@@ -504,7 +504,7 @@ Item {
                             id: tweetDateText
                             font.pixelSize: infoTextFontSize
                             color: Theme.secondaryColor
-                            text:  Format.formatDate(Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at), Formatter.DurationElapsed)
+                            text:  Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at)
                             elide: Text.ElideRight
                             maximumLineCount: 1
                         }
@@ -538,7 +538,7 @@ Item {
                                 id: tweetRetweetBusyIndicator
                                 anchors.right: parent.right
                                 running: visible
-                                size: BusyIndicatorSize.ExtraSmall
+                                //size: BusyIndicatorSize.ExtraSmall
                                 visible: !tweetRetweetedCountImage.visible
                             }
                         }
@@ -586,7 +586,7 @@ Item {
                                 id: tweetFavoriteBusyIndicator
                                 anchors.right: parent.right
                                 running: visible
-                                size: BusyIndicatorSize.ExtraSmall
+                                //size: BusyIndicatorSize.ExtraSmall
                                 visible: !tweetFavoritesCountImage.visible
                             }
                         }
@@ -699,7 +699,7 @@ Item {
         }
     }
 
-    Separator {
+    Rectangle {
         id: tweetSeparator
 
         anchors {
@@ -709,7 +709,7 @@ Item {
 
         width: parent.width
         color: Theme.primaryColor
-        horizontalAlignment: Qt.AlignHCenter
+        //horizontalAlignment: Qt.AlignHCenter
         visible: tweetElementItem.withSeparator
     }
 

@@ -18,13 +18,13 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 import "../js/twemoji.js" as Emoji
 import "../js/twitter-text.js" as TwitterText
 
-ListItem {
+ItemDelegate {
 
     id: singleUser
 
@@ -42,14 +42,14 @@ ListItem {
         }
     }
 
-    contentHeight: userRow.height + userSeparator.height + 2 * Theme.paddingMedium
-    contentWidth: parent.width
+    height: userRow.height + userSeparator.height + 2 * Theme.paddingMedium
+    width: parent.width
 
     onClicked: {
         pageStack.push(Qt.resolvedUrl("../pages/ProfilePage.qml"), {"profileModel": userModel});
     }
 
-    menu: ContextMenu {
+    Menu {
         MenuItem {
             onClicked: {
                 Clipboard.text = Functions.getUserUrl(userModel);
@@ -166,7 +166,7 @@ ListItem {
 
     }
 
-    Separator {
+    Rectangle {
         id: userSeparator
 
         anchors {
@@ -176,7 +176,7 @@ ListItem {
 
         width: parent.width
         color: Theme.primaryColor
-        horizontalAlignment: Qt.AlignHCenter
+       //horizontalAlignment: Qt.AlignHCenter
     }
 
 }

@@ -17,12 +17,15 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../js/functions.js" as Functions
 
 Page {
     id: aboutPage
-    allowedOrientations: Orientation.All
+    //allowedOrientations: Orientation.All
+
+    title: qsTr("About Piepmatz")
+
 
     focus: true
     Keys.onLeftPressed: {
@@ -56,7 +59,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: aboutContainer
         contentHeight: column.height
         anchors.fill: parent
@@ -66,9 +69,9 @@ Page {
             width: aboutPage.width
             spacing: Theme.paddingLarge
 
-            PageHeader {
-                title: qsTr("About Piepmatz")
-            }
+
+
+
 
             Image {
                 id: wunderfitzImage
@@ -133,11 +136,12 @@ Page {
                 onLinkActivated: Qt.openUrlExternally("mailto:contact@werkwolf.eu")
             }
 
-            Separator {
-                width: parent.width
-                color: Theme.primaryColor
-                horizontalAlignment: Qt.AlignHCenter
-            }
+            ToolSeparator {}
+//            Separator {
+//                width: parent.width
+//                color: Theme.primaryColor
+//                horizontalAlignment: Qt.AlignHCenter
+//            }
 
             Text {
                 wrapMode: Text.Wrap
@@ -154,12 +158,12 @@ Page {
                 horizontalAlignment: Text.AlignHCenter
                 onLinkActivated: Functions.handleLink(link);
             }
-
-            Separator {
-                width: parent.width
-                color: Theme.primaryColor
-                horizontalAlignment: Qt.AlignHCenter
-            }
+            ToolSeparator {}
+//            Separator {
+//                width: parent.width
+//                color: Theme.primaryColor
+//                horizontalAlignment: Qt.AlignHCenter
+//            }
 
             Label {
                 text: qsTr("Licensed under GNU GPLv3")
@@ -180,7 +184,7 @@ Page {
                 onLinkActivated: Qt.openUrlExternally("https://github.com/Wunderfitz/harbour-piepmatz")
             }
 
-            SectionHeader {
+            Label {
                 text: qsTr("About Twitter")
             }
 
@@ -231,7 +235,7 @@ Page {
 //                }
 //            }
 
-            SectionHeader {
+            Label {
                 text: qsTr("Credits")
             }
 
@@ -361,7 +365,7 @@ Page {
                 }
             }
 
-            VerticalScrollDecorator {}
+           // VerticalScrollDecorator {}
         }
 
     }

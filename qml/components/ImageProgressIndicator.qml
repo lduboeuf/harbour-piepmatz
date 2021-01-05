@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 
 Item {
 
@@ -34,7 +34,7 @@ Item {
     Behavior on opacity { NumberAnimation {} }
     visible: image.status === ( Image.Loading || Image.Error ) ? true : false
     opacity: image.status === ( Image.Loading || Image.Error ) ? 1 : 0
-    ProgressCircle {
+    ProgressBar {
         id: imageProgressCircle
         width: withPercentage ? parent.height / 2 : parent.height
         height: withPercentage ? parent.height / 2 : parent.height

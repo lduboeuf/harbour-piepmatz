@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import QtMultimedia 5.0
 import "../js/functions.js" as Functions
 
@@ -284,7 +284,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: false
                 running: visible
-                size: BusyIndicatorSize.Medium
+                //size: BusyIndicatorSize.Medium
                 onVisibleChanged: {
                     if (visible) {
                         enableScreensaver();
@@ -375,18 +375,18 @@ Item {
                     width: parent.width
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: positionText.top
-                    minimumValue: 0
-                    maximumValue: tweetVideo.duration ? tweetVideo.duration : 0
+                    from: 0
+                    to: tweetVideo.duration ? tweetVideo.duration : 0
                     stepSize: 1
                     value: tweetVideo.position
                     enabled: tweetVideo.seekable
                     visible: (tweetVideo.duration > 0)
-                    onReleased: {
+                    onMoved: {
                         tweetVideo.seek(Math.floor(value));
                         tweetVideo.play();
                         timeLeftTimer.start();
                     }
-                    valueText: getTimeString(Math.round((tweetVideo.duration - tweetVideoSlider.value) / 1000))
+                    //valueText: getTimeString(Math.round((tweetVideo.duration - tweetVideoSlider.value) / 1000))
                 }
 
                 Text {
