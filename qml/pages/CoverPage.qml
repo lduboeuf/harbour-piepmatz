@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -57,17 +57,17 @@ CoverBackground {
 
     Column {
         id: loadingColumn
-        width: parent.width - 2 * Theme.horizontalPageMargin
+        width: parent.width - 2 * LocalTheme.horizontalPageMargin
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        spacing: Theme.paddingMedium
+        spacing: LocalTheme.paddingMedium
         visible: coverPage.loading
         Behavior on opacity { NumberAnimation {} }
         opacity: coverPage.loading ? 1 : 0
         ToolTip {
             id: loadingLabel
             text: qsTr("Loading...")
-            font.pixelSize: Theme.fontSizeMedium
+            font.pixelSize: LocalTheme.fontSizeMedium
         }
     }
 
@@ -83,15 +83,15 @@ CoverBackground {
 
     Image {
         id: backgroundImage
-        source: "../../images/" + accountModel.getImagePath() + "background" + ( Theme.colorScheme ? "-black" : "" ) + ".png"
+        source: "../../images/" + accountModel.getImagePath() + "background" + ( LocalTheme.colorScheme ? "-black" : "" ) + ".png"
         anchors {
             verticalCenter: parent.verticalCenter
 
             bottom: parent.bottom
-            bottomMargin: Theme.paddingMedium
+            bottomMargin: LocalTheme.paddingMedium
 
             right: parent.right
-            rightMargin: Theme.paddingMedium
+            rightMargin: LocalTheme.paddingMedium
         }
 
         fillMode: Image.PreserveAspectFit
@@ -105,45 +105,45 @@ CoverBackground {
         opacity: coverPage.loading ? 0 : 1
         anchors {
             top: parent.top
-            topMargin: Theme.paddingMedium
+            topMargin: LocalTheme.paddingMedium
             left: parent.left
-            leftMargin: Theme.paddingMedium
+            leftMargin: LocalTheme.paddingMedium
             right: parent.right
-            rightMargin: Theme.paddingMedium
+            rightMargin: LocalTheme.paddingMedium
             bottom: parent.bottom
         }
         model: coverModel
         delegate: ListItem {
             anchors {
-                topMargin:  Theme.paddingMedium
+                topMargin:  LocalTheme.paddingMedium
             }
-            height: resultLabelTitle.height + resultLabelContent.height + Theme.paddingSmall
+            height: resultLabelTitle.height + resultLabelContent.height + LocalTheme.paddingSmall
             opacity: index < 4 ? 1.0 - index * 0.2 : 0.0
 
             Column {
                 width: parent.width
                 Row {
                     id: resultTitleRow
-                    spacing: Theme.paddingSmall
+                    spacing: LocalTheme.paddingSmall
                     width: parent.width
                     Image {
                         id: resultTitlePicture
                         source: display.image
-                        width: Theme.fontSizeExtraSmall
-                        height: Theme.fontSizeExtraSmall
+                        width: LocalTheme.fontSizeExtraSmall
+                        height: LocalTheme.fontSizeExtraSmall
                         sourceSize {
-                            width: Theme.fontSizeExtraSmall
-                            height: Theme.fontSizeExtraSmall
+                            width: LocalTheme.fontSizeExtraSmall
+                            height: LocalTheme.fontSizeExtraSmall
                         }
                     }
                     Text {
                         id: resultLabelTitle
-                        width: parent.width - Theme.paddingSmall - resultTitlePicture.width
+                        width: parent.width - LocalTheme.paddingSmall - resultTitlePicture.width
                         maximumLineCount: 1
-                        color: Theme.primaryColor
-                        font.pixelSize: Theme.fontSizeTiny
+                        color: LocalTheme.primaryColor
+                        font.pixelSize: LocalTheme.fontSizeTiny
                         font.bold: true
-                        text: Emoji.emojify(display.name, Theme.fontSizeTiny)
+                        text: Emoji.emojify(display.name, LocalTheme.fontSizeTiny)
                         textFormat: Text.StyledText
                         elide: Text.ElideRight
                         onTruncatedChanged: {
@@ -158,9 +158,9 @@ CoverBackground {
                 Text {
                     id: resultLabelContent
                     maximumLineCount: 2
-                    color: Theme.primaryColor
-                    font.pixelSize: Theme.fontSizeTiny
-                    text: Emoji.emojify(display.text, Theme.fontSizeTiny)
+                    color: LocalTheme.primaryColor
+                    font.pixelSize: LocalTheme.fontSizeTiny
+                    text: Emoji.emojify(display.text, LocalTheme.fontSizeTiny)
                     textFormat: Text.StyledText
                     width: parent.width
                     wrapMode: Text.Wrap

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -28,19 +28,19 @@ Row {
 
     id: tweetUserRow
     width: parent.width
-    spacing: Theme.paddingSmall
-    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall) ;
-    property string iconFontSize: ( accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeSmall : Theme.fontSizeMedium) ;
+    spacing: LocalTheme.paddingSmall
+    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeExtraSmall : LocalTheme.fontSizeSmall) ;
+    property string iconFontSize: ( accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeSmall : LocalTheme.fontSizeMedium) ;
 
     Connections {
         target: accountModel
         onFontSizeChanged: {
             if (fontSize === "piepmatz") {
-                componentFontSize = Theme.fontSizeExtraSmall;
-                iconFontSize = Theme.fontSizeSmall;
+                componentFontSize = LocalTheme.fontSizeExtraSmall;
+                iconFontSize = LocalTheme.fontSizeSmall;
             } else {
-                componentFontSize = Theme.fontSizeSmall;
-                iconFontSize = Theme.fontSizeMedium;
+                componentFontSize = LocalTheme.fontSizeSmall;
+                iconFontSize = LocalTheme.fontSizeMedium;
             }
         }
     }
@@ -49,7 +49,7 @@ Row {
         id: tweetUserNameText
         font.pixelSize: componentFontSize
         font.bold: true
-        color: Theme.primaryColor
+        color: LocalTheme.primaryColor
         text: Emoji.emojify(tweetUser.name, componentFontSize)
         textFormat: Text.StyledText
         elide: Text.ElideRight
@@ -72,7 +72,7 @@ Row {
 
     Image {
         id: tweetUserVerifiedImage
-        source: "image://theme/icon-s-installed"
+        source: "image://theme/ok"
         visible: tweetUser.verified
         width: iconFontSize
         height: iconFontSize
@@ -86,7 +86,7 @@ Row {
 
     Image {
         id: tweetUserProtectedImage
-        source: "image://theme/icon-s-secure"
+        source: "image://theme/lock"
         visible: tweetUser.protected
         width: iconFontSize
         height: iconFontSize
@@ -101,8 +101,8 @@ Row {
     Text {
         id: tweetUserHandleText
         font.pixelSize: componentFontSize
-        width: parent.width - ( tweetUserVerifiedImage.visible ? tweetUserVerifiedImage.width : 0 ) - ( tweetUserProtectedImage.visible ? tweetUserProtectedImage.width : 0 ) - tweetUserNameText.width - ( 2 * Theme.paddingSmall )
-        color: Theme.secondaryColor
+        width: parent.width - ( tweetUserVerifiedImage.visible ? tweetUserVerifiedImage.width : 0 ) - ( tweetUserProtectedImage.visible ? tweetUserProtectedImage.width : 0 ) - tweetUserNameText.width - ( 2 * LocalTheme.paddingSmall )
+        color: LocalTheme.secondaryColor
         anchors.bottom: tweetUserNameText.bottom
         text: qsTr("@%1").arg(tweetUser.screen_name)
         elide: Text.ElideRight

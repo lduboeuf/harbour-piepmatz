@@ -60,11 +60,10 @@ Page {
     }
 
     property variant conversationModel;
-    property variant configuration;
     property string myUserId;
     property bool loaded : true;
 
-    function getRemainingCharacters(text, configuration) {
+    function getRemainingCharacters(text) {
         return 10000 - TwitterText.getTweetLength(text);
     }
 
@@ -129,37 +128,37 @@ Page {
                 delegate: ListItem {
 
                     id: messageListItem
-                    contentHeight: messageTextItem.height + ( 2 * Theme.paddingMedium )
+                    contentHeight: messageTextItem.height + ( 2 * LocalTheme.paddingMedium )
                     contentWidth: parent.width
 
                     Column {
                         id: messageTextItem
 
-                        spacing: Theme.paddingSmall
+                        spacing: LocalTheme.paddingSmall
 
                         width: parent.width
-                        height: messageText.height + messageDateText.height + ( 2 * Theme.paddingMedium )
+                        height: messageText.height + messageDateText.height + ( 2 * LocalTheme.paddingMedium )
                         anchors.verticalCenter: parent.verticalCenter
 
                         Text {
                             anchors {
                                 left: parent.left
-                                leftMargin: (modelData.message_create.sender_id === conversationPage.myUserId) ? 4 * Theme.horizontalPageMargin : Theme.horizontalPageMargin
+                                leftMargin: (modelData.message_create.sender_id === conversationPage.myUserId) ? 4 * LocalTheme.horizontalPageMargin : LocalTheme.horizontalPageMargin
                                 right: parent.right
-                                rightMargin: (modelData.message_create.sender_id === conversationPage.myUserId) ? Theme.horizontalPageMargin : 4 * Theme.horizontalPageMargin
+                                rightMargin: (modelData.message_create.sender_id === conversationPage.myUserId) ? LocalTheme.horizontalPageMargin : 4 * LocalTheme.horizontalPageMargin
                             }
 
                             id: messageText
-                            text: Emoji.emojify(Functions.enhanceSimpleText(modelData.message_create.message_data.text, modelData.message_create.message_data.entities), Theme.fontSizeSmall)
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: modelData.message_create.sender_id === conversationPage.myUserId ? Theme.highlightColor : Theme.primaryColor
+                            text: Emoji.emojify(Functions.enhanceSimpleText(modelData.message_create.message_data.text, modelData.message_create.message_data.entities), LocalTheme.fontSizeSmall)
+                            font.pixelSize: LocalTheme.fontSizeSmall
+                            color: modelData.message_create.sender_id === conversationPage.myUserId ? LocalTheme.highlightColor : LocalTheme.primaryColor
                             wrapMode: Text.Wrap
                             textFormat: Text.StyledText
                             onLinkActivated: {
                                 Functions.handleLink(link);
                             }
                             horizontalAlignment: (modelData.message_create.sender_id === conversationPage.myUserId) ? Text.AlignRight : Text.AlignLeft
-                            linkColor: Theme.highlightColor
+                            linkColor: LocalTheme.highlightColor
                         }
 
                         Timer {
@@ -175,15 +174,15 @@ Page {
                         Text {
                             anchors {
                                 left: parent.left
-                                leftMargin: (modelData.message_create.sender_id === conversationPage.myUserId) ? 4 * Theme.horizontalPageMargin : Theme.horizontalPageMargin
+                                leftMargin: (modelData.message_create.sender_id === conversationPage.myUserId) ? 4 * LocalTheme.horizontalPageMargin : LocalTheme.horizontalPageMargin
                                 right: parent.right
-                                rightMargin: (modelData.message_create.sender_id === conversationPage.myUserId) ? Theme.horizontalPageMargin : 4 * Theme.horizontalPageMargin
+                                rightMargin: (modelData.message_create.sender_id === conversationPage.myUserId) ? LocalTheme.horizontalPageMargin : 4 * LocalTheme.horizontalPageMargin
                             }
 
                             id: messageDateText
                             text: Format.formatDate(new Date(parseInt(modelData.created_timestamp)), Formatter.DurationElapsed);
-                            font.pixelSize: Theme.fontSizeTiny
-                            color: modelData.message_create.sender_id === conversationPage.myUserId ? Theme.highlightColor : Theme.primaryColor
+                            font.pixelSize: LocalTheme.fontSizeTiny
+                            color: modelData.message_create.sender_id === conversationPage.myUserId ? LocalTheme.highlightColor : LocalTheme.primaryColor
                             horizontalAlignment: (modelData.message_create.sender_id === conversationPage.myUserId) ? Text.AlignRight : Text.AlignLeft
                         }
 
@@ -200,37 +199,37 @@ Page {
                 id: footerComponent
                 Row {
                     id: newMessageRow
-                    width: parent.width - Theme.horizontalPageMargin
-                    height: sendMessageColumn.height + ( 2 * Theme.paddingLarge )
+                    width: parent.width - LocalTheme.horizontalPageMargin
+                    height: sendMessageColumn.height + ( 2 * LocalTheme.paddingLarge )
                     anchors.left: parent.left
-                    spacing: Theme.paddingMedium
+                    spacing: LocalTheme.paddingMedium
                     Column {
                         id: sendMessageColumn
-                        width: parent.width - Theme.fontSizeMedium - ( 2 * Theme.paddingMedium )
+                        width: parent.width - LocalTheme.fontSizeMedium - ( 2 * LocalTheme.paddingMedium )
                         anchors.verticalCenter: parent.verticalCenter
                         TextArea {
                             id: newMessageTextField
                             width: parent.width
-                            font.pixelSize: Theme.fontSizeSmall
+                            font.pixelSize: LocalTheme.fontSizeSmall
                             placeholderText: qsTr("New message to %1").arg(conversationModel.user.name)
                             labelVisible: false
                             errorHighlight: remainingCharactersText.text < 0
                         }
                         Text {
                             id: remainingCharactersText
-                            text: qsTr("%1 characters left").arg(Number(getRemainingCharacters(newMessageTextField.text, conversationPage.configuration)).toLocaleString(Qt.locale(), "f", 0))
-                            color: remainingCharactersText.text < 0 ? Theme.highlightColor : Theme.primaryColor
-                            font.pixelSize: Theme.fontSizeTiny
+                            text: qsTr("%1 characters left").arg(Number(getRemainingCharacters(newMessageTextField.text)).toLocaleString(Qt.locale(), "f", 0))
+                            color: remainingCharactersText.text < 0 ? LocalTheme.highlightColor : LocalTheme.primaryColor
+                            font.pixelSize: LocalTheme.fontSizeTiny
                             font.bold: remainingCharactersText.text < 0 ? true : false
                             anchors.left: parent.left
-                            anchors.leftMargin: Theme.horizontalPageMargin
+                            anchors.leftMargin: LocalTheme.horizontalPageMargin
                         }
                     }
 
                     Column {
-                        width: Theme.fontSizeMedium
+                        width: LocalTheme.fontSizeMedium
                         anchors.bottom: parent.bottom
-                        anchors.bottomMargin: Theme.paddingLarge
+                        anchors.bottomMargin: LocalTheme.paddingLarge
                         IconButton {
                             id: newMessageSendButton
                             icon.source: "image://theme/icon-m-chat"

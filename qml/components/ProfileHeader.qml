@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -28,17 +28,17 @@ Item {
 
     property variant profileModel;
     width: parent.width
-    height: ((profilePictureColumn.y + profilePictureColumn.height) > (profileOverviewColumn.y + profileOverviewColumn.height) ? (profilePictureColumn.y + profilePictureColumn.height) : (profileOverviewColumn.y + profileOverviewColumn.height)) + Theme.paddingSmall
+    height: ((profilePictureColumn.y + profilePictureColumn.height) > (profileOverviewColumn.y + profileOverviewColumn.height) ? (profilePictureColumn.y + profilePictureColumn.height) : (profileOverviewColumn.y + profileOverviewColumn.height)) + LocalTheme.paddingSmall
 
     Connections {
         target: accountModel
         onFontSizeChanged: {
             if (fontSize === "piepmatz") {
-                profileNameText.font.pixelSize = Theme.fontSizeMedium;
-                profileScreenNameText.font.pixelSize = Theme.fontSizeSmall;
+                profileNameText.font.pixelSize = LocalTheme.fontSizeMedium;
+                profileScreenNameText.font.pixelSize = LocalTheme.fontSizeSmall;
             } else {
-                profileNameText.font.pixelSize = Theme.fontSizeLarge;
-                profileScreenNameText.font.pixelSize = Theme.fontSizeMedium;
+                profileNameText.font.pixelSize = LocalTheme.fontSizeLarge;
+                profileScreenNameText.font.pixelSize = LocalTheme.fontSizeMedium;
             }
         }
     }
@@ -73,7 +73,7 @@ Item {
         id: profilePictureColumn
         width: appWindow.width > appWindow.height ? ( appWindow.height / 3 ) : ( appWindow.width / 3 )
         height: appWindow.width > appWindow.height ? ( appWindow.height / 3 ) : ( appWindow.width / 3 )
-        x: Theme.horizontalPageMargin
+        x: LocalTheme.horizontalPageMargin
         anchors {
             verticalCenter: profileBackgroundItem.bottom
         }
@@ -85,10 +85,10 @@ Item {
                 id: profilePictureBackground
                 width: parent.width
                 height: parent.height
-                color: Theme.primaryColor
+                color: LocalTheme.primaryColor
                 radius: parent.width / 6
                 anchors {
-                    margins: Theme.horizontalPageMargin
+                    margins: LocalTheme.horizontalPageMargin
                 }
                 visible: profilePicture.status === Image.Ready ? true : false
                 opacity: profilePicture.status === Image.Ready ? 1 : 0
@@ -110,7 +110,7 @@ Item {
                 width: parent.width - parent.width / 10
                 height: parent.height - parent.height / 10
                 fillMode: Image.PreserveAspectCrop
-                anchors.margins: Theme.horizontalPageMargin + parent.width / 60
+                anchors.margins: LocalTheme.horizontalPageMargin + parent.width / 60
                 anchors.centerIn: profilePictureBackground
                 visible: false
             }
@@ -119,9 +119,9 @@ Item {
                 id: profilePictureMask
                 width: parent.width - parent.width / 10
                 height: parent.height - parent.height / 10
-                color: Theme.primaryColor
+                color: LocalTheme.primaryColor
                 radius: parent.width / 7
-                anchors.margins: Theme.horizontalPageMargin + parent.width / 60
+                anchors.margins: LocalTheme.horizontalPageMargin + parent.width / 60
                 anchors.centerIn: profilePictureBackground
                 visible: false
             }
@@ -153,26 +153,26 @@ Item {
     Column {
         id: profileOverviewColumn
         width: appWindow.width > appWindow.height ? ( appWindow.height * 2 / 3 ) : ( appWindow.width * 2 / 3 )
-        height: profileNameText.height + profileScreenNameText.height + ( Theme.paddingMedium )
-        spacing: Theme.paddingSmall
+        height: profileNameText.height + profileScreenNameText.height + ( LocalTheme.paddingMedium )
+        spacing: LocalTheme.paddingSmall
         anchors {
             top: profileBackgroundItem.bottom
-            topMargin: Theme.paddingMedium
+            topMargin: LocalTheme.paddingMedium
             left: profilePictureColumn.right
-            leftMargin: Theme.horizontalPageMargin
+            leftMargin: LocalTheme.horizontalPageMargin
         }
         Text {
             id: profileNameText
-            text: Emoji.emojify(profileModel.name, Theme.fontSizeMedium)
+            text: Emoji.emojify(profileModel.name, LocalTheme.fontSizeMedium)
             font {
-                pixelSize: accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeMedium : Theme.fontSizeLarge
+                pixelSize: accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeMedium : LocalTheme.fontSizeLarge
                 bold: true
             }
-            color: Theme.primaryColor
+            color: LocalTheme.primaryColor
             elide: Text.ElideRight
             textFormat: Text.StyledText
             maximumLineCount: 2
-            width: parent.width - ( 2 * Theme.horizontalPageMargin ) - Theme.paddingSmall
+            width: parent.width - ( 2 * LocalTheme.horizontalPageMargin ) - LocalTheme.paddingSmall
             wrapMode: Text.Wrap
             onTruncatedChanged: {
                 // There is obviously a bug in QML in truncating text with images.
@@ -186,10 +186,10 @@ Item {
             id: profileScreenNameText
             text: qsTr("@%1").arg(profileModel.screen_name)
             font {
-                pixelSize: accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeSmall : Theme.fontSizeMedium
+                pixelSize: accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeSmall : LocalTheme.fontSizeMedium
                 bold: true
             }
-            color: Theme.primaryColor
+            color: LocalTheme.primaryColor
             elide: Text.ElideRight
             width: parent.width
         }

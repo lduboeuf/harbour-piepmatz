@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -19,6 +19,8 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
+import Ubuntu.Components 1.3
+
 
 Item {
 
@@ -27,7 +29,7 @@ Item {
     anchors.verticalCenter: parent.verticalCenter
     anchors.horizontalCenter: parent.horizontalCenter
     width: parent.width
-    height: notificationText.height + 2 * Theme.paddingMedium
+    height: notificationText.height + 2 * LocalTheme.paddingMedium
     visible: false
     opacity: 0
     Behavior on opacity { NumberAnimation {} }
@@ -45,18 +47,18 @@ Item {
     Rectangle {
         id: notificationRectangle
         anchors.fill: parent
-        color: Theme.highlightColor
+        color: LocalTheme.highlightColor
         opacity: 0.6
         radius: parent.width / 15
     }
 
     Text {
         id: notificationText
-        color: Theme.primaryColor
+        color: LocalTheme.primaryColor
         text: notificationItem.text
-        font.pixelSize: Theme.fontSizeSmall
+        font.pixelSize: LocalTheme.fontSizeSmall
         font.bold: true
-        width: parent.width - 2 * Theme.paddingMedium
+        width: parent.width - 2 * LocalTheme.paddingMedium
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         wrapMode: Text.Wrap

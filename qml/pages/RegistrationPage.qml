@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -124,9 +124,11 @@ Page {
         Column {
             id: termsOfUseColumn
             width: parent.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
-
+//            PageHeader {
+//                title: qsTr("Welcome to Piepmatz!")
+//            }
 
             Image {
                 id: piepmatzImage
@@ -145,13 +147,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("Welcome to Piepmatz - a Twitter client for SailfishOS! Piepmatz is <a href=\"https://www.gnu.org/philosophy/free-sw\">free software</a> and licensed under the conditions of the <a href=\"https://www.gnu.org/licenses/gpl.html\">General Public License in version 3 (GPLv3)</a>. By using this software, you accept the terms and conditions of this license.")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -164,13 +166,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("Moreover, Piepmatz will register this installation automatically on my server if you press 'Accept'. I respect your privacy, therefore only anonymous and a very limited set of information will be transmitted: a unique identifer for this installation and your country. I simply would like to know how many users Piepmatz has and where they come from. If this is not OK for you, simply close the application. No information has been transmitted so far.")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -180,10 +182,10 @@ Page {
             Text {
                 id: candidateRegistrationData
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
-                color: Theme.primaryColor
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                color: LocalTheme.primaryColor
                 textFormat: Text.StyledText
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -205,13 +207,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("The data isn't shared with anyone else. Please see the <a href=\"https://werkwolf.eu/terms.html\">legal notice</a> for additional information how the data is processed. For additional details about the motivation for this, the unique ID and how it is generated please see my page <a href=\"https://werkwolf.eu/terms.html#wagnis\">about Wagnis</a>.")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -223,13 +225,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Have fun with Piepmatz! Sebastian J. Wolf")
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -251,9 +253,9 @@ Page {
 
             Label {
                 id: separatorLabel
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -277,7 +279,7 @@ Page {
         Column {
             id: registrationErrorColumn
             width: parent.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
             Image {
                 source: "../../images/" + accountModel.getImagePath() + "piepmatz.svg"
@@ -295,13 +297,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("Registration failed. Please ensure that your device is connected to the Internet and press 'Restart Registration'. In case a restart doesn't work, please contact me via <a href=\"mailto:contact@werkwolf.eu\">E-Mail</a>")
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -321,9 +323,9 @@ Page {
             }
 
             Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -343,7 +345,7 @@ Page {
         Column {
             id: registrationInvalidColumn
             width: parent.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
             Image {
                 source: "../../images/" + accountModel.getImagePath() + "piepmatz.svg"
@@ -361,13 +363,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("The registration file on your device is corrupt. The registration process needs to be restarted. Please ensure that your device is connected to the Internet and press 'Restart Registration'. In case the new registration isn't successful, please contact me via <a href=\"mailto:contact@werkwolf.eu\">E-Mail</a>")
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -387,9 +389,9 @@ Page {
             }
 
             Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -419,9 +421,9 @@ Page {
         Column {
             id: contributionColumn
             width: parent.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
-//            header: {
+//            PageHeader {
 //                title: qsTr("Development Contribution")
 //            }
 
@@ -441,13 +443,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("Piepmatz is and will remain Open Source Software. However, in order to support the development of Piepmatz, I'd like to ask you for a contribution before you can run it. Such a contribution can be made by translating Piepmatz to another language, help developing it or simply by purchasing a key.")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -456,13 +458,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("You have the choice between 4 different contributions: S, M, L, XL. No matter which size you choose, the purchased key will unlock the complete application. It's up to you to decide how much the app is worth to you.")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -471,13 +473,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("If you've already contributed to Piepmatz, please <a href=\"mailto:contact@werkwolf.eu\">contact me</a> directly.")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -552,20 +554,19 @@ Page {
                 }
             }
 
-
             SectionHeader {
                 text: qsTr("Validate your contribution key")
             }
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("After you have received your key by purchasing it or for another contribution, please validate your key here to run Piepmatz.")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -574,13 +575,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("If you have already validated your key on another device, you can reuse it for up to 3 additional devices without the need of another contribution.")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -600,10 +601,10 @@ Page {
 
                 Text {
                     text: qsTr("Enter the contribution key here")
-                    color: Theme.primaryColor
-                    font.pixelSize: Theme.fontSizeTiny
+                    color: LocalTheme.primaryColor
+                    font.pixelSize: LocalTheme.fontSizeTiny
                     anchors.left: parent.left
-                    anchors.leftMargin: Theme.horizontalPageMargin
+                    anchors.leftMargin: LocalTheme.horizontalPageMargin
                 }
             }
 
@@ -623,13 +624,13 @@ Page {
             Text {
                 visible: contributionFlickable.canSkip
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("You can skip the contribution for %1 if you want to test Piepmatz before.").arg(contributionFlickable.remainingTime)
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -649,9 +650,9 @@ Page {
             }
 
             Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -671,7 +672,7 @@ Page {
         Column {
             id: contributionInvalidColumn
             width: parent.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
             Image {
                 source: "../../images/" + accountModel.getImagePath() + "piepmatz.svg"
@@ -689,13 +690,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("Your contribution could not be validated. Please ensure that your device is connected to the Internet and press 'Restart Validation'. In case you have a valid contribution key and it can't be validated, please contact me via <a href=\"mailto:contact@werkwolf.eu\">E-Mail</a>")
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -716,9 +717,9 @@ Page {
             }
 
             Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -738,7 +739,7 @@ Page {
         Column {
             id: contributionValidColumn
             width: parent.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
             Image {
                 source: "../../images/" + accountModel.getImagePath() + "piepmatz.svg"
@@ -756,13 +757,13 @@ Page {
 
             Text {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignJustify
                 text: qsTr("Your contribution was successfully validated. Thank you very much for your contribution to the development of Piepmatz!")
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -783,9 +784,9 @@ Page {
             }
 
             Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter

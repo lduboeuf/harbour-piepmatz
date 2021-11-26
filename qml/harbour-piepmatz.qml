@@ -17,18 +17,18 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import QtQuick.Controls 2.2
+import Ubuntu.Components 1.3
 import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "pages"
 import "components"
 
-ApplicationWindow
+MainView
 {
 
     id: appWindow
     visible: true
-    height: 520
-    width: 320
+    height: 700
+    width: 400
 
     property bool isWifi: accountModel.isWiFi();
     property string linkPreviewMode: accountModel.getLinkPreviewMode();

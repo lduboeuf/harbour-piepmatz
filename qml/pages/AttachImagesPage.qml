@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -101,7 +101,7 @@ Page {
         Column {
             id: attachImagesColumn
             width: parent.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
 
 
@@ -109,7 +109,7 @@ Page {
 
                 id: imagesGridView
 
-                height: attachImagesPage.height - imagesHeader.height - Theme.paddingLarge
+                height: attachImagesPage.height - imagesHeader.height - LocalTheme.paddingLarge
                 width: parent.width
                 cellWidth: width / 3;
                 cellHeight: width / 3;
@@ -155,8 +155,8 @@ Page {
                     Rectangle {
                         id: selectionRectangle
                         border {
-                            color: Theme.highlightColor
-                            width: Theme.paddingSmall
+                            color: LocalTheme.highlightColor
+                            width: LocalTheme.paddingSmall
                         }
                         color: "transparent"
                         width: imagesGridView.cellWidth

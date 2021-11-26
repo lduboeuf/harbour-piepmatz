@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -30,6 +30,8 @@
 #include "o1requestor.h"
 #include "twitterapi.h"
 #include "locationinformation.h"
+#include "dbusinterface.h"
+#include "dbusadaptor.h"
 //#include "wagnis/wagnis.h"
 
 class AccountModel : public QAbstractListModel
@@ -61,14 +63,23 @@ public:
     Q_INVOKABLE void setUseSwipeNavigation(const bool &useSwipeNavigation);
     Q_INVOKABLE bool getDisplayImageDescriptions();
     Q_INVOKABLE void setDisplayImageDescriptions(const bool &displayImageDescriptions);
+    Q_INVOKABLE bool getUseSecretIdentity();
+    Q_INVOKABLE void setUseSecretIdentity(const bool &useSecretIdentity);
+    Q_INVOKABLE bool getUseOpenWith();
+    Q_INVOKABLE void setUseOpenWith(const bool &useOpenWith);
+    Q_INVOKABLE QString getSecretIdentityName();
+    Q_INVOKABLE void setSecretIdentityName(const QString &secretIdentityName);
     Q_INVOKABLE QString getFontSize();
     Q_INVOKABLE void setFontSize(const QString &fontSize);
     Q_INVOKABLE bool isWiFi();
     Q_INVOKABLE QString getLinkPreviewMode();
     Q_INVOKABLE void setLinkPreviewMode(const QString &linkPreviewMode);
+    Q_INVOKABLE bool hasSecretIdentity();
+    Q_INVOKABLE void searchEmoji(const QString &queryString);
 
     TwitterApi *getTwitterApi();
     LocationInformation *getLocationInformation();
+    DBusAdaptor *getDBusAdaptor();
     //Wagnis *getWagnis();
 
 signals:
@@ -84,6 +95,7 @@ signals:
     void fontSizeChanged(const QString &fontSize);
     void connectionTypeChanged(const bool &isWifi);
     void linkPreviewModeChanged(const QString &linkPreviewMode);
+    void emojiSearchSuccessful(const QVariantList &result);
 
 public slots:
     void handlePinRequestError(const QString &errorMessage);
@@ -93,6 +105,7 @@ public slots:
     void handleVerifyCredentialsSuccessful(const QVariantMap &result);
     void handleVerifyCredentialsError(const QString &errorMessage);
     void handleNetworkConfigurationChanged(const QNetworkConfiguration &config);
+    void handleEmojiSearchCompleted(const QString &queryString, const QVariantList &resultList);
 
 private:
     QList<QVariantMap> availableAccounts;
@@ -106,10 +119,17 @@ private:
     //Wagnis * const wagnis;
     QSettings settings;
     QVariantList otherAccounts;
+    bool secretIdentity;
+    O1Requestor *secretIdentityRequestor = nullptr;
+    DBusInterface *dbusInterface;
+    EmojiSearchWorker emojiSearchWorker;
 
     void obtainEncryptionKey();
     void initializeEnvironment();
     void readOtherAccounts();
+    void initializeSecretIdentity();
+    void initializeOpenWith();
+    void removeOpenWith();
 
 };
 

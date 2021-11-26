@@ -45,8 +45,8 @@ Item {
     }
     Text {
         id: imageProgressText
-        font.pixelSize: Theme.fontSizeExtraSmall
-        color: Theme.secondaryColor
+        font.pixelSize: LocalTheme.fontSizeExtraSmall
+        color: LocalTheme.secondaryColor
         text: withPercentage ? qsTr("%1 \%").arg(Math.round(image.progress * 100)) : qsTr("%1").arg(Math.round(image.progress * 100))
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
@@ -54,8 +54,8 @@ Item {
     }
     Text {
         id: imageErrorText
-        font.pixelSize: Theme.fontSizeExtraSmall
-        color: Theme.secondaryColor
+        font.pixelSize: LocalTheme.fontSizeExtraSmall
+        color: LocalTheme.secondaryColor
         text: qsTr("Error")
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter

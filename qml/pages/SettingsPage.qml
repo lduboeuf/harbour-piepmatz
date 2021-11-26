@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -19,7 +19,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../js/functions.js" as Functions
-import "../components"
+
 
 Page {
     id: settingsPage
@@ -59,10 +59,17 @@ Page {
     }
 
     property variant allAccounts;
+    property variant otherAccounts;
 
     Component.onCompleted: {
         allAccounts = [ accountModel.getCurrentAccount().screen_name ];
         allAccounts = allAccounts.concat(accountModel.getOtherAccounts());
+        otherAccounts = accountModel.getOtherAccounts();
+        for (var i = 0; i < otherAccounts.length; i++) {
+            if (otherAccounts[i] === accountModel.getSecretIdentityName()) {
+                secretIdentityComboBox.currentIndex = i;
+            }
+        }
     }
 
 //    RemorsePopup {
@@ -77,12 +84,15 @@ Page {
         Column {
             id: column
             width: settingsPage.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
+//            PageHeader {
+//                title: qsTr("Settings")
+//            }
 
-            SectionHeader {
-                text: qsTr("Accounts")
-            }
+//            SectionHeader {
+//                text: qsTr("Accounts")
+//            }
 
 //            ComboBox {
 //                id: accountsComboBox
@@ -136,9 +146,9 @@ Page {
                 }
             }
 
-            SectionHeader {
-                text: qsTr("Style")
-            }
+//            SectionHeader {
+//                text: qsTr("Style")
+//            }
 
             Switch {
                 checked: accountModel.getUseEmoji()
@@ -214,9 +224,9 @@ Page {
 //                }
 //            }
 
-            SectionHeader {
-                text: qsTr("Behavior")
-            }
+//            SectionHeader {
+//                text: qsTr("Behavior")
+//            }
 
 //            ComboBox {
 //                id: linkPreviewComboBox
@@ -240,9 +250,9 @@ Page {
 //                }
 //            }
 
-            SectionHeader {
-                text: qsTr("Location")
-            }
+//            SectionHeader {
+//                text: qsTr("Location")
+//            }
 
             Switch {
                 checked: locationInformation.isEnabled()
@@ -255,9 +265,9 @@ Page {
 
             Label {
                 id: separatorLabel
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter

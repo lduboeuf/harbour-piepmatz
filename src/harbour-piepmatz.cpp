@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -30,6 +30,7 @@
 #include <QtQml>
 #include <QQmlContext>
 #include <QGuiApplication>
+#include <QQuickView>
 
 #include "o1.h"
 #include "o1twitter.h"
@@ -48,6 +49,7 @@
 #include "membershiplistsmodel.h"
 #include "savedsearchesmodel.h"
 #include "theme.h"
+#include "dbusadaptor.h"
 //#include "wagnis/wagnis.h"
 
 int main(int argc, char *argv[])
@@ -61,11 +63,11 @@ int main(int argc, char *argv[])
 #else
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
-    QQmlApplicationEngine engine;
-    QQmlContext *context = engine.rootContext();
+   // QQmlApplicationEngine engine;
+    //QQmlContext *context = engine.rootContext();
+    QQuickView *view = new QQuickView();
+    QQmlContext *context = view->rootContext();
 #endif
-
-
 
     AccountModel accountModel;
     context->setContextProperty("accountModel", &accountModel);
@@ -75,6 +77,9 @@ int main(int argc, char *argv[])
 
     LocationInformation *locationInformation = accountModel.getLocationInformation();
     context->setContextProperty("locationInformation", locationInformation);
+
+    DBusAdaptor *dBusAdaptor = accountModel.getDBusAdaptor();
+    context->setContextProperty("dBusAdaptor", dBusAdaptor);
 
 //    Wagnis *wagnis = accountModel.getWagnis();
 //    context->setContextProperty("wagnis", wagnis);
@@ -109,16 +114,21 @@ int main(int argc, char *argv[])
 
     SavedSearchesModel savedSearchesModel(twitterApi);
     context->setContextProperty("savedSearchesModel", &savedSearchesModel);
-
-    context->setContextProperty("Theme", Theme::instance());
+    Theme theme;
+    context->setContextProperty("LocalTheme", &theme);
 
 #ifdef Q_OS_SAILFISH
     view->setSource(SailfishApp::pathTo("qml/harbour-piepmatz.qml"));
     view->show();
 #else
-    engine.load(QUrl(QStringLiteral("qrc:/qml/harbour-piepmatz.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
+    //QQuickView *view = new QQuickView();
+    view->setSource(QUrl("qrc:/qml/harbour-piepmatz.qml"));
+    view->setResizeMode(QQuickView::SizeRootObjectToView);
+    view->show();
+
+//    engine.load(QUrl(QStringLiteral("qrc:/qml/harbour-piepmatz.qml")));
+//    if (engine.rootObjects().isEmpty())
+//        return -1;
 #endif
     return app.exec();
 

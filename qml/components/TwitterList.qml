@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -28,8 +28,9 @@ ItemDelegate {
     id: singleList
 
     property variant listModel;
+    onListModelChanged: console.log('onListModelChanged:', JSON.stringify(listModel) )
 
-    height: listRow.height + listSeparator.height + 2 * Theme.paddingMedium
+    height: listRow.height + listSeparator.height + 2 * LocalTheme.paddingMedium
     width: parent.width
 
     onClicked: {
@@ -38,8 +39,8 @@ ItemDelegate {
 
     Column {
         id: listColumn
-        width: parent.width - ( 2 * Theme.horizontalPageMargin )
-        spacing: Theme.paddingSmall
+        width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+        spacing: LocalTheme.paddingSmall
         anchors {
             horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
@@ -48,13 +49,13 @@ ItemDelegate {
         Row {
             id: listRow
             width: parent.width
-            spacing: Theme.paddingMedium
+            spacing: LocalTheme.paddingMedium
 
             Column {
                 id: userPictureColumn
                 width: parent.width / 6
                 height: parent.width / 6
-                spacing: Theme.paddingSmall
+                spacing: LocalTheme.paddingSmall
 
                 Item {
                     id: userPictureItem
@@ -84,7 +85,7 @@ ItemDelegate {
                         z: 42
                         width: parent.width
                         height: parent.height
-                        color: Theme.primaryColor
+                        color: LocalTheme.primaryColor
                         radius: parent.width / 7
                         visible: false
                     }
@@ -116,15 +117,15 @@ ItemDelegate {
 
             Column {
                 id: userContentColumn
-                width: parent.width * 5 / 6 - Theme.horizontalPageMargin
+                width: parent.width * 5 / 6 - LocalTheme.horizontalPageMargin
 
-                spacing: Theme.paddingSmall
+                spacing: LocalTheme.paddingSmall
 
                 Text {
                     id: listNameText
-                    font.pixelSize: Theme.fontSizeExtraSmall
-                    color: Theme.primaryColor
-                    text: qsTr("<b>%1</b> by %2").arg(Emoji.emojify(listModel.name, Theme.fontSizeExtraSmall)).arg(Emoji.emojify(listModel.user.name, Theme.fontSizeExtraSmall))
+                    font.pixelSize: LocalTheme.fontSizeExtraSmall
+                    color: LocalTheme.primaryColor
+                    text: qsTr("<b>%1</b> by %2").arg(Emoji.emojify(listModel.name, LocalTheme.fontSizeExtraSmall)).arg(Emoji.emojify(listModel.user.name, LocalTheme.fontSizeExtraSmall))
                     elide: Text.ElideRight
                     maximumLineCount: 1
                     width: parent.width
@@ -141,15 +142,15 @@ ItemDelegate {
                 Text {
                     id: listsMembersText
                     text: qsTr("%1 members").arg(listModel.member_count)
-                    font.pixelSize: Theme.fontSizeExtraSmall
-                    color: Theme.primaryColor
+                    font.pixelSize: LocalTheme.fontSizeExtraSmall
+                    color: LocalTheme.primaryColor
                     wrapMode: Text.Wrap
                     width: parent.width
                     textFormat: Text.StyledText
                     onLinkActivated: {
                         Functions.handleLink(link);
                     }
-                    linkColor: Theme.highlightColor
+                    linkColor: LocalTheme.highlightColor
                 }
 
             }
@@ -162,11 +163,11 @@ ItemDelegate {
 
         anchors {
             top: listColumn.bottom
-            topMargin: Theme.paddingMedium
+            topMargin: LocalTheme.paddingMedium
         }
 
         width: parent.width
-        color: Theme.primaryColor
+        color: LocalTheme.primaryColor
         //horizontalAlignment: Qt.AlignHCenter
     }
 

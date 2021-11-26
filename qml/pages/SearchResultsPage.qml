@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -108,10 +108,10 @@ Page {
             width: parent.width
             height: parent.height
 
-            PageHeader {
-                id: searchResultsHeader
-                title: searchResultsPage.searchQuery
-            }
+//            PageHeader {
+//                id: searchResultsHeader
+//                title: searchResultsPage.searchQuery
+//            }
 
             Loader {
                 id: searchResultsLoader

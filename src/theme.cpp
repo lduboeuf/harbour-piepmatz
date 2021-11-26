@@ -21,14 +21,14 @@
 
 #include "theme.h"
 
-QScopedPointer<Theme> Theme::m_instance(0);
+//QScopedPointer<Theme> Theme::m_instance(0);
 
-Theme *Theme::instance() {
-    if (m_instance.isNull())
-        m_instance.reset(new Theme);
+//Theme *Theme::instance() {
+//    if (m_instance.isNull())
+//        m_instance.reset(new Theme);
 
-    return m_instance.data();
-}
+//    return m_instance.data();
+//}
 
 Theme::Theme(QObject *parent) : QObject(parent) { }
 
@@ -47,12 +47,32 @@ int Theme::fontSizeExtraLarge() const {
 int Theme::fontSizeHuge() const {
     return 32; }
 
+int Theme::iconSizeSmall() const
+{
+    return 24;
+}
+
+int Theme::iconSizeMedium() const
+{
+    return 36;
+}
+
+int Theme::iconSizeLarge() const
+{
+    return 48;
+}
+
 int Theme::paddingSmall() const {
     return 6; }
 int Theme::paddingMedium() const {
     return 8; }
 int Theme::paddingLarge() const {
     return 10; }
+
+int Theme::horizontalPageMargin() const
+{
+    return 10;
+}
 
 QString Theme::primaryColor() const {
     return "#222222"; }

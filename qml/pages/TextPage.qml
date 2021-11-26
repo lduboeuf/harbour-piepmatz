@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -129,19 +129,19 @@ Page {
         Column {
             id: column
             width: textPage.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
-            PageHeader {
-                id: textHeader
-            }
+//            PageHeader {
+//                id: textHeader
+//            }
 
             Text {
                 id: textContent
-                width: parent.width - 2 * Theme.horizontalPageMargin
+                width: parent.width - 2 * LocalTheme.horizontalPageMargin
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.pixelSize: Theme.fontSizeExtraSmall
-                color: Theme.primaryColor
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                color: LocalTheme.primaryColor
+                linkColor: LocalTheme.highlightColor
                 wrapMode: Text.Wrap
                 textFormat: Text.PlainText
             }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -27,11 +27,17 @@
 #include <QDir>
 #include <QStandardPaths>
 #include <QNetworkConfiguration>
+#include <QTextStream>
+#include <QProcess>
+#include <QSysInfo>
 
 const char SETTINGS_IMAGE_PATH[] = "settings/imagePath";
 const char SETTINGS_USE_EMOJI[] = "settings/useEmojis";
 const char SETTINGS_USE_LOADING_ANIMATIONS[] = "settings/useLoadingAnimations";
 const char SETTINGS_USE_SWIPE_NAVIGATION[] = "settings/useSwipeNavigation";
+const char SETTINGS_USE_SECRET_IDENTITY[] = "settings/useSecretIdentity";
+const char SETTINGS_USE_OPEN_WITH[] = "settings/useOpenWith";
+const char SETTINGS_SECRET_IDENTITY_NAME[] = "settings/secretIdentityName";
 const char SETTINGS_DISPLAY_IMAGE_DESCRIPTIONS[] = "settings/displayImageDescriptions";
 const char SETTINGS_FONT_SIZE[] = "settings/fontSize";
 const char SETTINGS_LINK_PREVIEW_MODE[] = "settings/linkPreviewMode";
@@ -46,6 +52,7 @@ AccountModel::AccountModel()
 {
     obtainEncryptionKey();
     initializeEnvironment();
+    connect(&emojiSearchWorker, SIGNAL(searchCompleted(QString, QVariantList)), this, SLOT(handleEmojiSearchCompleted(QString, QVariantList)));
 }
 
 QVariant AccountModel::data(const QModelIndex &index, int role) const {
@@ -66,10 +73,18 @@ void AccountModel::initializeEnvironment()
     connect(o1, &O1Twitter::linkingFailed, this, &AccountModel::handleLinkingFailed);
     connect(o1, &O1Twitter::linkingSucceeded, this, &AccountModel::handleLinkingSucceeded);
 
-    requestor = new O1Requestor(manager, o1, this);
-    //twitterApi = new TwitterApi(requestor, manager, wagnis, this);
-    twitterApi = new TwitterApi(requestor, manager, this);
     readOtherAccounts();
+    requestor = new O1Requestor(manager, o1, this);
+    this->initializeSecretIdentity();
+    if (this->getUseOpenWith()) {
+        this->initializeOpenWith();
+    } else {
+        this->removeOpenWith();
+    }
+    this->dbusInterface = new DBusInterface(this);
+
+    //twitterApi = new TwitterApi(requestor, manager, wagnis, this);
+    twitterApi = new TwitterApi(requestor, manager, secretIdentityRequestor, this);
 
     connect(twitterApi, &TwitterApi::verifyCredentialsError, this, &AccountModel::handleVerifyCredentialsError);
     connect(twitterApi, &TwitterApi::verifyCredentialsSuccessful, this, &AccountModel::handleVerifyCredentialsSuccessful);
@@ -113,7 +128,7 @@ void AccountModel::unlink()
 
 QVariantMap AccountModel::getCurrentAccount()
 {
-    qDebug() << "AccountModel::getCurrentAccount" << this->availableAccounts.value(0).value("screen_name").toString();
+    //qDebug() << "AccountModel::getCurrentAccount" << this->availableAccounts.value(0).value("screen_name").toString();
     return this->availableAccounts.value(0);
 }
 
@@ -216,6 +231,41 @@ void AccountModel::setDisplayImageDescriptions(const bool &displayImageDescripti
     settings.setValue(SETTINGS_DISPLAY_IMAGE_DESCRIPTIONS, displayImageDescriptions);
 }
 
+bool AccountModel::getUseSecretIdentity()
+{
+    return settings.value(SETTINGS_USE_SECRET_IDENTITY, false).toBool();
+}
+
+void AccountModel::setUseSecretIdentity(const bool &useSecretIdentity)
+{
+    settings.setValue(SETTINGS_USE_SECRET_IDENTITY, useSecretIdentity);
+}
+
+bool AccountModel::getUseOpenWith()
+{
+    return settings.value(SETTINGS_USE_OPEN_WITH, true).toBool();
+}
+
+void AccountModel::setUseOpenWith(const bool &useOpenWith)
+{
+    settings.setValue(SETTINGS_USE_OPEN_WITH, useOpenWith);
+    if (useOpenWith) {
+        this->initializeOpenWith();
+    } else {
+        this->removeOpenWith();
+    }
+}
+
+QString AccountModel::getSecretIdentityName()
+{
+    return settings.value(SETTINGS_SECRET_IDENTITY_NAME, "").toString();
+}
+
+void AccountModel::setSecretIdentityName(const QString &secretIdentityName)
+{
+    settings.setValue(SETTINGS_SECRET_IDENTITY_NAME, secretIdentityName);
+}
+
 QString AccountModel::getFontSize()
 {
     return settings.value(SETTINGS_FONT_SIZE, "piepmatz").toString();
@@ -253,6 +303,11 @@ void AccountModel::setLinkPreviewMode(const QString &linkPreviewMode)
     emit linkPreviewModeChanged(linkPreviewMode);
 }
 
+bool AccountModel::hasSecretIdentity()
+{
+    return this->secretIdentity;
+}
+
 TwitterApi *AccountModel::getTwitterApi()
 {
     return this->twitterApi;
@@ -261,6 +316,11 @@ TwitterApi *AccountModel::getTwitterApi()
 LocationInformation *AccountModel::getLocationInformation()
 {
     return this->locationInformation;
+}
+
+DBusAdaptor *AccountModel::getDBusAdaptor()
+{
+    return this->dbusInterface->getDBusAdaptor();
 }
 
 //Wagnis *AccountModel::getWagnis()
@@ -381,6 +441,156 @@ void AccountModel::readOtherAccounts()
     }
 }
 
+void AccountModel::initializeSecretIdentity()
+{
+    qDebug() << "AccountModel::initializeSecretIdentity";
+    secretIdentity = false;
+    secretIdentityRequestor = nullptr;
+    if (this->getUseSecretIdentity()) {
+        QString secretIdentity = this->getSecretIdentityName();
+        qDebug() << "Using secret identity " << secretIdentity;
+        QString accountFileName = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/harbour-piepmatz/harbour-piepmatz-" + secretIdentity + ".conf";
+        qDebug() << "Using file name " << accountFileName;
+        QSettings *secretIdentitySettings = new QSettings(accountFileName, QSettings::IniFormat, this);
+        O0SettingsStore *secretIdentitySettingsStore = new O0SettingsStore(secretIdentitySettings, encryptionKey, this);
+        O1Twitter *o1SecretIdentity = new O1Twitter(this);
+        o1SecretIdentity->setStore(secretIdentitySettingsStore);
+        o1SecretIdentity->setClientId(TWITTER_CLIENT_ID);
+        o1SecretIdentity->setClientSecret(TWITTER_CLIENT_SECRET);
+        if (o1SecretIdentity->linked()) {
+            qDebug() << "Secret identity successfully initialized!";
+            secretIdentityRequestor = new O1Requestor(manager, o1SecretIdentity, this);
+            secretIdentity = true;
+        } else {
+            qDebug() << "ERROR initializing secret identity!";
+        }
+    }
+}
+
+void AccountModel::initializeOpenWith()
+{
+    qDebug() << "AccountModel::initializeOpenWith";
+
+    const QStringList sailfishOSVersion = QSysInfo::productVersion().split(".");
+    int sailfishOSMajorVersion = sailfishOSVersion.value(0).toInt();
+    int sailfishOSMinorVersion = sailfishOSVersion.value(1).toInt();
+
+    const QString applicationsLocation(QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation));
+    const QString openUrlFilePath(applicationsLocation + "/open-url.desktop");
+    if (sailfishOSMajorVersion < 4 || ( sailfishOSMajorVersion == 4 && sailfishOSMinorVersion < 2 )) {
+        if (QFile::exists(openUrlFilePath)) {
+            qDebug() << "Standard open URL file exists, good!";
+        } else {
+            qDebug() << "Copying standard open URL file to " << openUrlFilePath;
+            QFile::copy("/usr/share/applications/open-url.desktop", openUrlFilePath);
+            QProcess::startDetached("update-desktop-database " + applicationsLocation);
+        }
+    } else {
+        if (QFile::exists(openUrlFilePath)) {
+            qDebug() << "Old open URL file exists, that needs to go away...!";
+            QFile::remove(openUrlFilePath);
+            QProcess::startDetached("update-desktop-database " + applicationsLocation);
+        }
+        // Something special for Verla...
+        if (sailfishOSMajorVersion == 4 && sailfishOSMinorVersion == 2) {
+            qDebug() << "Creating open URL file at " << openUrlFilePath;
+            QFile openUrlFile(openUrlFilePath);
+            if (openUrlFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                QTextStream fileOut(&openUrlFile);
+                fileOut.setCodec("UTF-8");
+                fileOut << QString("[Desktop Entry]").toUtf8() << "\n";
+                fileOut << QString("Type=Application").toUtf8() << "\n";
+                fileOut << QString("Name=Browser").toUtf8() << "\n";
+                fileOut << QString("Icon=icon-launcher-browser").toUtf8() << "\n";
+                fileOut << QString("NoDisplay=true").toUtf8() << "\n";
+                fileOut << QString("X-MeeGo-Logical-Id=sailfish-browser-ap-name").toUtf8() << "\n";
+                fileOut << QString("X-MeeGo-Translation-Catalog=sailfish-browser").toUtf8() << "\n";
+                fileOut << QString("MimeType=text/html;x-scheme-handler/http;x-scheme-handler/https;").toUtf8() << "\n";
+                fileOut << QString("X-Maemo-Service=org.sailfishos.browser.ui").toUtf8() << "\n";
+                fileOut << QString("X-Maemo-Object-Path=/ui").toUtf8() << "\n";
+                fileOut << QString("X-Maemo-Method=org.sailfishos.browser.ui.openUrl").toUtf8() << "\n";
+                fileOut.flush();
+                openUrlFile.close();
+                QProcess::startDetached("update-desktop-database " + applicationsLocation);
+            }
+        }
+    }
+
+    QString desktopFilePath = QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation) + "/harbour-piepmatz-open-url.desktop";
+    QFile desktopFile(desktopFilePath);
+    if (desktopFile.exists()) {
+        qDebug() << "Piepmatz open-with file existing, removing...";
+        desktopFile.remove();
+        QProcess::startDetached("update-desktop-database " + applicationsLocation);
+    }
+    qDebug() << "Creating Open-With file at " << desktopFile.fileName();
+    if (desktopFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream fileOut(&desktopFile);
+        fileOut.setCodec("UTF-8");
+        fileOut << QString("[Desktop Entry]").toUtf8() << "\n";
+        fileOut << QString("Type=Application").toUtf8() << "\n";
+        fileOut << QString("Name=Piepmatz").toUtf8() << "\n";
+        fileOut << QString("Icon=harbour-piepmatz").toUtf8() << "\n";
+        fileOut << QString("NotShowIn=X-MeeGo;").toUtf8() << "\n";
+        if (sailfishOSMajorVersion < 4 || ( sailfishOSMajorVersion == 4 && sailfishOSMinorVersion < 1 )) {
+            fileOut << QString("MimeType=text/html;x-scheme-handler/http;x-scheme-handler/https;").toUtf8() << "\n";
+        } else {
+            fileOut << QString("MimeType=x-url-handler/twitter.com;x-url-handler/mobile.twitter.com;x-url-handler/m.twitter.com;").toUtf8() << "\n";
+        }
+        fileOut << QString("X-Maemo-Service=de.ygriega.piepmatz").toUtf8() << "\n";
+        fileOut << QString("X-Maemo-Method=de.ygriega.piepmatz.openUrl").toUtf8() << "\n";
+        fileOut << QString("Hidden=true;").toUtf8() << "\n";
+        fileOut.flush();
+        desktopFile.close();
+        QProcess::startDetached("update-desktop-database " + QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation));
+    }
+    QString dbusPathName = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/dbus-1/services";
+    QDir dbusPath(dbusPathName);
+    if (!dbusPath.exists()) {
+        qDebug() << "Creating D-Bus directory " << dbusPathName;
+        dbusPath.mkpath(dbusPathName);
+    }
+    QString dbusServiceFileName = dbusPathName + "/de.ygriega.piepmatz.service";
+    QFile dbusServiceFile(dbusServiceFileName);
+    if (!dbusServiceFile.exists()) {
+        qDebug() << "Creating D-Bus service file at " << dbusServiceFile.fileName();
+        if (dbusServiceFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream fileOut(&dbusServiceFile);
+            fileOut.setCodec("UTF-8");
+            fileOut << QString("[D-BUS Service]").toUtf8() << "\n";
+            fileOut << QString("Name=de.ygriega.piepmatz").toUtf8() << "\n";
+            fileOut << QString("Exec=/usr/bin/invoker -s --type=silica-qt5 /usr/bin/harbour-piepmatz").toUtf8() << "\n";
+            fileOut.flush();
+            dbusServiceFile.close();
+        }
+    }
+}
+
+void AccountModel::removeOpenWith()
+{
+    qDebug() << "AccountModel::removeOpenWith";
+    QFile::remove(QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation) + "/harbour-piepmatz-open-url.desktop");
+    QFile::remove(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/dbus-1/services/de.ygriega.piepmatz.service");
+    QProcess::startDetached("update-desktop-database " + QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation));
+}
+
 int AccountModel::rowCount(const QModelIndex&) const {
     return availableAccounts.size();
+}
+
+void AccountModel::handleEmojiSearchCompleted(const QString &queryString, const QVariantList &resultList)
+{
+    qDebug() << "TwitterApi::handleEmojiSearchCompleted" << queryString;
+    emit emojiSearchSuccessful(resultList);
+
+}
+
+void AccountModel::searchEmoji(const QString &queryString)
+{
+    qDebug() << "TwitterApi::searchEmoji" << queryString;
+    while (this->emojiSearchWorker.isRunning()) {
+        this->emojiSearchWorker.requestInterruption();
+    }
+    this->emojiSearchWorker.setParameters(queryString);
+    this->emojiSearchWorker.start();
 }

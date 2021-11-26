@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -118,10 +118,10 @@ Page {
         Column {
             anchors.fill: parent
 
-            PageHeader {
-                id: friendsHeader
-                title: qsTr("%1: Following").arg(userName)
-            }
+//            PageHeader {
+//                id: friendsHeader
+//                title: qsTr("%1: Following").arg(userName)
+//            }
 
             ListView {
                 id: friendsListView

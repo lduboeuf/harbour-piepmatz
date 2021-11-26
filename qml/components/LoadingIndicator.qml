@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -38,8 +38,8 @@ Item {
 
     Column {
         width: parent.width
-        height: loadingLabel.height + loadingBusyIndicator.height + Theme.paddingMedium
-        spacing: Theme.paddingMedium
+        height: loadingLabel.height + loadingBusyIndicator.height + LocalTheme.paddingMedium
+        spacing: LocalTheme.paddingMedium
         anchors.verticalCenter: parent.verticalCenter
 
         ToolTip {

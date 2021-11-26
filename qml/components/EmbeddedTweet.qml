@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -29,15 +29,15 @@ Item {
 
     property variant tweetModel;
     property bool withReferenceUrl : true;
-    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall) ;
+    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeExtraSmall : LocalTheme.fontSizeSmall) ;
 
     Connections {
         target: accountModel
         onFontSizeChanged: {
             if (fontSize === "piepmatz") {
-                componentFontSize = Theme.fontSizeExtraSmall;
+                componentFontSize = LocalTheme.fontSizeExtraSmall;
             } else {
-                componentFontSize = Theme.fontSizeSmall;
+                componentFontSize = LocalTheme.fontSizeSmall;
             }
         }
     }
@@ -52,21 +52,22 @@ Item {
 
     Column {
         id: embeddedTweetColumn
-        spacing: Theme.paddingMedium
-        width: parent.width - Theme.paddingMedium
+        spacing: LocalTheme.paddingMedium
+        width: parent.width - LocalTheme.paddingMedium
         anchors.right: parent.right
-        height: embeddedTweetSeparatorTop.height + tweetUserRow.height + tweetContentText.height + 3 * ( Theme.paddingMedium ) + ( videoLoader.active ? videoLoader.height + Theme.paddingMedium : 0 ) + ( tweetImageSlideshow.visible ? tweetImageSlideshow.height + Theme.paddingMedium : 0 )
+        height: embeddedTweetSeparatorTop.height + tweetUserRow.height + tweetContentText.height + 3 * ( LocalTheme.paddingMedium ) + ( videoLoader.active ? videoLoader.height + LocalTheme.paddingMedium : 0 ) + ( tweetImageSlideshow.visible ? tweetImageSlideshow.height + LocalTheme.paddingMedium : 0 )
 
         Rectangle {
             id: embeddedTweetSeparatorTop
             width: parent.width
-            color: Theme.primaryColor
+            color: LocalTheme.primaryColor
             //horizontalAlignment: Qt.AlignHCenter
         }
 
         TweetUser {
             id: tweetUserRow
             tweetUser: tweetModel.retweeted_status ? tweetModel.retweeted_status.user : tweetModel.user
+            visible: !tweetModel.fakeTweet
         }
 
         Text {
@@ -75,11 +76,12 @@ Item {
             visible: (tweetContentText.text !== "")
             text: Emoji.emojify(Functions.enhanceTweetText(Functions.getRelevantTweet(tweetModel).full_text, Functions.getRelevantTweet(tweetModel).entities, Functions.getRelevantTweet(tweetModel).extended_entities, withReferenceUrl, false), componentFontSize)
             font.pixelSize: componentFontSize
-            color: Theme.primaryColor
+            font.italic: tweetModel.fakeTweet ? true : false
+            color: LocalTheme.primaryColor
             wrapMode: Text.Wrap
             textFormat: Text.StyledText
             onLinkActivated: Functions.handleLink(link)
-            linkColor: Theme.highlightColor
+            linkColor: LocalTheme.highlightColor
         }
 
         TweetImageSlideshow {

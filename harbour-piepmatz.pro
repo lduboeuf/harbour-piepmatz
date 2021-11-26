@@ -19,25 +19,37 @@ QT += core quick dbus positioning sql
 LIBS += -lcrypto
 
 
-sailfishapp {
-    DEFINES += Q_OS_SAILFISH
-    OTHER_FILES += qml/harbour-piepmatz.qml \
-        qml/pages/CoverPage.qml \
-        rpm/harbour-piepmatz.changes.in \
-        rpm/harbour-piepmatz.spec \
-        rpm/harbour-piepmatz.yaml \
-        translations/*.ts \
-        harbour-piepmatz.desktop
+#sailfishapp {
+#    message("olala salfish")
+#    DEFINES += Q_OS_SAILFISH
+#    OTHER_FILES += qml/harbour-piepmatz.qml \
+#        qml/pages/CoverPage.qml \
+#        rpm/harbour-piepmatz.changes.in \
+#        rpm/harbour-piepmatz.spec \
+#        rpm/harbour-piepmatz.yaml \
+#        translations/*.ts \
+#        harbour-piepmatz.desktop \
+#        db/emojis.db
 
-    DISTFILES += \
-        qml/pages/*.qml \
-        qml/components/*.qml
-}else{
+##    DISTFILES += \
+##        qml/pages/*.qml \
+##        qml/components/*.qml
+#}else{
+#    message("olala normal")
+#    OTHER_FILES += qml/harbour-piepmatz.qml \
+#        qml/pages/CoverPage.qml \
+#        translations/*.ts \
+#        harbour-piepmatz.desktop \
+#        db/emojis.db
 
-    RESOURCES += \
-        emojis.qrc \
-        qml.qrc
-}
+##    DISTFILES += \
+##            qml/pages/*.qml \
+##            qml/components/*.qml
+
+##    RESOURCES += \
+##        emojis.qrc \
+##        qml.qrc
+#}
 
 
 include(src/o2/o2.pri)
@@ -46,6 +58,9 @@ include(src/QGumboParser/QGumboParser.pri)
 
 SOURCES += src/harbour-piepmatz.cpp \
     src/accountmodel.cpp \
+    src/dbusadaptor.cpp \
+    src/dbusinterface.cpp \
+    src/emojisearchworker.cpp \
     src/theme.cpp \
     src/twitterapi.cpp \
     src/timelinemodel.cpp \
@@ -68,7 +83,13 @@ SOURCES += src/harbour-piepmatz.cpp \
     src/imagemetadataresponsehandler.cpp \
     src/contentextractor.cpp
 
+RESOURCES += \
+    emojis.qrc \
+    qml.qrc
 
+OTHER_FILES += translations/*.ts \
+    harbour-piepmatz.desktop \
+    db/emojis.db
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
@@ -118,12 +139,18 @@ ICONPATH = /usr/share/icons/hicolor
 piepmatz.desktop.path = /usr/share/applications/
 piepmatz.desktop.files = harbour-piepmatz.desktop
 
+database.files = db
+database.path = /usr/share/$${TARGET}
+
 INSTALLS += 86.png 108.png 128.png 172.png 256.png \
-            piepmatz.desktop gui images
+            piepmatz.desktop gui images database
 
 HEADERS += \
     src/accountmodel.h \
     src/theme.h \
+    src/dbusadaptor.h \
+    src/dbusinterface.h \
+    src/emojisearchworker.h \
     src/twitterapi.h \
     src/timelinemodel.h \
     src/covermodel.h \
@@ -145,10 +172,6 @@ HEADERS += \
     src/imagemetadataresponsehandler.h \
     src/contentextractor.h
 
-
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
-
+DISTFILES += \
+    qml/pages/*.qml \
+    qml/components/*.qml

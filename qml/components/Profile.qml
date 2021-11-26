@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -55,8 +55,8 @@ Item {
     property variant profileModel;
     property variant profileTimeline;
     property bool loadingError : false;
-    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall) ;
-    property string iconFontSize: ( accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeSmall : Theme.fontSizeMedium) ;
+    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeExtraSmall : LocalTheme.fontSizeSmall) ;
+    property string iconFontSize: ( accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeSmall : LocalTheme.fontSizeMedium) ;
 
     Component.onCompleted: {
         console.log("Profile Model called for " + profileModel.id_str + ": " + profileModel.screen_name);
@@ -77,11 +77,11 @@ Item {
         target: accountModel
         onFontSizeChanged: {
             if (fontSize === "piepmatz") {
-                componentFontSize = Theme.fontSizeExtraSmall;
-                iconFontSize = Theme.fontSizeSmall;
+                componentFontSize = LocalTheme.fontSizeExtraSmall;
+                iconFontSize = LocalTheme.fontSizeSmall;
             } else {
-                componentFontSize = Theme.fontSizeSmall;
-                iconFontSize = Theme.fontSizeMedium;
+                componentFontSize = LocalTheme.fontSizeSmall;
+                iconFontSize = LocalTheme.fontSizeMedium;
             }
         }
     }
@@ -107,9 +107,9 @@ Item {
         Column {
             id: profileElementsColumn
 
-            height: profileFollowingRow.height + profileHeader.height + profileActivityRow.height + profileItemColumn.height + ( 3 * Theme.paddingMedium )
+            height: profileFollowingRow.height + profileHeader.height + profileActivityRow.height + profileItemColumn.height + ( 3 * LocalTheme.paddingMedium )
             width: parent.width
-            spacing: Theme.paddingMedium
+            spacing: LocalTheme.paddingMedium
 
             ProfileHeader {
                 id: profileHeader
@@ -119,8 +119,8 @@ Item {
 
             Row {
                 id: profileFollowingRow
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
-                spacing: Theme.paddingMedium
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+                spacing: LocalTheme.paddingMedium
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -128,7 +128,7 @@ Item {
                     id: profileFriendsText
                     text: qsTr("%1 Following").arg(Number(profileModel.friends_count).toLocaleString(Qt.locale(), "f", 0))
                     font.pixelSize: componentFontSize
-                    color: Theme.highlightColor
+                    color: LocalTheme.highlightColor
                     font.underline: !profileItem.loadingError
                     wrapMode: Text.Wrap
                     MouseArea {
@@ -143,13 +143,13 @@ Item {
                     id: profileFollowingSeparatorText
                     text: "|"
                     font.pixelSize: componentFontSize
-                    color: Theme.primaryColor
+                    color: LocalTheme.primaryColor
                 }
                 Text {
                     id: profileFollowersText
                     text: qsTr("%1 Followers").arg(Number(profileModel.followers_count).toLocaleString(Qt.locale(), "f", 0))
                     font.pixelSize: componentFontSize
-                    color: Theme.highlightColor
+                    color: LocalTheme.highlightColor
                     font.underline: !profileItem.loadingError
                     wrapMode: Text.Wrap
                     MouseArea {
@@ -164,8 +164,8 @@ Item {
 
             Row {
                 id: profileActivityRow
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
-                spacing: Theme.paddingMedium
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+                spacing: LocalTheme.paddingMedium
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -174,7 +174,7 @@ Item {
                     text: qsTr("%1 Tweets").arg(Number(profileModel.statuses_count).toLocaleString(Qt.locale(), "f", 0))
                     font.pixelSize: componentFontSize
                     font.underline: !profileItem.loadingError
-                    color: Theme.highlightColor
+                    color: LocalTheme.highlightColor
                     MouseArea {
                         enabled: !profileItem.loadingError
                         anchors.fill: parent
@@ -187,14 +187,14 @@ Item {
                     id: profileActivitySeparatorText
                     text: "|"
                     font.pixelSize: componentFontSize
-                    color: Theme.primaryColor
+                    color: LocalTheme.primaryColor
                 }
                 Text {
                     id: profileFavoritesText
                     text: qsTr("%1 Favorites").arg(Number(profileModel.favourites_count).toLocaleString(Qt.locale(), "f", 0))
                     font.pixelSize: componentFontSize
                     font.underline: !profileItem.loadingError
-                    color: Theme.highlightColor
+                    color: LocalTheme.highlightColor
                     MouseArea {
                         enabled: !profileItem.loadingError
                         anchors.fill: parent
@@ -208,12 +208,12 @@ Item {
             Column {
                 id: profileItemColumn
                 width: parent.width
-                spacing: Theme.paddingMedium
+                spacing: LocalTheme.paddingMedium
 
                 Row {
                     id: profileDetailsRow
-                    spacing: Theme.paddingMedium
-                    width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                    spacing: LocalTheme.paddingMedium
+                    width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                     visible: profileModel.description ? true : false
                     anchors {
                         horizontalCenter: parent.horizontalCenter
@@ -223,21 +223,21 @@ Item {
                         id: profileDescriptionText
                         text: Emoji.emojify(TwitterText.autoLink(profileModel.description, { usernameIncludeSymbol : true }), componentFontSize)
                         font.pixelSize: componentFontSize
-                        color: Theme.primaryColor
+                        color: LocalTheme.primaryColor
                         wrapMode: Text.Wrap
                         width: parent.width
                         textFormat: Text.StyledText
                         onLinkActivated: {
                             Functions.handleLink(link);
                         }
-                        linkColor: Theme.highlightColor
+                        linkColor: LocalTheme.highlightColor
                     }
                 }
 
                 Row {
                     id: profileJoinedRow
-                    spacing: Theme.paddingMedium
-                    width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                    spacing: LocalTheme.paddingMedium
+                    width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                     }
@@ -246,7 +246,7 @@ Item {
                         id: profileJoinedText
                         text: qsTr("Joined in %1").arg(Functions.getValidDate(profileModel.created_at).toLocaleDateString(Qt.locale(), "MMMM yyyy"))
                         font.pixelSize: componentFontSize
-                        color: Theme.primaryColor
+                        color: LocalTheme.primaryColor
                         wrapMode: Text.NoWrap
                         elide: Text.ElideRight
                     }
@@ -255,8 +255,8 @@ Item {
 
                 Row {
                     id: profileLocationRow
-                    spacing: Theme.paddingMedium
-                    width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                    spacing: LocalTheme.paddingMedium
+                    width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                     }
@@ -265,7 +265,7 @@ Item {
                         width: profileModel.location.length === 0 ? 0 : ( profileModel.entities.url ? parent.width / 2 : parent.width )
                         Image {
                             id: profileLocationImage
-                            source: "image://theme/icon-m-location"
+                            source: "image://theme/location"
                             width: iconFontSize
                             height: iconFontSize
                         }
@@ -273,7 +273,7 @@ Item {
                             id: profileLocationText
                             text: Emoji.emojify(profileModel.location, componentFontSize)
                             font.pixelSize: componentFontSize
-                            color: Theme.primaryColor
+                            color: LocalTheme.primaryColor
                             wrapMode: Text.NoWrap
                             anchors.verticalCenter: parent.verticalCenter
                             elide: Text.ElideRight
@@ -286,7 +286,7 @@ Item {
                         width: profileModel.entities.url ? ( profileModel.location.length === 0 ? parent.width : parent.width / 2 ) : 0
                         Image {
                             id: profileUrlImage
-                            source: "image://theme/icon-m-link"
+                            source: "image://theme/stock_link"
                             width: iconFontSize
                             height: iconFontSize
                         }
@@ -294,11 +294,11 @@ Item {
                             id: profileUrlText
                             text: profileModel.entities.url ? ("<a href=\"" + profileModel.entities.url.urls[0].url + "\">" + profileModel.entities.url.urls[0].display_url + "</a>") : ""
                             font.pixelSize: componentFontSize
-                            color: Theme.primaryColor
+                            color: LocalTheme.primaryColor
                             wrapMode: Text.NoWrap
                             anchors.verticalCenter: parent.verticalCenter
                             onLinkActivated: Qt.openUrlExternally(profileModel.entities.url.urls[0].url)
-                            linkColor: Theme.highlightColor
+                            linkColor: LocalTheme.highlightColor
                             elide: Text.ElideRight
                             width: parent.width - profileUrlImage.width
                         }
@@ -308,7 +308,7 @@ Item {
                 Rectangle {
                     id: profileSeparator
                     width: parent.width
-                    color: Theme.primaryColor
+                    color: LocalTheme.primaryColor
                     //horizontalAlignment: Qt.AlignHCenter
                 }
             }
@@ -355,7 +355,7 @@ Item {
 
         anchors {
             top: parent.top
-            topMargin: Theme.paddingSmall
+            topMargin: LocalTheme.paddingSmall
             bottom: parent.bottom
             left: parent.left
             right: parent.right

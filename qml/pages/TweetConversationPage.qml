@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -68,16 +68,15 @@ Page {
         Column {
             anchors.fill: parent
 
-            PageHeader {
-                id: tweetConversationHeader
-                title: qsTr("Thread")
-            }
+//            PageHeader {
+//                id: tweetConversationHeader
+//                title: qsTr("Thread")
+//            }
 
             ListView {
                 id: tweetConversationListView
 
-                anchors.left: parent.left
-                anchors.right: parent.right
+                width: parent.width
                 height: parent.height - tweetConversationHeader.height
 
                 clip: true

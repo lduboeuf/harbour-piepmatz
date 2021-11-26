@@ -39,10 +39,15 @@ class Theme : public QObject
     Q_PROPERTY(int fontSizeLarge READ fontSizeLarge NOTIFY themeChanged)
     Q_PROPERTY(int fontSizeExtraLarge READ fontSizeExtraLarge NOTIFY themeChanged)
     Q_PROPERTY(int fontSizeHuge READ fontSizeHuge NOTIFY themeChanged)
+    Q_PROPERTY(int horizontalPageMargin READ horizontalPageMargin NOTIFY themeChanged)
 
     Q_PROPERTY(int paddingSmall READ paddingSmall NOTIFY themeChanged)
     Q_PROPERTY(int paddingMedium READ paddingMedium NOTIFY themeChanged)
     Q_PROPERTY(int paddingLarge READ paddingLarge NOTIFY themeChanged)
+
+    Q_PROPERTY(int iconSizeSmall READ iconSizeSmall NOTIFY themeChanged)
+    Q_PROPERTY(int iconSizeMedium READ iconSizeMedium NOTIFY themeChanged)
+    Q_PROPERTY(int iconSizeLarge READ iconSizeLarge NOTIFY themeChanged)
 
     Q_PROPERTY(QString primaryColor READ primaryColor NOTIFY themeChanged)
     Q_PROPERTY(QString secondaryColor READ secondaryColor NOTIFY themeChanged)
@@ -53,7 +58,8 @@ class Theme : public QObject
     Q_PROPERTY(QString highlightColorInverted READ highlightColorInverted NOTIFY themeChanged)
     Q_PROPERTY(QString secondaryHighlightColorInverted READ secondaryHighlightColorInverted NOTIFY themeChanged)
 public:
-    static Theme *instance();
+    //static Theme *instance();
+    Theme(QObject *parent = 0);
 
     int fontSizeTiny() const;
     int fontSizeExtraSmall() const;
@@ -63,9 +69,15 @@ public:
     int fontSizeExtraLarge() const;
     int fontSizeHuge() const;
 
+    int iconSizeSmall() const;
+    int iconSizeMedium() const;
+    int iconSizeLarge() const;
+
     int paddingSmall() const;
     int paddingMedium() const;
     int paddingLarge() const;
+
+    int horizontalPageMargin() const;
 
     QString primaryColor() const;
     QString secondaryColor() const;
@@ -80,10 +92,10 @@ signals:
     void themeChanged();
 
 private:
-    static QScopedPointer<Theme> m_instance;
+    //static QScopedPointer<Theme> m_instance;
 
-    explicit Theme(QObject *parent = 0);
-    Q_DISABLE_COPY(Theme)
+//    explicit Theme(QObject *parent = 0);
+//    Q_DISABLE_COPY(Theme)
 
 };
 

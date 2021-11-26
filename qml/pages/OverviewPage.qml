@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -29,6 +29,8 @@ import "../js/twemoji.js" as Emoji
 
 Page {
     id: overviewPage
+    property bool isPortrait: width > height //TODO
+    property bool isLandscape: !isPortrait
     //allowedOrientations: Orientation.All
     focus: true
 
@@ -81,7 +83,7 @@ Page {
             event.accepted = true;
         }
         if (event.key === Qt.Key_N && !overviewPage.tweetInProgress) {
-            pageStack.push(newTweetPage, {"configuration": overviewPage.configuration});
+            pageStack.push(newTweetPage);
             event.accepted = true;
         }
         if (event.key === Qt.Key_S) {
@@ -281,12 +283,12 @@ Page {
     }
 
     function getNavigationRowSize() {
-        return Theme.iconSizeMedium + Theme.fontSizeMedium + Theme.paddingMedium;
+        return LocalTheme.iconSizeMedium + LocalTheme.fontSizeMedium + LocalTheme.paddingMedium;
     }
 
     function handleHomeClicked() {
         if (overviewPage.activeTabId === 0) {
-            homeListView.scrollToTop();
+            homeListView.positionViewAtBeginning();
         } else {
             viewsSlideshow.opacity = 0;
             slideshowVisibleTimer.goToTab(0);
@@ -362,7 +364,6 @@ Page {
     property int activeTabId: 0;
     property variant myUser;
     property bool initializationCompleted : false;
-    property variant configuration;
     property bool tweetInProgress : false;
     property variant ipInfo;
     property variant profileEntity;
@@ -484,7 +485,6 @@ Page {
                 overviewColumn.visible = true;
                 overviewColumn.opacity = 1;
                 openTab(0);
-                twitterApi.helpConfiguration();
                 timelineModel.update();
                 mentionsModel.update();
                 notificationsColumn.updateInProgress = true;
@@ -525,13 +525,6 @@ Page {
             accountModel.verifyCredentials();
             overviewPage.tweetInProgress = false;
         }
-        onHelpConfigurationSuccessful: {
-            overviewPage.configuration = result;
-            console.log(overviewPage.configuration.short_url_length_https);
-        }
-        onHelpConfigurationError: {
-            overviewNotification.show(errorMessage);
-        }
         onImageUploadStatus: {
             console.log(fileName + " - sent " + bytesSent + " bytes out of " + bytesTotal);
         }
@@ -543,6 +536,13 @@ Page {
             Functions.updatePiepmatz();
         }
     }
+
+//    Connections {
+//        target: appWindow
+//        onErrorParsingUrl: {
+//            overviewNotification.show(errorMessage);
+//        }
+//    }
 
     Connections {
         target: imagesModel
@@ -576,7 +576,7 @@ Page {
         enabled: false
         width: parent.width
         height: persistentNotification.height
-        y: parent.height - getNavigationRowSize() - persistentNotification.height - Theme.paddingSmall
+        y: parent.height - getNavigationRowSize() - persistentNotification.height - LocalTheme.paddingSmall
         z: 42
 
         AppNotificationItem {
@@ -589,10 +589,10 @@ Page {
 
 
     Column {
-        y: ( parent.height - ( accountVerificationImage.height + accountVerificationIndicator.height + accountVerificationLabel.height + ( 3 * Theme.paddingSmall ) ) ) / 2
+        y: ( parent.height - ( accountVerificationImage.height + accountVerificationIndicator.height + accountVerificationLabel.height + ( 3 * LocalTheme.paddingSmall ) ) ) / 2
         width: parent.width
         id: accountVerificationColumn
-        spacing: Theme.paddingSmall
+        spacing: LocalTheme.paddingSmall
         Behavior on opacity { NumberAnimation {} }
 
         Image {
@@ -615,17 +615,16 @@ Page {
             id: accountVerificationIndicator
             anchors.horizontalCenter: parent.horizontalCenter
             running: true
-
-           // size: BusyIndicatorSize.Large
+            //size: BusyIndicatorSize.Large
         }
 
     }
 
     Column {
-        y: ( parent.height - ( verificationFailedImage.height + verificationFailedToolTip.height + verifyAgainButton.height + reauthenticateButton.height + ( 4 * Theme.paddingSmall ) ) ) / 2
+        y: ( parent.height - ( verificationFailedImage.height + verificationFailedInfoLabel.height + verifyAgainButton.height + reauthenticateButton.height + ( 4 * LocalTheme.paddingSmall ) ) ) / 2
         width: parent.width
         id: verificationFailedColumn
-        spacing: Theme.paddingSmall
+        spacing: LocalTheme.paddingSmall
         Behavior on opacity { NumberAnimation {} }
         opacity: 0
         visible: false
@@ -642,8 +641,8 @@ Page {
         }
 
         ToolTip {
-            id: verificationFailedToolTip
-            font.pixelSize: Theme.fontSizeLarge
+            id: verificationFailedInfoLabel
+            font.pixelSize: LocalTheme.fontSizeLarge
             text: qsTr("Piepmatz could not log you in!")
         }
 
@@ -696,7 +695,7 @@ Page {
             MenuItem {
                 text: qsTr("New Tweet")
                 enabled: overviewPage.tweetInProgress ? false : true
-                onClicked: pageStack.push(newTweetPage, {"configuration": overviewPage.configuration})
+                onClicked: pageStack.push(newTweetPage)
             }
             MenuItem {
                 text: qsTr("Refresh")
@@ -720,7 +719,7 @@ Page {
                 MenuItem {
                     text: qsTr("New Tweet")
                     enabled: overviewPage.tweetInProgress ? false : true
-                    onClicked: pageStack.push(newTweetPage, {"configuration": overviewPage.configuration})
+                    onClicked: pageStack.push(newTweetPage)
                 }
                 MenuItem {
                     text: qsTr("Settings")
@@ -741,12 +740,11 @@ Page {
             width: parent.width
             height: parent.height
 
-
             Row {
                 id: overviewRow
                 width: parent.width
                 height: parent.height - ( overviewPage.isLandscape ? 0 : getNavigationRowSize() )
-                spacing: Theme.paddingSmall
+                spacing: LocalTheme.paddingSmall
 
                 VisualItemModel {
                     id: viewsModel
@@ -784,11 +782,11 @@ Page {
 
                         Column {
                             width: parent.width
-                            height: homeProgressLabel.height + homeProgressIndicator.height + Theme.paddingSmall
+                            height: homeProgressLabel.height + homeProgressIndicator.height + LocalTheme.paddingSmall
                             visible: !homeView.loaded
                             opacity: homeView.loaded ? 0 : 1
                             id: homeProgressColumn
-                            spacing: Theme.paddingSmall
+                            spacing: LocalTheme.paddingSmall
                             Behavior on opacity { NumberAnimation {} }
                             anchors.verticalCenter: parent.verticalCenter
 
@@ -813,11 +811,13 @@ Page {
                             visible: homeView.loaded
                             width: parent.width
                             height: parent.height
-                            contentHeight: homeTimelineTweet.height
+                            //contentHeight: homeTimelineTweet.height
                             clip: true
 
                             model: timelineModel
-
+                            onCountChanged: {
+                               console.log("timelineModel",count)
+                            }
                             delegate: Tweet {
                                 id: homeTimelineTweet
                                 tweetModel: display
@@ -848,12 +848,12 @@ Page {
                             Item {
                                 id: homeTimelineLoadMoreRow
                                 width: overviewPage.width
-                                height: homeTimelineLoadMoreButton.height + ( 2 * Theme.paddingLarge )
+                                height: homeTimelineLoadMoreButton.height + ( 2 * LocalTheme.paddingLarge )
                                 Button {
                                     id: homeTimelineLoadMoreButton
                                     Behavior on opacity { NumberAnimation {} }
                                     text: qsTr("Load more tweets")
-                                    //preferredWidth: Theme.buttonWidthLarge
+                                    //preferredWidth: LocalTheme.buttonWidthLarge
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     opacity: visible ? 1 : 0
@@ -1094,7 +1094,7 @@ Page {
 
                                 id: messageContactItem
 
-                                height: messageContactRow.height + messageContactSeparator.height + 2 * Theme.paddingMedium
+                                height: messageContactRow.height + messageContactSeparator.height + 2 * LocalTheme.paddingMedium
                                width: parent.width
 
                                 onClicked: {
@@ -1103,8 +1103,8 @@ Page {
 
                                 Column {
                                     id: messageContactColumn
-                                    width: parent.width - ( 2 * Theme.horizontalPageMargin )
-                                    spacing: Theme.paddingSmall
+                                    width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+                                    spacing: LocalTheme.paddingSmall
                                     anchors {
                                         horizontalCenter: parent.horizontalCenter
                                         verticalCenter: parent.verticalCenter
@@ -1113,13 +1113,13 @@ Page {
                                     Row {
                                         id: messageContactRow
                                         width: parent.width
-                                        spacing: Theme.paddingMedium
+                                        spacing: LocalTheme.paddingMedium
 
                                         Column {
                                             id: messageContactPictureColumn
                                             width: parent.width / 6
                                             height: parent.width / 6
-                                            spacing: Theme.paddingSmall
+                                            spacing: LocalTheme.paddingSmall
 
                                             Item {
                                                 id: messageContactPictureItem
@@ -1140,7 +1140,7 @@ Page {
                                                     z: 42
                                                     width: parent.width
                                                     height: parent.height
-                                                    color: Theme.primaryColor
+                                                    color: LocalTheme.primaryColor
                                                     radius: parent.width / 7
                                                     visible: false
                                                 }
@@ -1166,16 +1166,16 @@ Page {
 
                                         Column {
                                             id: messageContactContentColumn
-                                            width: parent.width * 5 / 6 - Theme.horizontalPageMargin
+                                            width: parent.width * 5 / 6 - LocalTheme.horizontalPageMargin
 
-                                            spacing: Theme.paddingSmall
+                                            spacing: LocalTheme.paddingSmall
 
                                             Text {
                                                 id: messageContactNameText
-                                                text: Emoji.emojify(display.user.name, Theme.fontSizeMedium)
+                                                text: Emoji.emojify(display.user.name, LocalTheme.fontSizeMedium)
                                                 textFormat: Text.StyledText
-                                                font.pixelSize: Theme.fontSizeMedium
-                                                color: Theme.primaryColor
+                                                font.pixelSize: LocalTheme.fontSizeMedium
+                                                color: LocalTheme.primaryColor
                                                 elide: Text.ElideRight
                                                 width: parent.width
                                                 onTruncatedChanged: {
@@ -1190,12 +1190,12 @@ Page {
                                             Row {
                                                 id: messageContactLastMessageRow
                                                 width: parent.width
-                                                spacing: Theme.paddingMedium
+                                                spacing: LocalTheme.paddingMedium
                                                 Text {
                                                     id: messageContactLastUserText
-                                                    text: Emoji.emojify(getLastUserOfConversation(display.user, display.messages), Theme.fontSizeExtraSmall)
-                                                    font.pixelSize: Theme.fontSizeExtraSmall
-                                                    color: Theme.highlightColor
+                                                    text: Emoji.emojify(getLastUserOfConversation(display.user, display.messages), LocalTheme.fontSizeExtraSmall)
+                                                    font.pixelSize: LocalTheme.fontSizeExtraSmall
+                                                    color: LocalTheme.highlightColor
                                                     textFormat: Text.StyledText
                                                     onTruncatedChanged: {
                                                         // There is obviously a bug in QML in truncating text with images.
@@ -1207,10 +1207,10 @@ Page {
                                                 }
                                                 Text {
                                                     id: messageContactLastMessageText
-                                                    text: Emoji.emojify(getLastMessageOfConversation(display.messages), Theme.fontSizeExtraSmall)
-                                                    font.pixelSize: Theme.fontSizeExtraSmall
-                                                    color: Theme.primaryColor
-                                                    width: parent.width - Theme.paddingMedium - messageContactLastUserText.width
+                                                    text: Emoji.emojify(getLastMessageOfConversation(display.messages), LocalTheme.fontSizeExtraSmall)
+                                                    font.pixelSize: LocalTheme.fontSizeExtraSmall
+                                                    color: LocalTheme.primaryColor
+                                                    width: parent.width - LocalTheme.paddingMedium - messageContactLastUserText.width
                                                     elide: Text.ElideRight
                                                     textFormat: Text.StyledText
                                                     onTruncatedChanged: {
@@ -1236,8 +1236,8 @@ Page {
                                             Text {
                                                 id: messageContactTimeElapsedText
                                                 text: getConversationTimeElapsed(display.messages)
-                                                font.pixelSize: Theme.fontSizeTiny
-                                                color: Theme.primaryColor
+                                                font.pixelSize: LocalTheme.fontSizeTiny
+                                                color: LocalTheme.primaryColor
                                             }
                                         }
                                     }
@@ -1249,11 +1249,11 @@ Page {
 
                                     anchors {
                                         top: messageContactColumn.bottom
-                                        topMargin: Theme.paddingMedium
+                                        topMargin: LocalTheme.paddingMedium
                                     }
 
                                     width: parent.width
-                                    color: Theme.primaryColor
+                                    color: LocalTheme.primaryColor
                                     //horizontalAlignment: Qt.AlignHCenter
                                 }
 
@@ -1315,9 +1315,9 @@ Page {
                             ToolTip {
                                 id: messagesNoResultsText
                                 text: qsTr("No direct messages in the last 30 days")
-                               // color: Theme.primaryColor
-                                font.pixelSize: Theme.fontSizeLarge
-                                width: parent.width - 2 * Theme.horizontalPageMargin
+                               // color: LocalTheme.primaryColor
+                                font.pixelSize: LocalTheme.fontSizeLarge
+                                width: parent.width - 2 * LocalTheme.horizontalPageMargin
                             }
                         }
 
@@ -1428,7 +1428,7 @@ Page {
                             ToolButton {
                                 id: saveSearchButton
                                 contentItem: Image {
-                                    source: "image://theme/icon-m-add"
+                                    source: "image://theme/add"
 
                                 }
 
@@ -1444,19 +1444,19 @@ Page {
                         Row {
                             id: searchTypeRow
                             width: parent.width
-                            height: Theme.fontSizeLarge + Theme.paddingMedium
+                            height: LocalTheme.fontSizeLarge + LocalTheme.paddingMedium
                             anchors.top: searchFieldRow.bottom
-                            anchors.topMargin: Theme.paddingMedium
+                            anchors.topMargin: LocalTheme.paddingMedium
                             opacity: ( searchColumn.usersSearchInProgress || searchColumn.tweetSearchInProgress || (searchResultsListView.count === 0 && usersSearchResultsListView.count === 0)) ? 0 : 1
                             visible: ( searchColumn.usersSearchInProgress || searchColumn.tweetSearchInProgress || (searchResultsListView.count === 0 && usersSearchResultsListView.count === 0)) ? false : true
                             Behavior on opacity { NumberAnimation {} }
                             Text {
                                 id: searchTypeTweets
                                 width: ( parent.width / 2 )
-                                font.pixelSize: Theme.fontSizeMedium
+                                font.pixelSize: LocalTheme.fontSizeMedium
                                 font.capitalization: Font.SmallCaps
                                 horizontalAlignment: Text.AlignHCenter
-                                color: searchColumn.usersSearchSelected ? Theme.primaryColor : Theme.highlightColor
+                                color: searchColumn.usersSearchSelected ? LocalTheme.primaryColor : LocalTheme.highlightColor
                                 textFormat: Text.PlainText
                                 anchors.top: parent.top
                                 text: qsTr("Tweets")
@@ -1470,20 +1470,20 @@ Page {
                                 }
                             }
                             Rectangle {
-                                width: Theme.fontSizeMedium
-                                color: Theme.primaryColor
+                                width: LocalTheme.fontSizeMedium
+                                color: LocalTheme.primaryColor
                                // horizontalAlignment: Qt.AlignHCenter
                                 anchors.top: parent.top
-                                anchors.topMargin: Theme.paddingSmall
+                                anchors.topMargin: LocalTheme.paddingSmall
                                 transform: Rotation { angle: 90 }
                             }
                             Text {
                                 id: searchTypeUsers
-                                width: ( parent.width / 2 ) - ( 2 * Theme.fontSizeMedium )
-                                font.pixelSize: Theme.fontSizeMedium
+                                width: ( parent.width / 2 ) - ( 2 * LocalTheme.fontSizeMedium )
+                                font.pixelSize: LocalTheme.fontSizeMedium
                                 font.capitalization: Font.SmallCaps
                                 horizontalAlignment: Text.AlignHCenter
-                                color: searchColumn.usersSearchSelected ? Theme.highlightColor : Theme.primaryColor
+                                color: searchColumn.usersSearchSelected ? LocalTheme.highlightColor : LocalTheme.primaryColor
                                 textFormat: Text.PlainText
                                 anchors.top: parent.top
                                 text: qsTr("Users")
@@ -1501,19 +1501,19 @@ Page {
                         Row {
                             id: trendsPlaceRow
                             width: parent.width
-                            height: Theme.fontSizeLarge + Theme.paddingMedium
+                            height: LocalTheme.fontSizeLarge + LocalTheme.paddingMedium
                             anchors.top: searchFieldRow.bottom
-                            anchors.topMargin: Theme.paddingMedium
+                            anchors.topMargin: LocalTheme.paddingMedium
                             opacity: ( searchField.text === "" && trendsListView.count !== 0 && !( searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) && searchField.focus === false ) ? 1 : 0
                             visible: ( searchField.text === "" && trendsListView.count !== 0 && !( searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) && searchField.focus === false ) ? true : false
                             Behavior on opacity { NumberAnimation {} }
                             Text {
                                 id: trendsPlaceText
                                 width: parent.width
-                                font.pixelSize: Theme.fontSizeMedium
+                                font.pixelSize: LocalTheme.fontSizeMedium
                                 font.capitalization: Font.SmallCaps
                                 horizontalAlignment: Text.AlignHCenter
-                                color: Theme.highlightColor
+                                color: LocalTheme.highlightColor
                                 textFormat: Text.PlainText
                                 anchors.top: parent.top
                             }
@@ -1522,19 +1522,19 @@ Page {
                         Row {
                             id: savedSearchesRow
                             width: parent.width
-                            height: Theme.fontSizeLarge + Theme.paddingMedium
+                            height: LocalTheme.fontSizeLarge + LocalTheme.paddingMedium
                             anchors.top: searchFieldRow.bottom
-                            anchors.topMargin: Theme.paddingMedium
+                            anchors.topMargin: LocalTheme.paddingMedium
                             opacity: ( searchField.text === "" && trendsListView.count !== 0 && !( searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) && searchField.focus === true ) ? 1 : 0
                             visible: ( searchField.text === "" && trendsListView.count !== 0 && !( searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) && searchField.focus === true ) ? true : false
                             Behavior on opacity { NumberAnimation {} }
                             Text {
                                 id: savedSearchesText
                                 width: parent.width
-                                font.pixelSize: Theme.fontSizeMedium
+                                font.pixelSize: LocalTheme.fontSizeMedium
                                 font.capitalization: Font.SmallCaps
                                 horizontalAlignment: Text.AlignHCenter
-                                color: Theme.highlightColor
+                                color: LocalTheme.highlightColor
                                 textFormat: Text.PlainText
                                 anchors.top: parent.top
                                 text: qsTr("Saved Searches")
@@ -1547,7 +1547,7 @@ Page {
                             }
                             id: searchResultsListView
                             width: parent.width
-                            height: parent.height - searchField.height - searchTypeRow.height - Theme.paddingMedium
+                            height: parent.height - searchField.height - searchTypeRow.height - LocalTheme.paddingMedium
                             anchors.horizontalCenter: parent.horizontalCenter
                             opacity: ( !searchColumn.tweetSearchInProgress && !searchColumn.usersSearchSelected ) ? 1 : 0
                             visible: ( !searchColumn.tweetSearchInProgress && !searchColumn.usersSearchSelected ) ? true : false
@@ -1569,7 +1569,7 @@ Page {
                             }
                             id: usersSearchResultsListView
                             width: parent.width
-                            height: parent.height - searchField.height - searchTypeRow.height - Theme.paddingMedium
+                            height: parent.height - searchField.height - searchTypeRow.height - LocalTheme.paddingMedium
                             anchors.horizontalCenter: parent.horizontalCenter
                             opacity: ( !searchColumn.usersSearchInProgress && searchColumn.usersSearchSelected ) ? 1 : 0
                             visible: ( !searchColumn.usersSearchInProgress && searchColumn.usersSearchSelected ) ? true : false
@@ -1605,8 +1605,8 @@ Page {
                             ToolTip {
                                 id: searchInProgressIndicatorLabel
                                 text: qsTr("Searching...")
-                                font.pixelSize: Theme.fontSizeLarge
-                                width: parent.width - 2 * Theme.horizontalPageMargin
+                                font.pixelSize: LocalTheme.fontSizeLarge
+                                width: parent.width - 2 * LocalTheme.horizontalPageMargin
                             }
                         }
 
@@ -1642,9 +1642,9 @@ Page {
                             ToolTip {
                                 id: searchNoResultsText
                                 text: ( searchField.text === "" || searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) ? qsTr("What are you looking for?") : qsTr("No results found")
-                                //color: Theme.primaryColor
-                                font.pixelSize: Theme.fontSizeLarge
-                                width: parent.width - 2 * Theme.horizontalPageMargin
+                                //color: LocalTheme.primaryColor
+                                font.pixelSize: LocalTheme.fontSizeLarge
+                                width: parent.width - 2 * LocalTheme.horizontalPageMargin
                             }
                         }
 
@@ -1654,7 +1654,7 @@ Page {
                             }
                             id: trendsListView
                             width: parent.width
-                            height: parent.height - searchField.height - searchTypeRow.height - Theme.paddingMedium
+                            height: parent.height - searchField.height - searchTypeRow.height - LocalTheme.paddingMedium
                             anchors.horizontalCenter: parent.horizontalCenter
                             opacity: ( searchField.text === "" && trendsListView.count !== 0 && !( searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) && searchField.focus === false ) ? 1 : 0
                             visible: ( searchField.text === "" && trendsListView.count !== 0 && !( searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) && searchField.focus === false ) ? true : false
@@ -1668,9 +1668,9 @@ Page {
                                 width: parent.width
                                 Row {
                                     id: trendRow
-                                    width: parent.width - ( 2 * Theme.horizontalPageMargin )
-                                    height: Theme.fontSizeHuge
-                                    spacing: Theme.paddingMedium
+                                    width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+                                    height: LocalTheme.fontSizeHuge
+                                    spacing: LocalTheme.paddingMedium
                                     anchors {
                                         horizontalCenter: parent.horizontalCenter
                                         verticalCenter: parent.verticalCenter
@@ -1679,8 +1679,8 @@ Page {
                                         id: trendsNameText
                                         anchors.verticalCenter: parent.verticalCenter
                                         text: display.name
-                                        font.pixelSize: Theme.fontSizeSmall
-                                        color: Theme.primaryColor
+                                        font.pixelSize: LocalTheme.fontSizeSmall
+                                        color: LocalTheme.primaryColor
                                         elide: Text.ElideRight
                                         maximumLineCount: 1
                                         width: parent.width * 3 / 4
@@ -1689,10 +1689,10 @@ Page {
                                         id: trendsNameCount
                                         anchors.verticalCenter: parent.verticalCenter
                                         text: display.tweet_volume ? Number(display.tweet_volume).toLocaleString(Qt.locale(), "f", 0) : ""
-                                        font.pixelSize: Theme.fontSizeSmall
-                                        color: Theme.primaryColor
+                                        font.pixelSize: LocalTheme.fontSizeSmall
+                                        color: LocalTheme.primaryColor
                                         horizontalAlignment: Text.AlignRight
-                                        width: parent.width - trendsNameText.width - Theme.paddingMedium
+                                        width: parent.width - trendsNameText.width - LocalTheme.paddingMedium
                                         elide: Text.ElideRight
                                         maximumLineCount: 1
                                     }
@@ -1712,7 +1712,7 @@ Page {
                             }
                             id: savedSearchesListView
                             width: parent.width
-                            height: parent.height - searchField.height - savedSearchesRow.height - Theme.paddingMedium
+                            height: parent.height - searchField.height - savedSearchesRow.height - LocalTheme.paddingMedium
                             anchors.horizontalCenter: parent.horizontalCenter
                             opacity: ( searchField.text === "" && trendsListView.count !== 0 && !( searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) && searchField.focus === true ) ? 1 : 0
                             visible: ( searchField.text === "" && trendsListView.count !== 0 && !( searchColumn.tweetSearchInTransition || searchColumn.usersSearchInTransition ) && searchField.focus === true ) ? true : false
@@ -1740,9 +1740,9 @@ Page {
 
                                 Row {
                                     id: savedQuery
-                                    width: parent.width - ( 2 * Theme.horizontalPageMargin )
-                                    height: Theme.fontSizeHuge
-                                    spacing: Theme.paddingMedium
+                                    width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+                                    height: LocalTheme.fontSizeHuge
+                                    spacing: LocalTheme.paddingMedium
                                     anchors {
                                         horizontalCenter: parent.horizontalCenter
                                         verticalCenter: parent.verticalCenter
@@ -1751,8 +1751,8 @@ Page {
                                         id: savedQueryText
                                         anchors.verticalCenter: parent.verticalCenter
                                         text: display.query
-                                        font.pixelSize: Theme.fontSizeSmall
-                                        color: Theme.primaryColor
+                                        font.pixelSize: LocalTheme.fontSizeSmall
+                                        color: LocalTheme.primaryColor
                                         elide: Text.ElideRight
                                         maximumLineCount: 1
                                         width: parent.width
@@ -1772,8 +1772,8 @@ Page {
 
                     Item {
                         id: listsColumn
-                        width: parent.width
-                        height: parent.height
+                        width: overviewRow.width
+                        height: overviewRow.height
 
                         property bool myListsInProgress : false;
                         property bool memberListsInProgress : false;
@@ -1809,19 +1809,19 @@ Page {
                         Row {
                             id: listsTypeRow
                             width: parent.width
-                            height: Theme.fontSizeLarge + Theme.paddingMedium
+                            height: LocalTheme.fontSizeLarge + LocalTheme.paddingMedium
                             anchors.top: listsColumn.top
-                            anchors.topMargin: Theme.paddingMedium
+                            anchors.topMargin: LocalTheme.paddingMedium
                             opacity: ( listsColumn.myListsInProgress || listsColumn.memberListsInProgress || (myListsListView.count === 0 && memberListsListView.count === 0)) ? 0 : 1
                             visible: ( listsColumn.myListsInProgress || listsColumn.memberListsInProgress || (myListsListView.count === 0 && memberListsListView.count === 0)) ? false : true
                             Behavior on opacity { NumberAnimation {} }
                             Text {
                                 id: listsTypeMy
                                 width: ( parent.width / 2 )
-                                font.pixelSize: Theme.fontSizeMedium
+                                font.pixelSize: LocalTheme.fontSizeMedium
                                 font.capitalization: Font.SmallCaps
                                 horizontalAlignment: Text.AlignHCenter
-                                color: listsColumn.memberListsSelected ? Theme.primaryColor : Theme.highlightColor
+                                color: listsColumn.memberListsSelected ? LocalTheme.primaryColor : LocalTheme.highlightColor
                                 textFormat: Text.PlainText
                                 anchors.top: parent.top
                                 text: qsTr("Subscribed")
@@ -1835,20 +1835,20 @@ Page {
                                 }
                             }
                             Rectangle {
-                                width: Theme.fontSizeMedium
-                                color: Theme.primaryColor
+                                width: LocalTheme.fontSizeMedium
+                                color: LocalTheme.primaryColor
                                 //horizontalAlignment: Qt.AlignHCenter
                                 anchors.top: parent.top
-                                anchors.topMargin: Theme.paddingSmall
+                                anchors.topMargin: LocalTheme.paddingSmall
                                 transform: Rotation { angle: 90 }
                             }
                             Text {
                                 id: listsTypeMember
-                                width: ( parent.width / 2 ) - ( 2 * Theme.fontSizeMedium )
-                                font.pixelSize: Theme.fontSizeMedium
+                                width: ( parent.width / 2 ) - ( 2 * LocalTheme.fontSizeMedium )
+                                font.pixelSize: LocalTheme.fontSizeMedium
                                 font.capitalization: Font.SmallCaps
                                 horizontalAlignment: Text.AlignHCenter
-                                color: listsColumn.memberListsSelected ? Theme.highlightColor : Theme.primaryColor
+                                color: listsColumn.memberListsSelected ? LocalTheme.highlightColor : LocalTheme.primaryColor
                                 textFormat: Text.PlainText
                                 anchors.top: parent.top
                                 text: qsTr("Member of")
@@ -1869,7 +1869,7 @@ Page {
                             }
                             id: myListsListView
                             width: parent.width
-                            height: parent.height - listsTypeRow.height - Theme.paddingMedium
+                            height: parent.height - listsTypeRow.height - LocalTheme.paddingMedium
                             anchors.horizontalCenter: parent.horizontalCenter
                             opacity: ( !listsColumn.myListsInProgress && !listsColumn.memberListsSelected ) ? 1 : 0
                             visible: ( !listsColumn.myListsInProgress && !listsColumn.memberListsSelected ) ? true : false
@@ -1891,7 +1891,7 @@ Page {
                             }
                             id: memberListsListView
                             width: parent.width
-                            height: parent.height - listsTypeRow.height - Theme.paddingMedium
+                            height: parent.height - listsTypeRow.height - LocalTheme.paddingMedium
                             anchors.horizontalCenter: parent.horizontalCenter
                             opacity: ( !listsColumn.memberListsInProgress && listsColumn.memberListsSelected ) ? 1 : 0
                             visible: ( !listsColumn.memberListsInProgress && listsColumn.memberListsSelected ) ? true : false
@@ -1959,9 +1959,9 @@ Page {
                             ToolTip {
                                 id: listsNoResultsText
                                 text: qsTr("No lists found")
-                               // color: Theme.primaryColor
-                                font.pixelSize: Theme.fontSizeLarge
-                                width: parent.width - 2 * Theme.horizontalPageMargin
+                               // color: LocalTheme.primaryColor
+                                font.pixelSize: LocalTheme.fontSizeLarge
+                                width: parent.width - 2 * LocalTheme.horizontalPageMargin
                             }
                         }
 
@@ -2032,7 +2032,7 @@ Page {
 
                 SlideshowView {
                     id: viewsSlideshow
-                    width: parent.width - ( overviewPage.isLandscape ? getNavigationRowSize() + ( 2 * Theme.horizontalPageMargin ) : 0 )
+                    width: parent.width - ( overviewPage.isLandscape ? getNavigationRowSize() + ( 2 * LocalTheme.horizontalPageMargin ) : 0 )
                     height: parent.height
                     itemWidth: width
                     clip: true
@@ -2047,30 +2047,29 @@ Page {
                             slideshowVisibleTimer.start();
                         }
                     }
-
                 }
 
                 Item {
                     id: navigationColumn
-                    width: overviewPage.isLandscape ? getNavigationRowSize() + ( 2 * Theme.horizontalPageMargin ) : 0
+                    width: overviewPage.isLandscape ? getNavigationRowSize() + ( 2 * LocalTheme.horizontalPageMargin ) : 0
                     height: parent.height
                     visible: overviewPage.isLandscape
-                    property bool squeezed: height < ( ( Theme.iconSizeMedium + Theme.fontSizeTiny ) * 6 ) ? true : false
+                    property bool squeezed: height < ( ( LocalTheme.iconSizeMedium + LocalTheme.fontSizeTiny ) * 6 ) ? true : false
 
                     Rectangle {
                         id: navigatorColumnSeparator
                         width: parent.height
-                        color: Theme.primaryColor
+                        color: LocalTheme.primaryColor
                         //horizontalAlignment: Qt.AlignHCenter
                         anchors.top: parent.top
-                        anchors.topMargin: Theme.paddingSmall
+                        anchors.topMargin: LocalTheme.paddingSmall
                         transform: Rotation { angle: 90 }
                     }
 
                     Column {
 
                         anchors.left: parent.left
-                        anchors.leftMargin: Theme.paddingSmall
+                        anchors.leftMargin: LocalTheme.paddingSmall
                         anchors.top: parent.top
 
                         height: parent.height
@@ -2079,7 +2078,7 @@ Page {
                         Item {
                             id: homeButtonColumnLandscape
                             height: parent.height / 6
-                            width: parent.width - Theme.paddingMedium
+                            width: parent.width - LocalTheme.paddingMedium
                             HomeTimelineButton {
                                 id: homeTimelineButtonLandscape
                                 visible: (isActive || !navigationColumn.squeezed)
@@ -2090,7 +2089,7 @@ Page {
                         Item {
                             id: notificationsButtonColumnLandscape
                             height: parent.height / 6
-                            width: parent.width - Theme.paddingMedium
+                            width: parent.width - LocalTheme.paddingMedium
                             NotificationsButton {
                                 id: notificationsButtonLandscape
                                 visible: (isActive || !navigationColumn.squeezed)
@@ -2100,7 +2099,7 @@ Page {
                         Item {
                             id: messagesButtonColumnLandscape
                             height: parent.height / 6
-                            width: parent.width - Theme.paddingMedium
+                            width: parent.width - LocalTheme.paddingMedium
                             MessagesButton {
                                 id: messagesButtonLandscape
                                 visible: (isActive || !navigationColumn.squeezed)
@@ -2110,7 +2109,7 @@ Page {
                         Item {
                             id: searchButtonColumnLandscape
                             height: parent.height / 6
-                            width: parent.width - Theme.paddingMedium
+                            width: parent.width - LocalTheme.paddingMedium
                             SearchButton {
                                 id: searchButtonLandscape
                                 visible: (isActive || !navigationColumn.squeezed)
@@ -2121,7 +2120,7 @@ Page {
                         Item {
                             id: listsButtonColumnLandscape
                             height: parent.height / 6
-                            width: parent.width - Theme.paddingMedium
+                            width: parent.width - LocalTheme.paddingMedium
                             ListsButton {
                                 id: listsButtonLandscape
                                 visible: (isActive || !navigationColumn.squeezed)
@@ -2132,7 +2131,7 @@ Page {
                         Item {
                             id: profileButtonColumnLandscape
                             height: parent.height / 6
-                            width: parent.width - Theme.paddingMedium
+                            width: parent.width - LocalTheme.paddingMedium
                             ProfileButton {
                                 id: profileButtonLandscape
                                 visible: (isActive || !navigationColumn.squeezed)
@@ -2160,22 +2159,22 @@ Page {
                 Column {
                     id: navigationRowSeparatorColumn
                     width: parent.width
-                    height: Theme.paddingMedium
+                    height: LocalTheme.paddingMedium
                     Rectangle {
                         id: navigationRowSeparator
                         width: parent.width
-                        color: Theme.primaryColor
+                        color: LocalTheme.primaryColor
                         //horizontalAlignment: Qt.AlignHCenter
                     }
                 }
 
                 Row {
-                    y: Theme.paddingSmall
+                    y: LocalTheme.paddingSmall
                     width: parent.width
                     Item {
                         id: homeButtonColumn
                         width: parent.width / 6
-                        height: parent.height - Theme.paddingMedium
+                        height: parent.height - LocalTheme.paddingMedium
                         HomeTimelineButton {
                             id: homeTimelineButtonPortrait
                             anchors.top: parent.top

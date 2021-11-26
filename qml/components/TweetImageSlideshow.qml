@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -96,7 +96,7 @@ Item {
         color: "black"
         opacity: 0.3
         height: parent.height
-        width: Theme.fontSizeLarge
+        width: LocalTheme.fontSizeLarge
         anchors.left: tweetImageSlideshow.left
         visible: tweetImageSlideshowItem.withArrows
         MouseArea {
@@ -109,11 +109,11 @@ Item {
 
     Image {
         id: imageArrowLeft
-        width: Theme.fontSizeLarge
-        height: Theme.fontSizeLarge
+        width: LocalTheme.fontSizeLarge
+        height: LocalTheme.fontSizeLarge
         anchors.left: tweetImageSlideshow.left
         anchors.verticalCenter: tweetImageSlideshow.verticalCenter
-        source: "image://theme/icon-m-left"
+        source: "image://theme/go-previous"
         visible: tweetImageSlideshowItem.withArrows
     }
 
@@ -122,7 +122,7 @@ Item {
         color: "black"
         opacity: 0.3
         height: parent.height
-        width: Theme.fontSizeLarge
+        width: LocalTheme.fontSizeLarge
         anchors.right: tweetImageSlideshow.right
         visible: tweetImageSlideshowItem.withArrows
         MouseArea {
@@ -135,11 +135,11 @@ Item {
 
     Image {
         id: imageArrowRight
-        width: Theme.fontSizeLarge
-        height: Theme.fontSizeLarge
+        width: LocalTheme.fontSizeLarge
+        height: LocalTheme.fontSizeLarge
         anchors.right: tweetImageSlideshow.right
         anchors.verticalCenter: tweetImageSlideshow.verticalCenter
-        source: "image://theme/icon-m-right"
+        source: "image://theme/go-next"
         visible: tweetImageSlideshowItem.withArrows
     }
 
@@ -148,7 +148,7 @@ Item {
         active: ( tweetImageSlideshow.currentIndex >= 0 && accountModel.getDisplayImageDescriptions() ) ? true : false
         width: parent.width
         anchors.bottom: tweetImageSlideshow.bottom
-        anchors.bottomMargin: Theme.fontSizeLarge
+        anchors.bottomMargin: LocalTheme.fontSizeLarge
         sourceComponent: imageDescriptionComponent
     }
 
@@ -156,7 +156,7 @@ Item {
         id: imageDescriptionComponent
         Item {
             id: imageDescriptionItem
-            height: Theme.fontSizeSmall
+            height: LocalTheme.fontSizeSmall
             width: parent.width
             property variant imageMetadata: imageModel.get(tweetImageSlideshow.currentIndex)
             visible: imageMetadata && imageMetadata.ext_alt_text ? true : false
@@ -165,18 +165,18 @@ Item {
                 color: "black"
                 opacity: 0.3
                 height: parent.height
-                width: tweetImageSlideshowItem.withArrows ? tweetImageSlideshowItem.width - ( 2 * Theme.fontSizeLarge ) : tweetImageSlideshowItem.width
+                width: tweetImageSlideshowItem.withArrows ? tweetImageSlideshowItem.width - ( 2 * LocalTheme.fontSizeLarge ) : tweetImageSlideshowItem.width
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             Text {
-                width: parent.width - ( 2 * Theme.paddingMedium )
+                width: parent.width - ( 2 * LocalTheme.paddingMedium )
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 horizontalAlignment: Text.AlignHCenter
                 id: tweetImageDescriptionText
                 text: imageDescriptionItem.visible ? imageDescriptionItem.imageMetadata.ext_alt_text : ""
-                font.pixelSize: Theme.fontSizeTiny
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeTiny
+                color: LocalTheme.primaryColor
                 elide: Text.ElideRight
                 textFormat: Text.StyledText
                 maximumLineCount: 1
@@ -187,7 +187,7 @@ Item {
     Row {
         id: imagePointRepeaterRow
         anchors.bottom: tweetImageSlideshow.bottom
-        anchors.bottomMargin: Theme.fontSizeTiny
+        anchors.bottomMargin: LocalTheme.fontSizeTiny
         anchors.horizontalCenter: tweetImageSlideshow.horizontalCenter
         spacing: 5
         visible: tweetImageListModel.count > 1
@@ -201,7 +201,7 @@ Item {
                 radius: width * 0.5
                 border.color: "black"
                 border.width: 1
-                color: index === tweetImageSlideshow.currentIndex ? Theme.highlightColor : Theme.primaryColor
+                color: index === tweetImageSlideshow.currentIndex ? LocalTheme.highlightColor : LocalTheme.primaryColor
             }
         }
     }

@@ -67,11 +67,11 @@ Page {
         Column {
             id: column
             width: aboutPage.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
-
-
-
+//            PageHeader {
+//                title: qsTr("About Piepmatz")
+//            }
 
             Image {
                 id: wunderfitzImage
@@ -86,9 +86,9 @@ Page {
             }
 
             Label {
-                text: "Piepmatz 1.4.1"
+                text: "Piepmatz 1.10.1"
                 horizontalAlignment: Text.AlignHCenter
-                font.pixelSize: Theme.fontSizeExtraLarge
+                font.pixelSize: LocalTheme.fontSizeExtraLarge
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -96,11 +96,11 @@ Page {
 
             Label {
                 wrapMode: Text.Wrap
-                x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("A Twitter client for Sailfish OS")
-                font.pixelSize: Theme.fontSizeSmall
+                font.pixelSize: LocalTheme.fontSizeSmall
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -108,7 +108,7 @@ Page {
 
             Label {
                 text: qsTr("By Sebastian J. Wolf")
-                font.pixelSize: Theme.fontSizeSmall
+                font.pixelSize: LocalTheme.fontSizeSmall
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -119,41 +119,41 @@ Page {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
 
                 onLinkActivated: Functions.handleLink(link);
             }
 
             Text {
-                text: "<a href=\"mailto:contact@werkwolf.eu\">" + qsTr("Send E-Mail") + "</a>"
+                text: "<a href=\"mailto:sebastian@ygriega.de\">" + qsTr("Send E-Mail") + "</a>"
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
 
-                onLinkActivated: Qt.openUrlExternally("mailto:contact@werkwolf.eu")
+                onLinkActivated: Qt.openUrlExternally("mailto:sebastian@ygriega.de")
             }
 
             ToolSeparator {}
 //            Separator {
 //                width: parent.width
-//                color: Theme.primaryColor
+//                color: LocalTheme.primaryColor
 //                horizontalAlignment: Qt.AlignHCenter
 //            }
 
             Text {
                 wrapMode: Text.Wrap
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 //text: qsTr("This product uses <a href=\"https://werkwolf.eu/terms.html#wagnis\">Wagnis</a> and is distributed by <a href=\"https://werkwolf.eu\">WerkWolf OÜ</a>. You can also <a href=\"profile://werkwolf\">find WerkWolf on Twitter</a>.")
                 text: qsTr("This product is distributed by <a href=\"https://werkwolf.eu\">WerkWolf OÜ</a>. You can also <a href=\"profile://werkwolf\">find WerkWolf on Twitter</a>.")
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                color: Theme.primaryColor
+                color: LocalTheme.primaryColor
                 textFormat: Text.StyledText
                 horizontalAlignment: Text.AlignHCenter
                 onLinkActivated: Functions.handleLink(link);
@@ -161,13 +161,13 @@ Page {
             ToolSeparator {}
 //            Separator {
 //                width: parent.width
-//                color: Theme.primaryColor
+//                color: LocalTheme.primaryColor
 //                horizontalAlignment: Qt.AlignHCenter
 //            }
 
             Label {
                 text: qsTr("Licensed under GNU GPLv3")
-                font.pixelSize: Theme.fontSizeSmall
+                font.pixelSize: LocalTheme.fontSizeSmall
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -178,8 +178,8 @@ Page {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
 
                 onLinkActivated: Qt.openUrlExternally("https://github.com/Wunderfitz/harbour-piepmatz")
             }
@@ -195,7 +195,7 @@ Page {
                     horizontalCenter: parent.horizontalCenter
                 }
                 onClicked: {
-                    pageStack.push(Qt.resolvedUrl("../pages/TextPage.qml"), {"contentId": "tos"});
+                    Qt.openUrlExternally("https://twitter.com/tos")
                 }
             }
 
@@ -217,7 +217,7 @@ Page {
 //            Label {
 //                id: wagnisIdLabel
 //                text: qsTr("Wagnis ID: ") + wagnis.getId()
-//                font.pixelSize: Theme.fontSizeSmall
+//                font.pixelSize: LocalTheme.fontSizeSmall
 //                anchors {
 //                    horizontalCenter: parent.horizontalCenter
 //                }
@@ -240,10 +240,10 @@ Page {
             }
 
             Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
                 text: qsTr("This project uses OAuth for Qt by Akos Polster. Thanks for making it available under the conditions of the BSD-2-Clause license!")
-                font.pixelSize: Theme.fontSizeExtraSmall
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -255,17 +255,17 @@ Page {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
 
                 onLinkActivated: Qt.openUrlExternally("https://github.com/pipacs/o2")
             }
 
             Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
                 text: qsTr("This project uses twitter-text. Copyright 2014 Twitter, Inc. and other contributors. Thanks for making it available under the conditions of the Apache License, Version 2.0!")
-                font.pixelSize: Theme.fontSizeExtraSmall
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -277,18 +277,18 @@ Page {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
 
                 onLinkActivated: Qt.openUrlExternally("https://github.com/twitter/twitter-text")
             }
 
 
             Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
                 text: qsTr("This project uses twemoji. Copyright 2018 Twitter, Inc. and other contributors. Thanks for making it available under the conditions of the MIT License (coding) and CC-BY 4.0 (graphics)!")
-                font.pixelSize: Theme.fontSizeExtraSmall
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -300,17 +300,17 @@ Page {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
 
                 onLinkActivated: Qt.openUrlExternally("https://github.com/twitter/twemoji")
             }
 
             Label {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
                 text: qsTr("This project uses QGumboParser. Copyright 2017 Sergey Lagner. Thanks for making it available under the conditions of the MIT License! QGumboParser uses Gumbo. Copyright 2017 by Google. Licensed under the conditions of the Apache License 2.0.")
-                font.pixelSize: Theme.fontSizeExtraSmall
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
@@ -322,19 +322,19 @@ Page {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
 
                 onLinkActivated: Qt.openUrlExternally("https://github.com/lagner/QGumboParser")
             }
 
             Text {
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
                 text: qsTr("Piepmatz uses ipinfo.io and (if available) the GPS receiver of your device to determine your location. Your location is used to retrieve trends and - only if you explicitly agree - as attachment to your tweets. If you want to use your location in tweets, please ensure to have it enabled in your <a href=\"https://twitter.com/settings/safety\">Twitter settings</a>.")
-                font.pixelSize: Theme.fontSizeExtraSmall
-                linkColor: Theme.highlightColor
-                color: Theme.primaryColor
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
+                linkColor: LocalTheme.highlightColor
+                color: LocalTheme.primaryColor
                 wrapMode: Text.Wrap
                 textFormat: Text.StyledText
                 anchors {
@@ -348,17 +348,17 @@ Page {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
 
                 onLinkActivated: Qt.openUrlExternally("https://ipinfo.io")
             }
 
             Label {
                 id: separatorLabel
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter

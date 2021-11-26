@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -27,7 +27,7 @@ Column {
     id: tweetTextColumn
     property variant tweet;
     property bool truncateText : false;
-    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall) ;
+    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeExtraSmall : LocalTheme.fontSizeSmall) ;
     visible: (tweetContentText.text !== "")
 
     width: parent.width
@@ -36,9 +36,9 @@ Column {
         target: accountModel
         onFontSizeChanged: {
             if (fontSize === "piepmatz") {
-                componentFontSize = Theme.fontSizeExtraSmall;
+                componentFontSize = LocalTheme.fontSizeExtraSmall;
             } else {
-                componentFontSize = Theme.fontSizeSmall;
+                componentFontSize = LocalTheme.fontSizeSmall;
             }
         }
     }
@@ -46,16 +46,18 @@ Column {
     function makeTheTextGreatAgain() {
         var relevantTweet = Functions.getRelevantTweet(tweetTextColumn.tweet);
         var greatifiedText = relevantTweet.full_text;
-        greatifiedText = Emoji.emojify(Functions.enhanceText(greatifiedText, relevantTweet.entities, relevantTweet.extended_entities), componentFontSize);
+        //greatifiedText = Emoji.emojify(Functions.enhanceText(greatifiedText, relevantTweet.entities, relevantTweet.extended_entities), componentFontSize);
         return greatifiedText;
     }
 
     Text {
         width: parent.width
         id: tweetContentText
-        text: tweetTextColumn.truncateText ? Emoji.emojify(Functions.getRelevantTweet(tweetTextColumn.tweet).full_text, componentFontSize) : makeTheTextGreatAgain()
+        //text: tweetTextColumn.truncateText ? Emoji.emojify(Functions.getRelevantTweet(tweetTextColumn.tweet).full_text, componentFontSize) : makeTheTextGreatAgain()
+        text: makeTheTextGreatAgain()
         font.pixelSize: componentFontSize
-        color: Theme.primaryColor
+        font.italic: tweetTextColumn.tweet.fakeTweet ? true : false
+        color: LocalTheme.primaryColor
         elide: tweetTextColumn.truncateText ? Text.ElideRight : Text.ElideNone
         wrapMode: Text.Wrap
         textFormat: Text.StyledText
@@ -63,7 +65,7 @@ Column {
         onLinkActivated: {
             Functions.handleLink(link);
         }
-        linkColor: Theme.highlightColor
+        linkColor: LocalTheme.highlightColor
     }
 }
 

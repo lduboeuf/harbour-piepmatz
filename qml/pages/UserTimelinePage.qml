@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -22,7 +22,7 @@ import "../components"
 
 Page {
     id: userTimelinePage
-    allowedOrientations: Orientation.All
+   // allowedOrientations: Orientation.All
 
     focus: true
     Keys.onLeftPressed: {
@@ -117,10 +117,10 @@ Page {
 
         Column {
             anchors.fill: parent
-            PageHeader {
-                id: userTimelineHeader
-                title: userName
-            }
+//            PageHeader {
+//                id: userTimelineHeader
+//                title: userName
+//            }
 
             ListView {
                 id: userTimelineListView
@@ -135,7 +135,7 @@ Page {
                 delegate: Tweet {
                     tweetModel: modelData
                 }
-                VerticalScrollDecorator {}
+               // VerticalScrollDecorator {}
             }
 
         }

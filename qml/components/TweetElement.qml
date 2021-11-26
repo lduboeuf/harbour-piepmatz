@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -28,6 +28,7 @@ Item {
     id: tweetElementItem
 
     property variant tweetModel;
+    //onTweetModelChanged: console.log('tweetModel', JSON.stringify(tweetModel))
     property string tweetId : ( tweetModel.retweeted_status ? tweetModel.retweeted_status.id_str : tweetModel.id_str );
     // TODO: attributes favorited and retweeted are only temporary workarounds until we are able to update and replace individual tweets in the model
     // does not work completely if model is reloaded (e.g. during scrolling)
@@ -42,15 +43,15 @@ Item {
     property bool extendedMode : false;
     property bool withSeparator : true;
     property bool isRetweetMention : false;
-    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeTiny : Theme.fontSizeExtraSmall) ;
-    property string infoTextFontSize: ( accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall) ;
-    property string infoIconFontSize: Theme.fontSizeMedium;
+    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeTiny : LocalTheme.fontSizeExtraSmall) ;
+    property string infoTextFontSize: ( accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeExtraSmall : LocalTheme.fontSizeSmall) ;
+    property string infoIconFontSize: LocalTheme.fontSizeMedium;
 
     width: parent.width
-    height: tweetRow.height + tweetAdditionalRow.height + tweetSeparator.height + 3 * Theme.paddingMedium
+    height: tweetRow.height + tweetAdditionalRow.height + tweetSeparator.height + 3 * LocalTheme.paddingMedium
 
     Behavior on height {
-        PropertyAnimation { easing.type: Easing.Linear; duration: 250 }
+        PropertyAnimation { easing.type: Easing.OutBack; duration: 200 }
         enabled: accountModel.getUseLoadingAnimations()
     }
 
@@ -58,19 +59,19 @@ Item {
         target: accountModel
         onFontSizeChanged: {
             if (fontSize === "piepmatz") {
-                componentFontSize = Theme.fontSizeTiny;
-                infoTextFontSize = Theme.fontSizeExtraSmall;
+                componentFontSize = LocalTheme.fontSizeTiny;
+                infoTextFontSize = LocalTheme.fontSizeExtraSmall;
             } else {
-                componentFontSize = Theme.fontSizeExtraSmall;
-                infoTextFontSize = Theme.fontSizeSmall;
+                componentFontSize = LocalTheme.fontSizeExtraSmall;
+                infoTextFontSize = LocalTheme.fontSizeSmall;
             }
         }
     }
 
     Column {
         id: tweetColumn
-        width: parent.width - ( 2 * Theme.horizontalPageMargin )
-        spacing: Theme.paddingSmall
+        width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+        spacing: LocalTheme.paddingSmall
         anchors {
             horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
@@ -79,36 +80,36 @@ Item {
         Row {
             id: tweetRow
             width: parent.width
-            spacing: Theme.paddingMedium
+            spacing: LocalTheme.paddingMedium
 
             Column {
                 id: tweetAuthorColumn
-                width: parent.width / 6
+                width: tweetModel.fakeTweet ? 0 : ( parent.width / 6 )
                 height: parent.width / 6
-                spacing: Theme.paddingSmall
+                spacing: LocalTheme.paddingSmall
                 Image {
                     id: tweetRetweetedImage
-                    source: "image://theme/icon-s-retweet"
+                    source: "image://theme/retweet"
                     visible: tweetModel.retweeted_status ? true : false
                     anchors.right: parent.right
-                    width: tweetElementItem.isRetweetMention ? Theme.fontSizeSmall : Theme.fontSizeExtraSmall
-                    height: tweetElementItem.isRetweetMention ? Theme.fontSizeSmall : Theme.fontSizeExtraSmall
+                    width: tweetElementItem.isRetweetMention ? LocalTheme.fontSizeSmall : LocalTheme.fontSizeExtraSmall
+                    height: tweetElementItem.isRetweetMention ? LocalTheme.fontSizeSmall : LocalTheme.fontSizeExtraSmall
                 }
                 Image {
                     id: tweetInReplyToImage
-                    source: "image://theme/icon-s-repost"
+                    source: "image://theme/mail-forward"
                     visible: tweetModel.in_reply_to_status_id_str ? true : false
                     anchors.right: parent.right
-                    width: Theme.fontSizeExtraSmall
-                    height: Theme.fontSizeExtraSmall
+                    width: LocalTheme.fontSizeExtraSmall
+                    height: LocalTheme.fontSizeExtraSmall
                 }
                 Image {
                     id: tweetDirectImage
-                    source: "image://theme/icon-s-message"
+                    source: "image://theme/email"
                     visible: (tweetModel.in_reply_to_user_id_str && !tweetModel.in_reply_to_status_id_str) ? true : false
                     anchors.right: parent.right
-                    width: Theme.fontSizeExtraSmall
-                    height: Theme.fontSizeExtraSmall
+                    width: LocalTheme.fontSizeExtraSmall
+                    height: LocalTheme.fontSizeExtraSmall
                 }
 
                 Item {
@@ -139,7 +140,7 @@ Item {
                         z: 42
                         width: parent.width
                         height: parent.height
-                        color: Theme.primaryColor
+                        color: LocalTheme.primaryColor
                         radius: parent.width / 7
                         visible: false
                     }
@@ -171,15 +172,15 @@ Item {
 
             Column {
                 id: tweetContentColumn
-                width: parent.width * 5 / 6 - Theme.horizontalPageMargin
+                width: tweetModel.fakeTweet ? ( parent.width - LocalTheme.horizontalPageMargin ) : ( parent.width * 5 / 6 - LocalTheme.horizontalPageMargin )
 
-                spacing: Theme.paddingSmall
+                spacing: LocalTheme.paddingSmall
 
                 Column {
                     Text {
                         id: tweetRetweetedText
-                        font.pixelSize: tweetElementItem.isRetweetMention ? Theme.fontSizeExtraSmall : componentFontSize
-                        color: tweetElementItem.isRetweetMention ? Theme.primaryColor : Theme.secondaryColor
+                        font.pixelSize: tweetElementItem.isRetweetMention ? LocalTheme.fontSizeExtraSmall : componentFontSize
+                        color: tweetElementItem.isRetweetMention ? LocalTheme.primaryColor : LocalTheme.secondaryColor
                         text: qsTr("Retweeted by %1").arg(( tweetElementItem.isRetweetMention ? "<b>" : "" ) + Emoji.emojify(tweetModel.user.name, componentFontSize) + ( tweetElementItem.isRetweetMention ? "</b>" : "" ))
                         textFormat: Text.StyledText
                         visible: tweetModel.retweeted_status ? true : false
@@ -205,7 +206,7 @@ Item {
                     Text {
                         id: tweetInReplyToText
                         font.pixelSize: componentFontSize
-                        color: Theme.secondaryColor
+                        color: LocalTheme.secondaryColor
                         text: qsTr("In reply to %1").arg(Emoji.emojify(Functions.getUserNameById(tweetModel.in_reply_to_user_id, tweetModel.user, tweetModel.entities.user_mentions), componentFontSize))
                         textFormat: Text.StyledText
                         visible: tweetModel.in_reply_to_status_id_str ? true : false
@@ -230,7 +231,7 @@ Item {
                     Text {
                         id: tweetDirectText
                         font.pixelSize: componentFontSize
-                        color: Theme.secondaryColor
+                        color: LocalTheme.secondaryColor
                         text: qsTr("Tweet to %1").arg(Emoji.emojify(Functions.getUserNameById(tweetModel.in_reply_to_user_id, tweetModel.user, tweetModel.entities.user_mentions), componentFontSize))
                         textFormat: Text.StyledText
                         visible: (tweetModel.in_reply_to_user_id_str && !tweetModel.in_reply_to_status_id_str) ? true : false
@@ -256,7 +257,7 @@ Item {
                 TweetUser {
                     id: tweetUserRow
                     tweetUser: tweetModel.retweeted_status ? tweetModel.retweeted_status.user : tweetModel.user
-                    visible: !tweetElementItem.isRetweetMention
+                    visible: !tweetElementItem.isRetweetMention && !tweetModel.fakeTweet
                 }
 
                 TweetText {
@@ -295,10 +296,11 @@ Item {
                         visible: false
                         opacity: visible ? 1 : 0
                         Behavior on opacity { NumberAnimation {} }
-                        spacing: Theme.paddingSmall
+                        spacing: LocalTheme.paddingSmall
                         Rectangle {
                             width: parent.width
-                            color: Theme.primaryColor
+                            color: LocalTheme.primaryColor
+                            height: 1
                             //horizontalAlignment: Qt.AlignHCenter
                         }
 
@@ -340,12 +342,13 @@ Item {
                         }
 
                         Text {
-                            visible: referenceMetadata.description ? true : false
+                            //visible: referenceMetadata.description ? true : false
                             width: parent.width
                             id: openGraphText
-                            text: referenceMetadata.description ? Emoji.emojify(Functions.htmlDecode(referenceMetadata.description), componentFontSize) : ""
+                            //text: referenceMetadata.description ? Emoji.emojify(Functions.htmlDecode(referenceMetadata.description), componentFontSize) : ""
+                            text: referenceMetadata.description
                             font.pixelSize: componentFontSize
-                            color: Theme.primaryColor
+                            color: LocalTheme.primaryColor
                             wrapMode: Text.Wrap
                             textFormat: Text.StyledText
                             maximumLineCount: 4
@@ -365,19 +368,20 @@ Item {
                             id: openGraphLink
                             text: "<a href=\"" + referenceMetadata.url + "\">" + Emoji.emojify(Functions.htmlDecode(referenceMetadata.title), componentFontSize) + "</a>"
                             font.pixelSize: componentFontSize
-                            color: Theme.highlightColor
+                            color: LocalTheme.highlightColor
                             wrapMode: Text.Wrap
                             textFormat: Text.StyledText
                             onLinkActivated: {
                                 Functions.handleLink(link);
                             }
-                            linkColor: Theme.highlightColor
+                            linkColor: LocalTheme.highlightColor
                         }
 
                         Rectangle {
                             width: parent.width
-                            color: Theme.primaryColor
-                            //horizontalAlignment: Qt.AlignHCenter
+                            color: LocalTheme.primaryColor
+                            height: 1
+                                                      //horizontalAlignment: Qt.AlignHCenter
                         }
                     }
                 }
@@ -392,15 +396,15 @@ Item {
                 Row {
                     id: tweetSourceRow
                     width: parent.width
-                    visible: tweetElement.extendedMode
-                    spacing: Theme.paddingSmall
+                    visible: tweetElement.extendedMode && !tweetModel.fakeTweet
+                    spacing: LocalTheme.paddingSmall
                     Text {
                         id: tweetSourceText
                         width: parent.width
-                        font.pixelSize: Theme.fontSizeExtraSmall
+                        font.pixelSize: LocalTheme.fontSizeExtraSmall
                         elide: Text.ElideRight
                         maximumLineCount: 1
-                        color: Theme.secondaryColor
+                        color: LocalTheme.secondaryColor
                         text: qsTr("Tweeted with %1").arg((tweetModel.retweeted_status ? tweetModel.retweeted_status.source : tweetModel.source).replace(/\<[^\>]+\>/g, ""))
                     }
                 }
@@ -409,20 +413,20 @@ Item {
                     id: tweetPlaceRow
                     width: parent.width
                     visible: tweetElement.extendedMode && Functions.containsPlace(tweetModel)
-                    spacing: Theme.paddingSmall
+                    spacing: LocalTheme.paddingSmall
                     Image {
                         id: tweetPlaceImage
-                        source: "image://theme/icon-m-location"
-                        width: Theme.fontSizeSmall
-                        height: Theme.fontSizeSmall
+                        source: "image://theme/location"
+                        width: LocalTheme.fontSizeSmall
+                        height: LocalTheme.fontSizeSmall
                     }
                     Text {
                         id: tweetPlaceText
-                        width: parent.width - Theme.paddingSmall - tweetPlaceImage.width
-                        font.pixelSize: Theme.fontSizeExtraSmall
+                        width: parent.width - LocalTheme.paddingSmall - tweetPlaceImage.width
+                        font.pixelSize: LocalTheme.fontSizeExtraSmall
                         elide: Text.ElideRight
                         maximumLineCount: 1
-                        color: Theme.secondaryColor
+                        color: LocalTheme.secondaryColor
                         text: tweetPlaceRow.visible ? ( tweetModel.retweeted_status ? tweetModel.retweeted_status.place.full_name : tweetModel.place.full_name ) : ""
                     }
                 }
@@ -430,16 +434,17 @@ Item {
                 Row {
                     id: tweetInfoRow
                     width: parent.width
-                    height: Theme.fontSizeLarge
-                    spacing: Theme.paddingSmall
+                    height: LocalTheme.fontSizeLarge
+                    spacing: LocalTheme.paddingSmall
+                    visible: !tweetModel.fakeTweet
 
                     Connections {
                         target: twitterApi
                         onFavoriteSuccessful: {
                             if (tweetElementItem.tweetId === result.id_str) {
                                 tweetFavoritesCountImage.visible = true;
-                                tweetFavoritesCountImage.source = "image://theme/icon-s-favorite?" + Theme.highlightColor;
-                                tweetFavoritesCountText.color = Theme.highlightColor;
+                                tweetFavoritesCountImage.source = "image://theme/icon-s-favorite?" + LocalTheme.highlightColor;
+                                tweetFavoritesCountText.color = LocalTheme.highlightColor;
                                 tweetFavoritesCountText.text = Functions.getShortenedCount(Functions.getFavoritesCount(result));
                                 tweetElementItem.favorited = true;
                             }
@@ -450,8 +455,8 @@ Item {
                         onUnfavoriteSuccessful: {
                             if (tweetElementItem.tweetId === result.id_str) {
                                 tweetFavoritesCountImage.visible = true;
-                                tweetFavoritesCountImage.source = "image://theme/icon-s-favorite?" + Theme.primaryColor;
-                                tweetFavoritesCountText.color = Theme.secondaryColor;
+                                tweetFavoritesCountImage.source = "image://theme/icon-s-favorite?" + LocalTheme.primaryColor;
+                                tweetFavoritesCountText.color = LocalTheme.secondaryColor;
                                 tweetFavoritesCountText.text = Functions.getShortenedCount(Functions.getFavoritesCount(result));
                                 tweetElementItem.favorited = false;
                             }
@@ -462,8 +467,8 @@ Item {
                         onRetweetSuccessful: {
                             if (tweetElementItem.tweetId === result.retweeted_status.id_str) {
                                 tweetRetweetedCountImage.visible = true;
-                                tweetRetweetedCountImage.source = "image://theme/icon-s-retweet?" + Theme.highlightColor;
-                                tweetRetweetedCountText.color = Theme.highlightColor;
+                                tweetRetweetedCountImage.source = "image://theme/icon-s-retweet?" + LocalTheme.highlightColor;
+                                tweetRetweetedCountText.color = LocalTheme.highlightColor;
                                 tweetRetweetedCountText.text = Functions.getShortenedCount(Functions.getRetweetCount(result));
                                 tweetElementItem.retweeted = true;
                             }
@@ -474,8 +479,8 @@ Item {
                         onUnretweetSuccessful: {
                             if (tweetElementItem.tweetId === result.id_str) {
                                 tweetRetweetedCountImage.visible = true;
-                                tweetRetweetedCountImage.source = "image://theme/icon-s-retweet?" + Theme.primaryColor;
-                                tweetRetweetedCountText.color = Theme.secondaryColor;
+                                tweetRetweetedCountImage.source = "image://theme/icon-s-retweet?" + LocalTheme.primaryColor;
+                                tweetRetweetedCountText.color = LocalTheme.secondaryColor;
                                 tweetRetweetedCountText.text = Functions.getShortenedCount(Functions.getRetweetCount(result));
                                 tweetElementItem.retweeted = false;
                             }
@@ -491,7 +496,8 @@ Item {
                         running: true
                         repeat: true
                         onTriggered: {
-                            tweetDateText.text = Format.formatDate(Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at), Formatter.DurationElapsed);
+                            //TODO
+                            tweetDateText.text = Qt.formatDate(Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at));
                         }
                     }
 
@@ -503,8 +509,8 @@ Item {
                             width: parent.width
                             id: tweetDateText
                             font.pixelSize: infoTextFontSize
-                            color: Theme.secondaryColor
-                            text:  Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at)
+                            color: LocalTheme.secondaryColor
+                            text:  Qt.formatDate(Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at))
                             elide: Text.ElideRight
                             maximumLineCount: 1
                         }
@@ -513,7 +519,7 @@ Item {
                     Row {
                         width: parent.width * 11 / 20
                         height: parent.height
-                        spacing: Theme.paddingSmall
+                        spacing: LocalTheme.paddingSmall
                         Column {
                             width: parent.width / 6
                             anchors.verticalCenter: parent.verticalCenter
@@ -521,7 +527,8 @@ Item {
                             Image {
                                 id: tweetRetweetedCountImage
                                 anchors.right: parent.right
-                                source: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.retweeted ? ( "image://theme/icon-s-retweet?" + Theme.highlightColor ) : "image://theme/icon-s-retweet" ) : ( tweetModel.retweeted ? ( "image://theme/icon-s-retweet?" + Theme.highlightColor ) : "image://theme/icon-s-retweet" )
+
+                                source: "image://theme/retweet"
                                 width: infoIconFontSize
                                 height: infoIconFontSize
                                 opacity: Functions.getRelevantTweet(tweetModel).user.protected ? 0.2 : 1
@@ -533,6 +540,11 @@ Item {
                                     }
 
                                 }
+                            }
+                            ColorOverlay {
+                                    //anchors.fill: tweetRetweetedCountImage
+                                    source: tweetRetweetedCountImage
+                                    color: tweetModel.retweeted_status ? tweetModel.retweeted_status.retweeted ? LocalTheme.highlightColor : LocalTheme.primaryColor  : tweetModel.retweeted ? LocalTheme.highlightColor  : LocalTheme.primaryColor
                             }
                             BusyIndicator {
                                 id: tweetRetweetBusyIndicator
@@ -550,7 +562,7 @@ Item {
                                 id: tweetRetweetedCountText
                                 font.pixelSize: infoTextFontSize
                                 anchors.left: parent.left
-                                color: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.retweeted ? Theme.highlightColor : Theme.secondaryColor ) : ( tweetModel.retweeted ? Theme.highlightColor : Theme.secondaryColor )
+                                color: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.retweeted ? LocalTheme.highlightColor : LocalTheme.secondaryColor ) : ( tweetModel.retweeted ? LocalTheme.highlightColor : LocalTheme.secondaryColor )
                                 text: Functions.getShortenedCount(Functions.getRetweetCount(tweetModel))
                                 elide: Text.ElideRight
                                 maximumLineCount: 1
@@ -570,7 +582,7 @@ Item {
                             Image {
                                 id: tweetFavoritesCountImage
                                 anchors.right: parent.right
-                                source: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.favorited ? ( "image://theme/icon-s-favorite?" + Theme.highlightColor ) : "image://theme/icon-s-favorite" ) : ( tweetModel.favorited ? ( "image://theme/icon-s-favorite?" + Theme.highlightColor ) : "image://theme/icon-s-favorite" )
+                                source: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.favorited ? ( "image://theme/like?" + LocalTheme.highlightColor ) : "image://theme/like" ) : ( tweetModel.favorited ? ( "image://theme/like?" + LocalTheme.highlightColor ) : "image://theme/like" )
                                 width: infoIconFontSize
                                 height: infoIconFontSize
                                 MouseArea {
@@ -597,7 +609,7 @@ Item {
                                 id: tweetFavoritesCountText
                                 font.pixelSize: infoTextFontSize
                                 anchors.left: parent.left
-                                color: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.favorited ? Theme.highlightColor : Theme.secondaryColor ) : ( tweetModel.favorited ? Theme.highlightColor : Theme.secondaryColor )
+                                color: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.favorited ? LocalTheme.highlightColor : LocalTheme.secondaryColor ) : ( tweetModel.favorited ? LocalTheme.highlightColor : LocalTheme.secondaryColor )
                                 text: Functions.getShortenedCount(Functions.getFavoritesCount(tweetModel))
                                 elide: Text.ElideRight
                                 maximumLineCount: 1
@@ -620,19 +632,19 @@ Item {
         Row {
             id: tweetAdditionalRow
             width: parent.width
-            spacing: Theme.paddingMedium
+            spacing: LocalTheme.paddingMedium
 
             Column {
                 id: dummyLeftColumn
                 width: parent.width / 6
-                height: Theme.fontSizeTiny
+                height: LocalTheme.fontSizeTiny
             }
 
             Column {
                 id: tweetAdditionalRightColumn
-                width: parent.width * 5 / 6 - Theme.horizontalPageMargin
+                width: parent.width * 5 / 6 - LocalTheme.horizontalPageMargin
 
-                spacing: Theme.paddingSmall
+                spacing: LocalTheme.paddingSmall
 
                 TweetImageSlideshow {
                     id: tweetImageSlideshow
@@ -704,11 +716,11 @@ Item {
 
         anchors {
             top: tweetColumn.bottom
-            topMargin: Theme.paddingMedium
+            topMargin: LocalTheme.paddingMedium
         }
 
         width: parent.width
-        color: Theme.primaryColor
+        color: LocalTheme.primaryColor
         //horizontalAlignment: Qt.AlignHCenter
         visible: tweetElementItem.withSeparator
     }

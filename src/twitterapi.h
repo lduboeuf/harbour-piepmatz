@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -28,16 +28,17 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QSettings>
 #include <QVariantMap>
 #include <QVariantList>
 #include "o1requestor.h"
 #include "o0requestparameter.h"
 #include "o0globals.h"
+#include "emojisearchworker.h"
 //#include "wagnis/wagnis.h"
 
 const char API_ACCOUNT_VERIFY_CREDENTIALS[] = "https://api.twitter.com/1.1/account/verify_credentials.json";
 const char API_ACCOUNT_SETTINGS[] = "https://api.twitter.com/1.1/account/settings.json";
-const char API_HELP_CONFIGURATION[] = "https://api.twitter.com/1.1/help/configuration.json";
 const char API_HELP_PRIVACY[] = "https://api.twitter.com/1.1/help/privacy.json";
 const char API_HELP_TOS[] = "https://api.twitter.com/1.1/help/tos.json";
 const char API_MEDIA_UPLOAD[] = "https://upload.twitter.com/1.1/media/upload.json";
@@ -76,16 +77,17 @@ const char API_SAVED_SEARCHES_LIST[] = "https://api.twitter.com/1.1/saved_search
 const char API_SAVED_SEARCHES_CREATE[] = "https://api.twitter.com/1.1/saved_searches/create.json";
 const char API_SAVED_SEARCHES_DESTROY[] = "https://api.twitter.com/1.1/saved_searches/destroy/:id.json";
 
+const char HEADER_NO_RECURSION[] = "X-Piepmatz-No-Recursion";
+
 class TwitterApi : public QObject {
 
     Q_OBJECT
 public:
     //TwitterApi(O1Requestor* requestor, QNetworkAccessManager *manager, Wagnis *wagnis, QObject* parent = 0);
-    TwitterApi(O1Requestor* requestor, QNetworkAccessManager *manager, QObject* parent = 0);
+    TwitterApi(O1Requestor* requestor, QNetworkAccessManager *manager, O1Requestor* secretIdentityRequestor = 0, QObject *parent = 0);
 
     Q_INVOKABLE void verifyCredentials();
     Q_INVOKABLE void accountSettings();
-    Q_INVOKABLE void helpConfiguration();
     Q_INVOKABLE void helpPrivacy();
     Q_INVOKABLE void helpTos();
     Q_INVOKABLE void tweet(const QString &text, const QString &placeId = QString());
@@ -96,10 +98,10 @@ public:
     Q_INVOKABLE void homeTimeline(const QString &maxId = QString());
     Q_INVOKABLE void mentionsTimeline();
     Q_INVOKABLE void retweetTimeline();
-    Q_INVOKABLE void userTimeline(const QString &screenName);
+    Q_INVOKABLE void userTimeline(const QString &screenName, const bool &useSecretIdentity = false);
     Q_INVOKABLE void followers(const QString &screenName);
-    Q_INVOKABLE void friends(const QString &screenName);
-    Q_INVOKABLE void showStatus(const QString &statusId);
+    Q_INVOKABLE void friends(const QString &screenName, const QString &cursor = 0);
+    Q_INVOKABLE void showStatus(const QString &statusId, const bool &useSecretIdentity = false);
     Q_INVOKABLE void showUser(const QString &screenName);
     Q_INVOKABLE void showUserById(const QString &userId);
     Q_INVOKABLE void followUser(const QString &screenName);
@@ -131,17 +133,24 @@ public:
 
     Q_INVOKABLE void getOpenGraph(const QString &address);
     Q_INVOKABLE void getSingleTweet(const QString &tweetId, const QString &address);
+    Q_INVOKABLE void getSingleTweetWithConversationId(const QString &tweetId);
+    Q_INVOKABLE void getTweetConversation(const QString &conversationId);
     Q_INVOKABLE void getIpInfo();
     Q_INVOKABLE void controlScreenSaver(const bool &enabled);
-    Q_INVOKABLE void handleAdditionalInformation(const QString &additionalInformation);
+    Q_INVOKABLE void handleAdditionalInformation(const QString &additionalInformation);    
+
+    Q_INVOKABLE bool getDeveloperMode();
+    Q_INVOKABLE void setDeveloperMode(const bool enableDeveloperMode);
+    Q_INVOKABLE QString getBearerToken();
+    Q_INVOKABLE void setBearerToken(const QString &bearerToken);
+
+    Q_INVOKABLE QVariantMap parseErrorResponse(const QString &errorText, const QByteArray &responseText);
 
 signals:
     void verifyCredentialsSuccessful(const QVariantMap &result);
     void verifyCredentialsError(const QString &errorMessage);
     void accountSettingsSuccessful(const QVariantMap &result);
     void accountSettingsError(const QString &errorMessage);
-    void helpConfigurationSuccessful(const QVariantMap &result);
-    void helpConfigurationError(const QString &errorMessage);
     void helpPrivacySuccessful(const QVariantMap &result);
     void helpPrivacyError(const QString &errorMessage);
     void helpTosSuccessful(const QVariantMap &result);
@@ -164,6 +173,8 @@ signals:
     void showStatusError(const QString &errorMessage);
     void showUserSuccessful(const QVariantMap &result);
     void showUserError(const QString &errorMessage);
+    void showUserByIdSuccessful(const QVariantMap &result);
+    void showUserByIdError(const QString &errorMessage);
     void followUserSuccessful(const QVariantMap &result);
     void followUserError(const QString &errorMessage);
     void unfollowUserSuccessful(const QVariantMap &result);
@@ -225,9 +236,14 @@ signals:
     void getIpInfoSuccessful(const QVariantMap &result);
     void getIpInfoError(const QString &errorMessage);
 
+    void bearerTokenChanged(const QString &bearerToken);
+    void developerModeChanged(const bool developerModel);
+
 private:
     O1Requestor *requestor;
+    O1Requestor *secretIdentityRequestor;
     QNetworkAccessManager *manager;
+    QSettings twitterSettings;
     //Wagnis *wagnis;
 
 private slots:
@@ -235,8 +251,6 @@ private slots:
     void handleVerifyCredentialsError(QNetworkReply::NetworkError error);
     void handleAccountSettingsSuccessful();
     void handleAccountSettingsError(QNetworkReply::NetworkError error);
-    void handleHelpConfigurationSuccessful();
-    void handleHelpConfigurationError(QNetworkReply::NetworkError error);
     void handleHelpPrivacySuccessful();
     void handleHelpPrivacyError(QNetworkReply::NetworkError error);
     void handleHelpTosSuccessful();
@@ -260,6 +274,8 @@ private slots:
     void handleShowStatusFinished();
     void handleShowUserError(QNetworkReply::NetworkError error);
     void handleShowUserFinished();
+    void handleShowUserByIdError(QNetworkReply::NetworkError error);
+    void handleShowUserByIdFinished();
     void handleFollowUserError(QNetworkReply::NetworkError error);
     void handleFollowUserFinished();
     void handleUnfollowUserError(QNetworkReply::NetworkError error);
@@ -312,6 +328,8 @@ private slots:
     void handleGetOpenGraphFinished();
     void handleGetSingleTweetError(QNetworkReply::NetworkError error);
     void handleGetSingleTweetFinished();
+    void handleGetSingleTweetWithConversationIdFinished();
+    void handleGetTweetConversationFinished();
     void handleTweetConversationReceived(QString tweetId, QVariantList receivedTweets);
     void handleGetIpInfoError(QNetworkReply::NetworkError error);
     void handleGetIpInfoFinished();

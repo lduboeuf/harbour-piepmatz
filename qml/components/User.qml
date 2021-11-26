@@ -29,20 +29,20 @@ ItemDelegate {
     id: singleUser
 
     property variant userModel;
-    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? Theme.fontSizeExtraSmall : Theme.fontSizeSmall) ;
+    property string componentFontSize: ( accountModel.getFontSize() === "piepmatz" ? LocalTheme.fontSizeExtraSmall : LocalTheme.fontSizeSmall) ;
 
     Connections {
         target: accountModel
         onFontSizeChanged: {
             if (fontSize === "piepmatz") {
-                componentFontSize = Theme.fontSizeExtraSmall;
+                componentFontSize = LocalTheme.fontSizeExtraSmall;
             } else {
-                componentFontSize = Theme.fontSizeSmall;
+                componentFontSize = LocalTheme.fontSizeSmall;
             }
         }
     }
 
-    height: userRow.height + userSeparator.height + 2 * Theme.paddingMedium
+    height: userRow.height + userSeparator.height + 2 * LocalTheme.paddingMedium
     width: parent.width
 
     onClicked: {
@@ -60,8 +60,8 @@ ItemDelegate {
 
     Column {
         id: userColumn
-        width: parent.width - ( 2 * Theme.horizontalPageMargin )
-        spacing: Theme.paddingSmall
+        width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+        spacing: LocalTheme.paddingSmall
         anchors {
             horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
@@ -70,13 +70,13 @@ ItemDelegate {
         Row {
             id: userRow
             width: parent.width
-            spacing: Theme.paddingMedium
+            spacing: LocalTheme.paddingMedium
 
             Column {
                 id: userPictureColumn
                 width: parent.width / 6
                 height: parent.width / 6
-                spacing: Theme.paddingSmall
+                spacing: LocalTheme.paddingSmall
 
                 Item {
                     id: userPictureItem
@@ -106,7 +106,7 @@ ItemDelegate {
                         z: 42
                         width: parent.width
                         height: parent.height
-                        color: Theme.primaryColor
+                        color: LocalTheme.primaryColor
                         radius: parent.width / 7
                         visible: false
                     }
@@ -138,9 +138,9 @@ ItemDelegate {
 
             Column {
                 id: userContentColumn
-                width: parent.width * 5 / 6 - Theme.horizontalPageMargin
+                width: parent.width * 5 / 6 - LocalTheme.horizontalPageMargin
 
-                spacing: Theme.paddingSmall
+                spacing: LocalTheme.paddingSmall
 
                 TweetUser {
                     id: tweetUserRow
@@ -149,16 +149,16 @@ ItemDelegate {
 
                 Text {
                     id: userDescriptionText
-                    text: Emoji.emojify(TwitterText.autoLink(userModel.description, { usernameIncludeSymbol : true }), Theme.fontSizeExtraSmall)
+                    text: Emoji.emojify(TwitterText.autoLink(userModel.description, { usernameIncludeSymbol : true }), LocalTheme.fontSizeExtraSmall)
                     font.pixelSize: componentFontSize
-                    color: Theme.primaryColor
+                    color: LocalTheme.primaryColor
                     wrapMode: Text.Wrap
                     width: parent.width
                     textFormat: Text.StyledText
                     onLinkActivated: {
                         Functions.handleLink(link);
                     }
-                    linkColor: Theme.highlightColor
+                    linkColor: LocalTheme.highlightColor
                 }
 
             }
@@ -171,11 +171,11 @@ ItemDelegate {
 
         anchors {
             top: userColumn.bottom
-            topMargin: Theme.paddingMedium
+            topMargin: LocalTheme.paddingMedium
         }
 
         width: parent.width
-        color: Theme.primaryColor
+        color: LocalTheme.primaryColor
        //horizontalAlignment: Qt.AlignHCenter
     }
 

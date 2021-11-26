@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -25,10 +25,10 @@ Page {
     title: qsTr("Welcome to Piepmatz!")
 
     Column {
-        y: ( parent.height - ( errorToolTip.height + wunderfitzErrorImage.height + errorOkButton.height + ( 3 * Theme.paddingSmall ) ) ) / 2
+        y: ( parent.height - ( errorInfoLabel.height + wunderfitzErrorImage.height + errorOkButton.height + ( 3 * LocalTheme.paddingSmall ) ) ) / 2
         width: parent.width
         id: pinErrorColumn
-        spacing: Theme.paddingSmall
+        spacing: LocalTheme.paddingSmall
 
         Behavior on opacity { NumberAnimation {} }
         opacity: 0
@@ -46,8 +46,8 @@ Page {
         }
 
         ToolTip {
-            id: errorToolTip
-            font.pixelSize: Theme.fontSizeLarge
+            id: errorInfoLabel
+            font.pixelSize: LocalTheme.fontSizeLarge
             text: ""
         }
 
@@ -67,10 +67,10 @@ Page {
     }
 
     Column {
-        y: ( parent.height - ( wunderfitzPinImage.height + enterPinLabel.height + enterPinField.height + enterPinButton.height + ( 3 * Theme.paddingSmall ) ) ) / 2
+        y: ( parent.height - ( wunderfitzPinImage.height + enterPinLabel.height + enterPinField.height + enterPinButton.height + ( 3 * LocalTheme.paddingSmall ) ) ) / 2
         width: parent.width
         id: enterPinColumn
-        spacing: Theme.paddingSmall
+        spacing: LocalTheme.paddingSmall
 
         Behavior on opacity { NumberAnimation {} }
         opacity: 0
@@ -89,7 +89,7 @@ Page {
 
         ToolTip {
             id: enterPinLabel
-            font.pixelSize: Theme.fontSizeLarge
+            font.pixelSize: LocalTheme.fontSizeLarge
             text: qsTr("Please enter the Twitter PIN:")
         }
 
@@ -99,8 +99,8 @@ Page {
                 horizontalCenter: parent.horizontalCenter
             }
             inputMethodHints: Qt.ImhDigitsOnly
-            font.pixelSize: Theme.fontSizeExtraLarge
-            width: parent.width - 4 * Theme.paddingLarge
+            font.pixelSize: LocalTheme.fontSizeExtraLarge
+            width: parent.width - 4 * LocalTheme.paddingLarge
             horizontalAlignment: TextInput.AlignHCenter
         }
 
@@ -119,10 +119,10 @@ Page {
     }
 
     Column {
-        y: ( parent.height - ( wunderfitzLinkingErrorImage.height + linkingErrorToolTip.height + errorOkButton.height + ( 3 * Theme.paddingSmall ) ) ) / 2
+        y: ( parent.height - ( wunderfitzLinkingErrorImage.height + linkingErrorInfoLabel.height + errorOkButton.height + ( 3 * LocalTheme.paddingSmall ) ) ) / 2
         width: parent.width
         id: linkingErrorColumn
-        spacing: Theme.paddingSmall
+        spacing: LocalTheme.paddingSmall
 
         Behavior on opacity { NumberAnimation {} }
         opacity: 0
@@ -140,8 +140,8 @@ Page {
         }
 
         ToolTip {
-            id: linkingErrorToolTip
-            font.pixelSize: Theme.fontSizeLarge
+            id: linkingErrorInfoLabel
+            font.pixelSize: LocalTheme.fontSizeLarge
             text: qsTr("Unable to authenticate you with the entered PIN.")
         }
 
@@ -191,7 +191,7 @@ Page {
                 enterPinColumn.opacity = 1
             }
             onPinRequestError: {
-                errorToolTip.text = errorMessage
+                errorInfoLabel.text = errorMessage
                 welcomeFlickable.visible = false
                 pinErrorColumn.visible = true
                 welcomeFlickable.opacity = 0
@@ -215,12 +215,15 @@ Page {
         Column {
             id: column
             width: parent.width
-            spacing: Theme.paddingLarge
+            spacing: LocalTheme.paddingLarge
 
+//            PageHeader {
+//                title: qsTr("Welcome to Piepmatz!")
+//            }
 
             Image {
                 id: wunderfitzImage
-                source: Qt.resolvedUrl("../../images/" + accountModel.getImagePath() + "piepmatz.svg")
+                source: "../../images/" + accountModel.getImagePath() + "piepmatz.svg"
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -231,11 +234,11 @@ Page {
 
             Label {
                 wrapMode: Text.Wrap
-                //x: parent.paddingSmall
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("Please login to Twitter to continue.")
-                font.pixelSize: Theme.fontSizeSmall
+                font.pixelSize: LocalTheme.fontSizeSmall
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -253,12 +256,11 @@ Page {
 
             Label {
                 wrapMode: Text.Wrap
-               // anchors.horizontalCenter: parent
-                //x: Theme.horizontalPageMargin
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr("If you don't have a Twitter account yet, please sign up first.")
-                font.pixelSize: Theme.fontSizeSmall
+                font.pixelSize: LocalTheme.fontSizeSmall
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
@@ -269,8 +271,8 @@ Page {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                font.pixelSize: Theme.fontSizeSmall
-                linkColor: Theme.highlightColor
+                font.pixelSize: LocalTheme.fontSizeSmall
+                linkColor: LocalTheme.highlightColor
 
                 onLinkActivated: Qt.openUrlExternally("https://twitter.com/")
             }

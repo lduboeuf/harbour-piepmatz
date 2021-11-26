@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -38,7 +38,6 @@ Page {
         pageStack.pop();
     }
 
-    property variant configuration;
     property real progress : 0;
     property bool valid : true;
     property variant attachmentTweet;
@@ -47,6 +46,7 @@ Page {
     property bool replyToTweetLoaded;
     property bool withImages : false;
     property variant atMentionProposals;
+    property variant emojiProposals;
     property variant attachedImages;
     property variant ipInfo;
     property variant place;
@@ -85,6 +85,11 @@ Page {
             twitterApi.searchUsers(currentWord);
         } else {
             newTweetPage.atMentionProposals = null;
+        }
+        if (currentWord.length > 1 && currentWord.charAt(0) === ':') {
+            accountModel.searchEmoji(currentWord.substring(1));
+        } else {
+            newTweetPage.emojiProposals = null;
         }
     }
 
@@ -143,6 +148,13 @@ Page {
         onImagesSelected: {
             newTweetPage.withImages = true;
             newTweetPage.attachedImages = imagesModel.getSelectedImages();
+        }
+    }
+
+    Connections {
+        target: accountModel
+        onEmojiSearchSuccessful: {
+            newTweetPage.emojiProposals = result;
         }
     }
 
@@ -240,8 +252,11 @@ Page {
         Column {
             id: column
             width: newTweetPage.width
-            spacing: Theme.paddingSmall
+            spacing: LocalTheme.paddingSmall
 
+//            PageHeader {
+//                title: ( replyToStatusId ? qsTr("Reply") : ( attachmentTweet ? qsTr("Retweet") : qsTr("New Tweet") ) ) + " " + qsTr("@%1").arg(accountModel.getCurrentAccount().screen_name)
+//            }
 
             Connections {
                 target: twitterApi
@@ -272,12 +287,12 @@ Page {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
-                width: parent.width - 2 * Theme.paddingLarge
+                width: parent.width - 2 * LocalTheme.paddingLarge
                 TextArea {
                     id: enterTweetTextArea
                     width: parent.width - remainingCircle.width
                     focus: true
-                    font.pixelSize: Theme.fontSizeSmall
+                    font.pixelSize: LocalTheme.fontSizeSmall
                     //labelVisible: false;
                     onTextChanged: {
                         parseText(enterTweetTextArea.text);
@@ -289,10 +304,10 @@ Page {
 
                 ProgressCircle {
                     id: remainingCircle
-                    secondaryColor: Theme.highlightColor
-                    primaryColor: Theme.highlightDimmerColor
-                    width: Theme.itemSizeExtraSmall
-                    height: Theme.itemSizeExtraSmall
+                    secondaryColor: LocalTheme.highlightColor
+                    primaryColor: LocalTheme.highlightDimmerColor
+                    width: LocalTheme.itemSizeExtraSmall
+                    height: LocalTheme.itemSizeExtraSmall
                     value: newTweetPage.progress
                     anchors {
                         verticalCenter: parent.verticalCenter
@@ -314,22 +329,22 @@ Page {
 
             Column {
                 id: atMentioningColumn
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: atMentionProposals ? ( atMentionProposals.length > 0 ? true : false ) : false
                 opacity: atMentionProposals ? ( atMentionProposals.length > 0 ? 1 : 0 ) : 0
                 Behavior on opacity { NumberAnimation {} }
-                spacing: Theme.paddingMedium
+                spacing: LocalTheme.paddingMedium
 
                 Flickable {
                     width: parent.width
-                    height: atMentioningResultRow.height + Theme.paddingSmall
+                    height: atMentioningResultRow.height + LocalTheme.paddingSmall
                     anchors.horizontalCenter: parent.horizontalCenter
                     contentWidth: atMentioningResultRow.width
                     clip: true
                     Row {
                         id: atMentioningResultRow
-                        spacing: Theme.paddingMedium
+                        spacing: LocalTheme.paddingMedium
                         Repeater {
                             model: atMentionProposals
 
@@ -339,11 +354,11 @@ Page {
 
                                 Row {
                                     id: singleUserRow
-                                    spacing: Theme.paddingSmall
+                                    spacing: LocalTheme.paddingSmall
 
                                     Item {
-                                        width: Theme.fontSizeHuge
-                                        height: Theme.fontSizeHuge
+                                        width: LocalTheme.fontSizeHuge
+                                        height: LocalTheme.fontSizeHuge
                                         anchors.verticalCenter: parent.verticalCenter
                                         Image {
                                             id: userPicture
@@ -368,7 +383,7 @@ Page {
                                             z: 42
                                             width: parent.width
                                             height: parent.height
-                                            color: Theme.primaryColor
+                                            color: LocalTheme.primaryColor
                                             radius: parent.width / 7
                                             visible: false
                                         }
@@ -387,12 +402,12 @@ Page {
 
                                     Column {
                                         Row {
-                                            spacing: Theme.paddingSmall
+                                            spacing: LocalTheme.paddingSmall
                                             Text {
-                                                text: Emoji.emojify(modelData.name, Theme.fontSizeExtraSmall)
+                                                text: Emoji.emojify(modelData.name, LocalTheme.fontSizeExtraSmall)
                                                 textFormat: Text.StyledText
-                                                color: Theme.primaryColor
-                                                font.pixelSize: Theme.fontSizeExtraSmall
+                                                color: LocalTheme.primaryColor
+                                                font.pixelSize: LocalTheme.fontSizeExtraSmall
                                                 font.bold: true
                                                 elide: Text.ElideRight
                                                 maximumLineCount: 1
@@ -408,15 +423,15 @@ Page {
                                             Image {
                                                 source: "image://theme/icon-s-installed"
                                                 visible: modelData.verified
-                                                width: Theme.fontSizeSmall
-                                                height: Theme.fontSizeSmall
+                                                width: LocalTheme.fontSizeSmall
+                                                height: LocalTheme.fontSizeSmall
                                             }
                                         }
                                         Text {
                                             text: qsTr("@%1").arg(modelData.screen_name)
                                             textFormat: Text.StyledText
-                                            color: Theme.primaryColor
-                                            font.pixelSize: Theme.fontSizeExtraSmall
+                                            color: LocalTheme.primaryColor
+                                            font.pixelSize: LocalTheme.fontSizeExtraSmall
                                         }
                                     }
                                 }
@@ -436,12 +451,65 @@ Page {
 
             }
 
+            Column {
+                id: emojiColumn
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
+                anchors.horizontalCenter: parent.horizontalCenter
+                visible: emojiProposals ? ( emojiProposals.length > 0 ? true : false ) : false
+                opacity: emojiProposals ? ( emojiProposals.length > 0 ? 1 : 0 ) : 0
+                Behavior on opacity { NumberAnimation {} }
+                spacing: LocalTheme.paddingMedium
+
+                Flickable {
+                    width: parent.width
+                    height: emojiResultRow.height + LocalTheme.paddingSmall
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    contentWidth: emojiResultRow.width
+                    clip: true
+                    Row {
+                        id: emojiResultRow
+                        spacing: LocalTheme.paddingMedium
+                        Repeater {
+                            model: emojiProposals
+
+                            Item {
+                                height: singleEmojiRow.height
+                                width: singleEmojiRow.width
+
+                                Row {
+                                    id: singleEmojiRow
+                                    spacing: LocalTheme.paddingSmall
+
+                                    Image {
+                                        id: emojiPicture
+                                        source: "../js/emoji/" + modelData.file_name
+                                        width: LocalTheme.fontSizeLarge
+                                        height: LocalTheme.fontSizeLarge
+                                    }
+
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        replaceAtMentioning(enterTweetTextArea.text, enterTweetTextArea.cursorPosition, modelData.emoji);
+                                        emojiProposals = null;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+            }
+
             Switch {
                 id: attachLocationTextSwitch
                 //icon.source: "image://theme/icon-m-location"
                 visible: ( newTweetPage.place && newTweetPage.geoEnabled ) ? true : false
                 text: qsTr("Attach current location to this tweet")
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
@@ -458,7 +526,7 @@ Page {
             Loader {
                 id: attachmentTweetLoader
                 active: attachmentTweet ? true : false
-                width: parent.width - 2 * Theme.horizontalPageMargin
+                width: parent.width - 2 * LocalTheme.horizontalPageMargin
                 anchors.horizontalCenter: parent.horizontalCenter
                 sourceComponent: attachmentTweetComponent
             }
@@ -506,7 +574,7 @@ Page {
                     color: "black"
                     opacity: 0.3
                     height: parent.height
-                    width: Theme.fontSizeLarge
+                    width: LocalTheme.fontSizeLarge
                     anchors.left: attachedImagesSlideshow.left
                     visible: attachedImagesSlideshow.count > 1
                     MouseArea {
@@ -519,8 +587,8 @@ Page {
 
                 Image {
                     id: imageArrowLeft
-                    width: Theme.fontSizeLarge
-                    height: Theme.fontSizeLarge
+                    width: LocalTheme.fontSizeLarge
+                    height: LocalTheme.fontSizeLarge
                     anchors.left: attachedImagesSlideshow.left
                     anchors.verticalCenter: attachedImagesSlideshow.verticalCenter
                     source: "image://theme/icon-m-left"
@@ -532,7 +600,7 @@ Page {
                     color: "black"
                     opacity: 0.3
                     height: parent.height
-                    width: Theme.fontSizeLarge
+                    width: LocalTheme.fontSizeLarge
                     anchors.right: attachedImagesSlideshow.right
                     visible: attachedImagesSlideshow.count > 1
                     MouseArea {
@@ -545,8 +613,8 @@ Page {
 
                 Image {
                     id: imageArrowRight
-                    width: Theme.fontSizeLarge
-                    height: Theme.fontSizeLarge
+                    width: LocalTheme.fontSizeLarge
+                    height: LocalTheme.fontSizeLarge
                     anchors.right: attachedImagesSlideshow.right
                     anchors.verticalCenter: attachedImagesSlideshow.verticalCenter
                     source: "image://theme/icon-m-right"
@@ -556,7 +624,7 @@ Page {
                 Row {
                     id: imagePointRepeaterRow
                     anchors.bottom: attachedImagesSlideshow.bottom
-                    anchors.bottomMargin: Theme.fontSizeTiny
+                    anchors.bottomMargin: LocalTheme.fontSizeTiny
                     anchors.horizontalCenter: attachedImagesSlideshow.horizontalCenter
                     spacing: 5
                     visible: attachedImagesSlideshow.count > 1
@@ -570,7 +638,7 @@ Page {
                             radius: width * 0.5
                             border.color: "black"
                             border.width: 1
-                            color: index === attachedImagesSlideshow.currentIndex ? Theme.highlightColor : Theme.primaryColor
+                            color: index === attachedImagesSlideshow.currentIndex ? LocalTheme.highlightColor : LocalTheme.primaryColor
                         }
                     }
                 }
@@ -579,7 +647,7 @@ Page {
 
             Column {
                 id: imageDescriptionColumn
-                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                width: parent.width - ( 2 * LocalTheme.horizontalPageMargin )
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: attachedImagesItem.visible
                 Timer {
@@ -594,7 +662,7 @@ Page {
                 TextArea {
                     id: imageDescriptionTextField
                     width: parent.width
-                    font.pixelSize: Theme.fontSizeSmall
+                    font.pixelSize: LocalTheme.fontSizeSmall
                     placeholderText: qsTr("Image Description")
                    // labelVisible: false
                    // errorHighlight: getRemainingDescriptionCharacters(imageDescriptionTextField.text) < 0
@@ -607,11 +675,11 @@ Page {
                 Text {
                     id: descriptionRemainingCharactersText
                     text: qsTr("%1 characters left").arg(Number(getRemainingDescriptionCharacters(imageDescriptionTextField.text)).toLocaleString(Qt.locale(), "f", 0))
-                    color: descriptionRemainingCharactersText.text < 0 ? Theme.highlightColor : Theme.primaryColor
-                    font.pixelSize: Theme.fontSizeTiny
+                    color: descriptionRemainingCharactersText.text < 0 ? LocalTheme.highlightColor : LocalTheme.primaryColor
+                    font.pixelSize: LocalTheme.fontSizeTiny
                     font.bold: descriptionRemainingCharactersText.text < 0 ? true : false
                     anchors.left: parent.left
-                    anchors.leftMargin: Theme.horizontalPageMargin
+                    anchors.leftMargin: LocalTheme.horizontalPageMargin
                 }
             }
 

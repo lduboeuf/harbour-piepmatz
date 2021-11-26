@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -45,13 +45,14 @@ ItemDelegate {
     }
 
     Menu {
-        MenuItem {
-            visible: ( tweetModel.retweeted_status ? false : ( tweetModel.user.id_str === singleTweet.userId ) )
-            onClicked: {
-                tweetRemorseItem.execute(singleTweet, qsTr("Deleting tweet"), function() { twitterApi.destroyTweet(tweetModel.id_str); } );
-            }
-            text: qsTr("Delete Tweet")
-        }
+        //TODO
+//        MenuItem {
+//            visible: ( tweetModel.retweeted_status ? false : ( tweetModel.user.id_str === singleTweet.userId ) )
+//            onClicked: {
+//                tweetRemorseItem.execute(singleTweet, qsTr("Deleting tweet"), function() { twitterApi.destroyTweet(tweetModel.id_str); } );
+//            }
+//            text: qsTr("Delete Tweet")
+//        }
 
         MenuItem {
             onClicked: {
@@ -85,6 +86,7 @@ ItemDelegate {
 
     TweetElement {
         id: tweetElement
+        width: parent.width
         tweetModel: singleTweet.tweetModel
         isRetweetMention: singleTweet.isRetweetMention
     }

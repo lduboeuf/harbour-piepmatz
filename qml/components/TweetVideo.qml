@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -101,9 +101,9 @@ Item {
             Image {
                 id: playButton
                 anchors.centerIn: parent
-                width: Theme.iconSizeLarge
-                height: Theme.iconSizeLarge
-                source: "image://theme/icon-l-play"
+                width: LocalTheme.iconSizeLarge
+                height: LocalTheme.iconSizeLarge
+                source: "image://theme/media-playback-start"
                 visible: placeholderImage.status === Image.Ready ? true : false
                 MouseArea {
                     anchors.fill: parent
@@ -122,8 +122,8 @@ Item {
             Image {
                 id: fullscreenButton
                 anchors.centerIn: parent
-                width: Theme.iconSizeLarge
-                height: Theme.iconSizeLarge
+                width: LocalTheme.iconSizeLarge
+                height: LocalTheme.iconSizeLarge
                 source: "../../images/icon-l-fullscreen.png"
                 visible: ( placeholderImage.status === Image.Ready && !tweetVideoComponent.fullscreen ) ? true : false
                 MouseArea {
@@ -163,8 +163,8 @@ Item {
         id: errorText
         visible: false
         width: parent.width
-        color: Theme.primaryColor
-        font.pixelSize: Theme.fontSizeExtraSmall
+        color: LocalTheme.primaryColor
+        font.pixelSize: LocalTheme.fontSizeExtraSmall
         horizontalAlignment: Text.AlignHCenter
         anchors {
             verticalCenter: parent.verticalCenter
@@ -335,9 +335,9 @@ Item {
                         Image {
                             id: pausedPlayButton
                             anchors.centerIn: parent
-                            width: Theme.iconSizeLarge
-                            height: Theme.iconSizeLarge
-                            source: "image://theme/icon-l-play"
+                            width: LocalTheme.iconSizeLarge
+                            height: LocalTheme.iconSizeLarge
+                            source: "image://theme/icon-l-play?white"
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
@@ -356,8 +356,8 @@ Item {
                         Image {
                             id: pausedFullscreenButton
                             anchors.centerIn: parent
-                            width: Theme.iconSizeLarge
-                            height: Theme.iconSizeLarge
+                            width: LocalTheme.iconSizeLarge
+                            height: LocalTheme.iconSizeLarge
                             source: "../../images/icon-l-fullscreen.png"
                             visible: ( videoComponentLoader.active && tweetVideo.playbackState === MediaPlayer.PausedState ) ? true : false
                             MouseArea {
@@ -392,11 +392,11 @@ Item {
                 Text {
                     id: positionText
                     visible: tweetVideo.visible && tweetVideo.duration === 0
-                    color: Theme.primaryColor
-                    font.pixelSize: tweetVideoComponent.fullscreen ? Theme.fontSizeSmall : Theme.fontSizeTiny
+                    color: LocalTheme.primaryColor
+                    font.pixelSize: tweetVideoComponent.fullscreen ? LocalTheme.fontSizeSmall : LocalTheme.fontSizeTiny
                     anchors {
                         bottom: parent.bottom
-                        bottomMargin: Theme.paddingSmall
+                        bottomMargin: LocalTheme.paddingSmall
                         horizontalCenter: positionTextOverlay.horizontalCenter
                     }
                     wrapMode: Text.Wrap

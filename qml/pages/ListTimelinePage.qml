@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -128,10 +128,10 @@ Page {
         Column {
             anchors.fill: parent
 
-            PageHeader {
-                id: listTimelineHeader
-                title: qsTr("%1: Timeline").arg(listName)
-            }
+//            PageHeader {
+//                id: listTimelineHeader
+//                title: qsTr("%1: Timeline").arg(listName)
+//            }
 
             ListView {
                 id: listTimelineListView
@@ -157,12 +157,12 @@ Page {
                     id: listTimelineLoadMoreRow
                     visible: listTimelineListView.count > 0
                     width: parent.width
-                    height: listTimelineLoadMoreButton.height + ( 2 * Theme.paddingLarge )
+                    height: listTimelineLoadMoreButton.height + ( 2 * LocalTheme.paddingLarge )
                     Button {
                         id: listTimelineLoadMoreButton
                         Behavior on opacity { NumberAnimation {} }
                         text: qsTr("Load more tweets")
-                        preferredWidth: Theme.buttonWidthLarge
+                        preferredWidth: LocalTheme.buttonWidthLarge
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.horizontalCenter: parent.horizontalCenter
                         opacity: visible ? 1 : 0

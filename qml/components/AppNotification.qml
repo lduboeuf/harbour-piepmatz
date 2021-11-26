@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -26,7 +26,7 @@ Item {
     y: -100
     Behavior on y { PropertyAnimation { easing.type: Easing.OutCubic } }
     anchors.horizontalCenter: parent.horizontalCenter
-    width: parent.width - 2 * Theme.horizontalPageMargin
+    width: parent.width - 2 * LocalTheme.horizontalPageMargin
 
     function show(message, additionalInformation) {
         notificationTextItem.text = message;

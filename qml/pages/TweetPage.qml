@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-19 Sebastian J. Wolf
+    Copyright (C) 2017-20 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -84,7 +84,11 @@ Page {
             twitterApi.showStatus(replyToStatusId);
         }
         myTweetId = Functions.getRelevantTweet(tweetModel).id_str;
-        twitterApi.getSingleTweet(myTweetId, Functions.getTweetUrl(tweetModel));
+        if (twitterApi.getDeveloperMode()) {
+            twitterApi.getSingleTweetWithConversationId(myTweetId);
+        } else {
+            twitterApi.getSingleTweet(myTweetId, Functions.getTweetUrl(tweetModel));
+        }
     }
 
     Connections {
@@ -139,10 +143,13 @@ Page {
         Column {
             id: tweetColumn
             width: tweetPage.width
-            spacing: Theme.paddingSmall
+            spacing: LocalTheme.paddingSmall
             Behavior on opacity { NumberAnimation {} }
 
-
+//            PageHeader {
+//                id: tweetHeader
+//                title: qsTr("Tweet")
+//            }
 
             Component {
                 id: replyToTweetComponent
@@ -171,7 +178,7 @@ Page {
                 id: showConversationButton
                 Behavior on opacity { NumberAnimation {} }
                 text: qsTr("Show Thread")
-                //preferredWidth: Theme.buttonWidthLarge
+                //preferredWidth: LocalTheme.buttonWidthLarge
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: false
                 opacity: visible ? 1 : 0
@@ -182,9 +189,9 @@ Page {
 
             Label {
                 id: separatorLabel
-                x: Theme.horizontalPageMargin
-                width: parent.width  - ( 2 * Theme.horizontalPageMargin )
-                font.pixelSize: Theme.fontSizeExtraSmall
+                x: LocalTheme.horizontalPageMargin
+                width: parent.width  - ( 2 * LocalTheme.horizontalPageMargin )
+                font.pixelSize: LocalTheme.fontSizeExtraSmall
                 wrapMode: Text.Wrap
                 anchors {
                     horizontalCenter: parent.horizontalCenter
