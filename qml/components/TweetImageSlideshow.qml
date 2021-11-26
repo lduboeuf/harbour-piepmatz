@@ -113,7 +113,7 @@ Item {
         height: Theme.fontSizeLarge
         anchors.left: tweetImageSlideshow.left
         anchors.verticalCenter: tweetImageSlideshow.verticalCenter
-        source: "image://theme/go-previous"
+        source: "//go-previous"
         visible: tweetImageSlideshowItem.withArrows
     }
 
@@ -139,7 +139,7 @@ Item {
         height: Theme.fontSizeLarge
         anchors.right: tweetImageSlideshow.right
         anchors.verticalCenter: tweetImageSlideshow.verticalCenter
-        source: "image://theme/go-next"
+        source: "//go-next"
         visible: tweetImageSlideshowItem.withArrows
     }
 

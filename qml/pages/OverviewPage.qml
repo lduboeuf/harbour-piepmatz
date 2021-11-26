@@ -1427,10 +1427,11 @@ Page {
 
                             ToolButton {
                                 id: saveSearchButton
-                                contentItem: Image {
-                                    source: "image://theme/add"
+                                icon.name: "add"
+//                                contentItem: Image {
+//                                    source: "image://theme/add"
 
-                                }
+//                                }
 
                                //icon.source: "image://theme/icon-m-add"
                                 anchors.verticalCenter: parent.verticalCenter

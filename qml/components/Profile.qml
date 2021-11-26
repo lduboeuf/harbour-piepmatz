@@ -265,7 +265,7 @@ Item {
                         width: profileModel.location.length === 0 ? 0 : ( profileModel.entities.url ? parent.width / 2 : parent.width )
                         Image {
                             id: profileLocationImage
-                            source: "image://theme/location"
+                            source: "//location"
                             width: iconFontSize
                             height: iconFontSize
                         }
@@ -286,7 +286,7 @@ Item {
                         width: profileModel.entities.url ? ( profileModel.location.length === 0 ? parent.width : parent.width / 2 ) : 0
                         Image {
                             id: profileUrlImage
-                            source: "image://theme/stock_link"
+                            source: "//stock_link"
                             width: iconFontSize
                             height: iconFontSize
                         }

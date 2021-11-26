@@ -72,7 +72,7 @@ Row {
 
     Image {
         id: tweetUserVerifiedImage
-        source: "image://theme/ok"
+        source: "//ok"
         visible: tweetUser.verified
         width: iconFontSize
         height: iconFontSize
@@ -86,7 +86,7 @@ Row {
 
     Image {
         id: tweetUserProtectedImage
-        source: "image://theme/lock"
+        source: "//lock"
         visible: tweetUser.protected
         width: iconFontSize
         height: iconFontSize

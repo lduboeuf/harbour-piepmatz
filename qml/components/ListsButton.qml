@@ -30,10 +30,11 @@ Column {
         height: Theme.iconSizeMedium
         width: Theme.iconSizeMedium
         enabled: listsButton.isActive
-        contentItem: Image {
-            source: "image://theme/note"
+        icon.name: "note"
+//        contentItem: Image {
+//            source: "image://theme/note"
 
-        }
+//        }
 
         //icon.source: listsButton.isActive ? "image://theme/note?" + Theme.highlightColor : "image://theme/note?" + Theme.primaryColor
         anchors {

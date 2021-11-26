@@ -89,7 +89,7 @@ Item {
                 spacing: Theme.paddingSmall
                 Image {
                     id: tweetRetweetedImage
-                    source: "image://theme/retweet"
+                    source: "//retweet"
                     visible: tweetModel.retweeted_status ? true : false
                     anchors.right: parent.right
                     width: tweetElementItem.isRetweetMention ? Theme.fontSizeSmall : Theme.fontSizeExtraSmall
@@ -97,7 +97,7 @@ Item {
                 }
                 Image {
                     id: tweetInReplyToImage
-                    source: "image://theme/mail-forward"
+                    source: "//mail-forward"
                     visible: tweetModel.in_reply_to_status_id_str ? true : false
                     anchors.right: parent.right
                     width: Theme.fontSizeExtraSmall
@@ -105,7 +105,7 @@ Item {
                 }
                 Image {
                     id: tweetDirectImage
-                    source: "image://theme/email"
+                    source: "//email"
                     visible: (tweetModel.in_reply_to_user_id_str && !tweetModel.in_reply_to_status_id_str) ? true : false
                     anchors.right: parent.right
                     width: Theme.fontSizeExtraSmall
@@ -416,7 +416,7 @@ Item {
                     spacing: Theme.paddingSmall
                     Image {
                         id: tweetPlaceImage
-                        source: "image://theme/location"
+                        source: "//location"
                         width: Theme.fontSizeSmall
                         height: Theme.fontSizeSmall
                     }
@@ -528,7 +528,7 @@ Item {
                                 id: tweetRetweetedCountImage
                                 anchors.right: parent.right
 
-                                source: "image://theme/retweet"
+                                source: "//retweet"
                                 width: infoIconFontSize
                                 height: infoIconFontSize
                                 opacity: Functions.getRelevantTweet(tweetModel).user.protected ? 0.2 : 1
@@ -582,7 +582,8 @@ Item {
                             Image {
                                 id: tweetFavoritesCountImage
                                 anchors.right: parent.right
-                                source: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.favorited ? ( "image://theme/like?" + Theme.highlightColor ) : "image://theme/like" ) : ( tweetModel.favorited ? ( "image://theme/like?" + Theme.highlightColor ) : "image://theme/like" )
+
+                                source: "//like"
                                 width: infoIconFontSize
                                 height: infoIconFontSize
                                 MouseArea {
@@ -593,6 +594,11 @@ Item {
                                     }
 
                                 }
+                            }
+                            ColorOverlay {
+                                    //anchors.fill: tweetRetweetedCountImage
+                                    source: tweetFavoritesCountImage
+                                    color: tweetModel.retweeted_status ?  (tweetModel.retweeted_status.favorited ?  Theme.highlightColor  : Theme.primaryColor ) : ( tweetModel.favorited ? Theme.highlightColor  : Theme.primaryColor  )
                             }
                             BusyIndicator {
                                 id: tweetFavoriteBusyIndicator
