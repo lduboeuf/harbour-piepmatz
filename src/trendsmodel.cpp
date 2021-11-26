@@ -30,7 +30,7 @@ TrendsModel::TrendsModel(TwitterApi *twitterApi)
     connect(twitterApi, &TwitterApi::placesForTrendsSuccessful, this, &TrendsModel::handlePlacesForTrendsSuccessful);
     connect(twitterApi, &TwitterApi::trendsSuccessful, this, &TrendsModel::handleTrendsSuccessful);
 
-    QFile woeidsFile(QStringLiteral("/usr/share/harbour-piepmatz/qml/js/woeids-countries.json"));
+    QFile woeidsFile(QStringLiteral("qml/js/woeids-countries.json"));
     if (woeidsFile.open(QIODevice::ReadOnly)) {
         woeidsCountries = QJsonDocument::fromJson(woeidsFile.readAll()).array().toVariantList();
         woeidsFile.close();

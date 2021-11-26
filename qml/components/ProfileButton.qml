@@ -16,20 +16,27 @@
     You should have received a copy of the GNU General Public License
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.0
+import QtQuick 2.4
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 
 Column {
     id: profileButton
     property bool isActive: false
 
     width: parent.width
-    IconButton {
+    ToolButton {
         id: profileButtonImage
-        height: Theme.iconSizeMedium
-        width: Theme.iconSizeMedium
-        icon.source: profileButton.isActive ? "image://theme/icon-m-contact?" + Theme.highlightColor : "image://theme/icon-m-contact?" + Theme.primaryColor
+        icon.name: "account"
+//        height: Theme.iconSizeMedium
+//        width: Theme.iconSizeMedium
+        enabled: profileButton.isActive
+//        contentItem: Image{
+//            source: "image://theme/account"
+
+//        }
+
+        //icon.source: profileButton.isActive ? "image://theme/contact?" + Theme.highlightColor : "image://theme/contact?" + Theme.primaryColor
         anchors {
             horizontalCenter: parent.horizontalCenter
         }
@@ -42,10 +49,8 @@ Column {
         text: qsTr("Profile")
         font.pixelSize: Theme.fontSizeTiny * 4 / 5
         color: profileButton.isActive ? Theme.highlightColor : Theme.primaryColor
-        truncationMode: TruncationMode.Elide
-        elide: Text.ElideRight
-        width: parent.width - Theme.paddingSmall
-        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Label.WordWrap
+        //truncationMode: TruncationMode.Fade
         anchors {
             horizontalCenter: parent.horizontalCenter
         }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-20 Sebastian J. Wolf
+    Copyright (C) 2017-19 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -17,12 +17,15 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../js/functions.js" as Functions
 
 Page {
     id: aboutPage
-    allowedOrientations: Orientation.All
+    //allowedOrientations: Orientation.All
+
+    title: qsTr("About Piepmatz")
+
 
     focus: true
     Keys.onLeftPressed: {
@@ -56,7 +59,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: aboutContainer
         contentHeight: column.height
         anchors.fill: parent
@@ -66,9 +69,9 @@ Page {
             width: aboutPage.width
             spacing: Theme.paddingLarge
 
-            PageHeader {
-                title: qsTr("About Piepmatz")
-            }
+//            PageHeader {
+//                title: qsTr("About Piepmatz")
+//            }
 
             Image {
                 id: wunderfitzImage
@@ -133,11 +136,34 @@ Page {
                 onLinkActivated: Qt.openUrlExternally("mailto:sebastian@ygriega.de")
             }
 
-            Separator {
-                width: parent.width
+            ToolSeparator {}
+//            Separator {
+//                width: parent.width
+//                color: Theme.primaryColor
+//                horizontalAlignment: Qt.AlignHCenter
+//            }
+
+            Text {
+                wrapMode: Text.Wrap
+                width: parent.width - ( 2 * Theme.horizontalPageMargin )
+                //text: qsTr("This product uses <a href=\"https://werkwolf.eu/terms.html#wagnis\">Wagnis</a> and is distributed by <a href=\"https://werkwolf.eu\">WerkWolf OÜ</a>. You can also <a href=\"profile://werkwolf\">find WerkWolf on Twitter</a>.")
+                text: qsTr("This product is distributed by <a href=\"https://werkwolf.eu\">WerkWolf OÜ</a>. You can also <a href=\"profile://werkwolf\">find WerkWolf on Twitter</a>.")
+                font.pixelSize: Theme.fontSizeSmall
+                linkColor: Theme.highlightColor
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                }
                 color: Theme.primaryColor
-                horizontalAlignment: Qt.AlignHCenter
+                textFormat: Text.StyledText
+                horizontalAlignment: Text.AlignHCenter
+                onLinkActivated: Functions.handleLink(link);
             }
+            ToolSeparator {}
+//            Separator {
+//                width: parent.width
+//                color: Theme.primaryColor
+//                horizontalAlignment: Qt.AlignHCenter
+//            }
 
             Label {
                 text: qsTr("Licensed under GNU GPLv3")
@@ -158,7 +184,7 @@ Page {
                 onLinkActivated: Qt.openUrlExternally("https://github.com/Wunderfitz/harbour-piepmatz")
             }
 
-            SectionHeader {
+            Label {
                 text: qsTr("About Twitter")
             }
 
@@ -180,7 +206,7 @@ Page {
                     horizontalCenter: parent.horizontalCenter
                 }
                 onClicked: {
-                    Qt.openUrlExternally("https://twitter.com/privacy")
+                    pageStack.push(Qt.resolvedUrl("../pages/TextPage.qml"), {"contentId": "privacy"});
                 }
             }
 
@@ -209,7 +235,7 @@ Page {
 //                }
 //            }
 
-            SectionHeader {
+            Label {
                 text: qsTr("Credits")
             }
 
@@ -339,7 +365,7 @@ Page {
                 }
             }
 
-            VerticalScrollDecorator {}
+           // VerticalScrollDecorator {}
         }
 
     }

@@ -17,13 +17,14 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.5
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../components"
 
 
 Page {
     id: attachImagesPage
-    allowedOrientations: Orientation.All
+    title: qsTr("Select Images")
+    //allowedOrientations: Orientation.All
 
     focus: true
     Keys.onLeftPressed: {
@@ -80,12 +81,12 @@ Page {
         width: parent.width
     }
 
-    SilicaFlickable {
+    Flickable {
         id: attachImagesContainer
         anchors.fill: parent
         contentHeight: attachImagesColumn.height
 
-        PullDownMenu {
+        Menu {
             id: attachImagesPullDown
             visible: attachImagesPage.selectedImages.length > 0 ? true : false
             MenuItem {
@@ -102,12 +103,9 @@ Page {
             width: parent.width
             spacing: Theme.paddingLarge
 
-            PageHeader {
-                id: imagesHeader
-                title: qsTr("Select Images")
-            }
 
-            SilicaGridView {
+
+            GridView {
 
                 id: imagesGridView
 
@@ -167,7 +165,7 @@ Page {
                     }
                 }
 
-                VerticalScrollDecorator {}
+               // VerticalScrollDecorator {}
 
             }
         }

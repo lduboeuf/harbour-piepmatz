@@ -18,7 +18,7 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 import "../js/twemoji.js" as Emoji
@@ -265,7 +265,7 @@ Item {
                         width: profileModel.location.length === 0 ? 0 : ( profileModel.entities.url ? parent.width / 2 : parent.width )
                         Image {
                             id: profileLocationImage
-                            source: "image://theme/icon-m-location"
+                            source: "image://theme/location"
                             width: iconFontSize
                             height: iconFontSize
                         }
@@ -286,7 +286,7 @@ Item {
                         width: profileModel.entities.url ? ( profileModel.location.length === 0 ? parent.width : parent.width / 2 ) : 0
                         Image {
                             id: profileUrlImage
-                            source: "image://theme/icon-m-link"
+                            source: "image://theme/stock_link"
                             width: iconFontSize
                             height: iconFontSize
                         }
@@ -305,11 +305,11 @@ Item {
                     }
                 }
 
-                Separator {
+                Rectangle {
                     id: profileSeparator
                     width: parent.width
                     color: Theme.primaryColor
-                    horizontalAlignment: Qt.AlignHCenter
+                    //horizontalAlignment: Qt.AlignHCenter
                 }
             }
 
@@ -344,11 +344,11 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             running: profileTimelineLoadingIndicator.visible
-            size: BusyIndicatorSize.Large
+            //size: BusyIndicatorSize.Large
         }
     }
 
-    SilicaListView {
+    ListView {
         id: profileTimelineListView
 
         header: profileListHeaderComponent
@@ -367,7 +367,7 @@ Item {
         delegate: Tweet {
             tweetModel: modelData
         }
-        VerticalScrollDecorator {}
+        //VerticalScrollDecorator {}
     }
 
 

@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 import "../js/twemoji.js" as Emoji
@@ -57,11 +57,11 @@ Item {
         anchors.right: parent.right
         height: embeddedTweetSeparatorTop.height + tweetUserRow.height + tweetContentText.height + 3 * ( Theme.paddingMedium ) + ( videoLoader.active ? videoLoader.height + Theme.paddingMedium : 0 ) + ( tweetImageSlideshow.visible ? tweetImageSlideshow.height + Theme.paddingMedium : 0 )
 
-        Separator {
+        Rectangle {
             id: embeddedTweetSeparatorTop
             width: parent.width
             color: Theme.primaryColor
-            horizontalAlignment: Qt.AlignHCenter
+            //horizontalAlignment: Qt.AlignHCenter
         }
 
         TweetUser {

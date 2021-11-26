@@ -17,12 +17,12 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../components"
 
 Page {
     id: userTimelinePage
-    allowedOrientations: Orientation.All
+   // allowedOrientations: Orientation.All
 
     focus: true
     Keys.onLeftPressed: {
@@ -90,7 +90,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: userTimelineContainer
         width: parent.width
         height: parent.height
@@ -117,12 +117,12 @@ Page {
 
         Column {
             anchors.fill: parent
-            PageHeader {
-                id: userTimelineHeader
-                title: userName
-            }
+//            PageHeader {
+//                id: userTimelineHeader
+//                title: userName
+//            }
 
-            SilicaListView {
+            ListView {
                 id: userTimelineListView
 
                 anchors.left: parent.left
@@ -135,7 +135,7 @@ Page {
                 delegate: Tweet {
                     tweetModel: modelData
                 }
-                VerticalScrollDecorator {}
+               // VerticalScrollDecorator {}
             }
 
         }

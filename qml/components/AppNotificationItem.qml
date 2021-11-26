@@ -18,7 +18,9 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
+//import Ubuntu.Components 1.3
+
 
 Item {
 

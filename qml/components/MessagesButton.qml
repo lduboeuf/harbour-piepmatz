@@ -18,18 +18,24 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 
 Column {
     id: messagesButton
     property bool isActive: false
 
     width: parent.width
-    IconButton {
+    ToolButton {
         id: messagesButtonImage
+        icon.name: "email"
+        enabled: messagesButton.isActive
         height: Theme.iconSizeMedium
         width: Theme.iconSizeMedium
-        icon.source: messagesButton.isActive ? "image://theme/icon-m-mail?" + Theme.highlightColor : "image://theme/icon-m-mail?" + Theme.primaryColor
+//        Image {
+//            source: "image://theme/email"
+//        }
+
+        //icon.source: messagesButton.isActive ? "image://theme/icon-m-mail?" + Theme.highlightColor : "image://theme/icon-m-mail?" + Theme.primaryColor
         anchors {
             horizontalCenter: parent.horizontalCenter
         }
@@ -42,10 +48,8 @@ Column {
         text: qsTr("Messages")
         font.pixelSize: Theme.fontSizeTiny * 4 / 5
         color: messagesButton.isActive ? Theme.highlightColor : Theme.primaryColor
-        truncationMode: TruncationMode.Elide
-        elide: Text.ElideRight
-        width: parent.width - Theme.paddingSmall
-        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Label.WordWrap
+        //truncationMode: TruncationMode.Fade
         anchors {
             horizontalCenter: parent.horizontalCenter
         }

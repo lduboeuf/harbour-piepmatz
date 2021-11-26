@@ -17,13 +17,14 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../components"
 import "../js/functions.js" as Functions
 
 Page {
     id: tweetPage
-    allowedOrientations: Orientation.All
+    title: qsTr("Tweet")
+   // allowedOrientations: Orientation.All
 
     focus: true
     Keys.onLeftPressed: {
@@ -105,12 +106,12 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: tweetContainer
         anchors.fill: parent
         contentHeight: tweetColumn.height
 
-        PullDownMenu {
+        Menu {
             id: tweetMenu
             visible: tweetColumn.visible
             MenuItem {
@@ -145,10 +146,10 @@ Page {
             spacing: Theme.paddingSmall
             Behavior on opacity { NumberAnimation {} }
 
-            PageHeader {
-                id: tweetHeader
-                title: qsTr("Tweet")
-            }
+//            PageHeader {
+//                id: tweetHeader
+//                title: qsTr("Tweet")
+//            }
 
             Component {
                 id: replyToTweetComponent
@@ -177,7 +178,7 @@ Page {
                 id: showConversationButton
                 Behavior on opacity { NumberAnimation {} }
                 text: qsTr("Show Thread")
-                preferredWidth: Theme.buttonWidthLarge
+                //preferredWidth: Theme.buttonWidthLarge
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: false
                 opacity: visible ? 1 : 0
@@ -199,7 +200,7 @@ Page {
 
         }
 
-        VerticalScrollDecorator { }
+        //VerticalScrollDecorator { }
     }
 }
 

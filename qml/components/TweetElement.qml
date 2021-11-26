@@ -18,7 +18,7 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 import "../js/twemoji.js" as Emoji
@@ -28,6 +28,7 @@ Item {
     id: tweetElementItem
 
     property variant tweetModel;
+    //onTweetModelChanged: console.log('tweetModel', JSON.stringify(tweetModel))
     property string tweetId : ( tweetModel.retweeted_status ? tweetModel.retweeted_status.id_str : tweetModel.id_str );
     // TODO: attributes favorited and retweeted are only temporary workarounds until we are able to update and replace individual tweets in the model
     // does not work completely if model is reloaded (e.g. during scrolling)
@@ -88,7 +89,7 @@ Item {
                 spacing: Theme.paddingSmall
                 Image {
                     id: tweetRetweetedImage
-                    source: "image://theme/icon-s-retweet"
+                    source: "image://theme/retweet"
                     visible: tweetModel.retweeted_status ? true : false
                     anchors.right: parent.right
                     width: tweetElementItem.isRetweetMention ? Theme.fontSizeSmall : Theme.fontSizeExtraSmall
@@ -96,7 +97,7 @@ Item {
                 }
                 Image {
                     id: tweetInReplyToImage
-                    source: "image://theme/icon-s-repost"
+                    source: "image://theme/mail-forward"
                     visible: tweetModel.in_reply_to_status_id_str ? true : false
                     anchors.right: parent.right
                     width: Theme.fontSizeExtraSmall
@@ -104,7 +105,7 @@ Item {
                 }
                 Image {
                     id: tweetDirectImage
-                    source: "image://theme/icon-s-message"
+                    source: "image://theme/email"
                     visible: (tweetModel.in_reply_to_user_id_str && !tweetModel.in_reply_to_status_id_str) ? true : false
                     anchors.right: parent.right
                     width: Theme.fontSizeExtraSmall
@@ -296,10 +297,11 @@ Item {
                         opacity: visible ? 1 : 0
                         Behavior on opacity { NumberAnimation {} }
                         spacing: Theme.paddingSmall
-                        Separator {
+                        Rectangle {
                             width: parent.width
                             color: Theme.primaryColor
-                            horizontalAlignment: Qt.AlignHCenter
+                            height: 1
+                            //horizontalAlignment: Qt.AlignHCenter
                         }
 
                         Item {
@@ -340,10 +342,11 @@ Item {
                         }
 
                         Text {
-                            visible: referenceMetadata.description ? true : false
+                            //visible: referenceMetadata.description ? true : false
                             width: parent.width
                             id: openGraphText
-                            text: referenceMetadata.description ? Emoji.emojify(Functions.htmlDecode(referenceMetadata.description), componentFontSize) : ""
+                            //text: referenceMetadata.description ? Emoji.emojify(Functions.htmlDecode(referenceMetadata.description), componentFontSize) : ""
+                            text: referenceMetadata.description
                             font.pixelSize: componentFontSize
                             color: Theme.primaryColor
                             wrapMode: Text.Wrap
@@ -374,10 +377,11 @@ Item {
                             linkColor: Theme.highlightColor
                         }
 
-                        Separator {
+                        Rectangle {
                             width: parent.width
                             color: Theme.primaryColor
-                            horizontalAlignment: Qt.AlignHCenter
+                            height: 1
+                                                      //horizontalAlignment: Qt.AlignHCenter
                         }
                     }
                 }
@@ -412,7 +416,7 @@ Item {
                     spacing: Theme.paddingSmall
                     Image {
                         id: tweetPlaceImage
-                        source: "image://theme/icon-m-location"
+                        source: "image://theme/location"
                         width: Theme.fontSizeSmall
                         height: Theme.fontSizeSmall
                     }
@@ -492,7 +496,8 @@ Item {
                         running: true
                         repeat: true
                         onTriggered: {
-                            tweetDateText.text = Format.formatDate(Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at), Formatter.DurationElapsed);
+                            //TODO
+                            tweetDateText.text = Qt.formatDate(Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at));
                         }
                     }
 
@@ -505,7 +510,7 @@ Item {
                             id: tweetDateText
                             font.pixelSize: infoTextFontSize
                             color: Theme.secondaryColor
-                            text:  Format.formatDate(Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at), Formatter.DurationElapsed)
+                            text:  Qt.formatDate(Functions.getValidDate(tweetModel.retweeted_status ? tweetModel.retweeted_status.created_at : tweetModel.created_at))
                             elide: Text.ElideRight
                             maximumLineCount: 1
                         }
@@ -522,7 +527,8 @@ Item {
                             Image {
                                 id: tweetRetweetedCountImage
                                 anchors.right: parent.right
-                                source: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.retweeted ? ( "image://theme/icon-s-retweet?" + Theme.highlightColor ) : "image://theme/icon-s-retweet" ) : ( tweetModel.retweeted ? ( "image://theme/icon-s-retweet?" + Theme.highlightColor ) : "image://theme/icon-s-retweet" )
+
+                                source: "image://theme/retweet"
                                 width: infoIconFontSize
                                 height: infoIconFontSize
                                 opacity: Functions.getRelevantTweet(tweetModel).user.protected ? 0.2 : 1
@@ -535,11 +541,16 @@ Item {
 
                                 }
                             }
+                            ColorOverlay {
+                                    //anchors.fill: tweetRetweetedCountImage
+                                    source: tweetRetweetedCountImage
+                                    color: tweetModel.retweeted_status ? tweetModel.retweeted_status.retweeted ? Theme.highlightColor : Theme.primaryColor  : tweetModel.retweeted ? Theme.highlightColor  : Theme.primaryColor
+                            }
                             BusyIndicator {
                                 id: tweetRetweetBusyIndicator
                                 anchors.right: parent.right
                                 running: visible
-                                size: BusyIndicatorSize.ExtraSmall
+                                //size: BusyIndicatorSize.ExtraSmall
                                 visible: !tweetRetweetedCountImage.visible
                             }
                         }
@@ -571,7 +582,7 @@ Item {
                             Image {
                                 id: tweetFavoritesCountImage
                                 anchors.right: parent.right
-                                source: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.favorited ? ( "image://theme/icon-s-favorite?" + Theme.highlightColor ) : "image://theme/icon-s-favorite" ) : ( tweetModel.favorited ? ( "image://theme/icon-s-favorite?" + Theme.highlightColor ) : "image://theme/icon-s-favorite" )
+                                source: tweetModel.retweeted_status ? ( tweetModel.retweeted_status.favorited ? ( "image://theme/like?" + Theme.highlightColor ) : "image://theme/like" ) : ( tweetModel.favorited ? ( "image://theme/like?" + Theme.highlightColor ) : "image://theme/like" )
                                 width: infoIconFontSize
                                 height: infoIconFontSize
                                 MouseArea {
@@ -587,7 +598,7 @@ Item {
                                 id: tweetFavoriteBusyIndicator
                                 anchors.right: parent.right
                                 running: visible
-                                size: BusyIndicatorSize.ExtraSmall
+                                //size: BusyIndicatorSize.ExtraSmall
                                 visible: !tweetFavoritesCountImage.visible
                             }
                         }
@@ -700,7 +711,7 @@ Item {
         }
     }
 
-    Separator {
+    Rectangle {
         id: tweetSeparator
 
         anchors {
@@ -710,7 +721,7 @@ Item {
 
         width: parent.width
         color: Theme.primaryColor
-        horizontalAlignment: Qt.AlignHCenter
+        //horizontalAlignment: Qt.AlignHCenter
         visible: tweetElementItem.withSeparator
     }
 

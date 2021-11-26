@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../components"
 
 Page {
@@ -90,7 +90,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: listMembersContainer
         width: parent.width
         height: parent.height
@@ -118,12 +118,12 @@ Page {
         Column {
             anchors.fill: parent
 
-            PageHeader {
-                id: listMembersHeader
-                title: qsTr("%1: Members").arg(listName)
-            }
+//            PageHeader {
+//                id: listMembersHeader
+//                title: qsTr("%1: Members").arg(listName)
+//            }
 
-            SilicaListView {
+            ListView {
                 id: listMembersListView
 
                 anchors.left: parent.left

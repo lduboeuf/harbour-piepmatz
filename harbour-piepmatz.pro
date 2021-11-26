@@ -12,9 +12,45 @@
 # The name of your application
 TARGET = harbour-piepmatz
 
-CONFIG += sailfishapp c++11
+CONFIG += c++11
 
-QT += core dbus positioning sql
+QT += core quick dbus positioning sql
+
+LIBS += -lcrypto
+
+
+#sailfishapp {
+#    message("olala salfish")
+#    DEFINES += Q_OS_SAILFISH
+#    OTHER_FILES += qml/harbour-piepmatz.qml \
+#        qml/pages/CoverPage.qml \
+#        rpm/harbour-piepmatz.changes.in \
+#        rpm/harbour-piepmatz.spec \
+#        rpm/harbour-piepmatz.yaml \
+#        translations/*.ts \
+#        harbour-piepmatz.desktop \
+#        db/emojis.db
+
+##    DISTFILES += \
+##        qml/pages/*.qml \
+##        qml/components/*.qml
+#}else{
+#    message("olala normal")
+#    OTHER_FILES += qml/harbour-piepmatz.qml \
+#        qml/pages/CoverPage.qml \
+#        translations/*.ts \
+#        harbour-piepmatz.desktop \
+#        db/emojis.db
+
+##    DISTFILES += \
+##            qml/pages/*.qml \
+##            qml/components/*.qml
+
+##    RESOURCES += \
+##        emojis.qrc \
+##        qml.qrc
+#}
+
 
 include(src/o2/o2.pri)
 #include(src/wagnis/wagnis.pri)
@@ -25,6 +61,7 @@ SOURCES += src/harbour-piepmatz.cpp \
     src/dbusadaptor.cpp \
     src/dbusinterface.cpp \
     src/emojisearchworker.cpp \
+    src/theme.cpp \
     src/twitterapi.cpp \
     src/timelinemodel.cpp \
     src/covermodel.cpp \
@@ -46,12 +83,11 @@ SOURCES += src/harbour-piepmatz.cpp \
     src/imagemetadataresponsehandler.cpp \
     src/contentextractor.cpp
 
-OTHER_FILES += qml/harbour-piepmatz.qml \
-    qml/pages/CoverPage.qml \
-    rpm/harbour-piepmatz.changes.in \
-    rpm/harbour-piepmatz.spec \
-    rpm/harbour-piepmatz.yaml \
-    translations/*.ts \
+RESOURCES += \
+    emojis.qrc \
+    qml.qrc
+
+OTHER_FILES += translations/*.ts \
     harbour-piepmatz.desktop \
     db/emojis.db
 
@@ -111,6 +147,7 @@ INSTALLS += 86.png 108.png 128.png 172.png 256.png \
 
 HEADERS += \
     src/accountmodel.h \
+    src/theme.h \
     src/dbusadaptor.h \
     src/dbusinterface.h \
     src/emojisearchworker.h \

@@ -17,11 +17,12 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.2
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 
 Page {
     id: welcomePage
-    allowedOrientations: Orientation.All
+    //allowedOrientations: Orientation.All
+    title: qsTr("Welcome to Piepmatz!")
 
     Column {
         y: ( parent.height - ( errorInfoLabel.height + wunderfitzErrorImage.height + errorOkButton.height + ( 3 * Theme.paddingSmall ) ) ) / 2
@@ -44,7 +45,7 @@ Page {
             width: 1/2 * parent.width
         }
 
-        InfoLabel {
+        ToolTip {
             id: errorInfoLabel
             font.pixelSize: Theme.fontSizeLarge
             text: ""
@@ -86,7 +87,7 @@ Page {
             width: 1/2 * parent.width
         }
 
-        InfoLabel {
+        ToolTip {
             id: enterPinLabel
             font.pixelSize: Theme.fontSizeLarge
             text: qsTr("Please enter the Twitter PIN:")
@@ -138,7 +139,7 @@ Page {
             width: 1/2 * parent.width
         }
 
-        InfoLabel {
+        ToolTip {
             id: linkingErrorInfoLabel
             font.pixelSize: Theme.fontSizeLarge
             text: qsTr("Unable to authenticate you with the entered PIN.")
@@ -173,7 +174,7 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: welcomeFlickable
         anchors.fill: parent
         contentHeight: column.height
@@ -216,9 +217,9 @@ Page {
             width: parent.width
             spacing: Theme.paddingLarge
 
-            PageHeader {
-                title: qsTr("Welcome to Piepmatz!")
-            }
+//            PageHeader {
+//                title: qsTr("Welcome to Piepmatz!")
+//            }
 
             Image {
                 id: wunderfitzImage

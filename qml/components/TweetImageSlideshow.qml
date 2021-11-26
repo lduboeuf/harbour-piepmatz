@@ -18,7 +18,7 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 
@@ -113,7 +113,7 @@ Item {
         height: Theme.fontSizeLarge
         anchors.left: tweetImageSlideshow.left
         anchors.verticalCenter: tweetImageSlideshow.verticalCenter
-        source: "image://theme/icon-m-left"
+        source: "image://theme/go-previous"
         visible: tweetImageSlideshowItem.withArrows
     }
 
@@ -139,7 +139,7 @@ Item {
         height: Theme.fontSizeLarge
         anchors.right: tweetImageSlideshow.right
         anchors.verticalCenter: tweetImageSlideshow.verticalCenter
-        source: "image://theme/icon-m-right"
+        source: "image://theme/go-next"
         visible: tweetImageSlideshowItem.withArrows
     }
 

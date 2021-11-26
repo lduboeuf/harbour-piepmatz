@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 import "../js/twemoji.js" as Emoji
@@ -46,14 +46,15 @@ Column {
     function makeTheTextGreatAgain() {
         var relevantTweet = Functions.getRelevantTweet(tweetTextColumn.tweet);
         var greatifiedText = relevantTweet.full_text;
-        greatifiedText = Emoji.emojify(Functions.enhanceText(greatifiedText, relevantTweet.entities, relevantTweet.extended_entities), componentFontSize);
+        //greatifiedText = Emoji.emojify(Functions.enhanceText(greatifiedText, relevantTweet.entities, relevantTweet.extended_entities), componentFontSize);
         return greatifiedText;
     }
 
     Text {
         width: parent.width
         id: tweetContentText
-        text: tweetTextColumn.truncateText ? Emoji.emojify(Functions.getRelevantTweet(tweetTextColumn.tweet).full_text, componentFontSize) : makeTheTextGreatAgain()
+        //text: tweetTextColumn.truncateText ? Emoji.emojify(Functions.getRelevantTweet(tweetTextColumn.tweet).full_text, componentFontSize) : makeTheTextGreatAgain()
+        text: makeTheTextGreatAgain()
         font.pixelSize: componentFontSize
         font.italic: tweetTextColumn.tweet.fakeTweet ? true : false
         color: Theme.primaryColor

@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "pages"
 import "components"
 
@@ -25,39 +25,41 @@ ApplicationWindow
 {
 
     id: appWindow
-
+    visible: true
+    height: 570
+    width: 360
     property bool isWifi: accountModel.isWiFi();
     property string linkPreviewMode: accountModel.getLinkPreviewMode();
 
     property string currentStatusInProgress;
     signal errorParsingUrl(string errorMessage);
 
-    Connections {
-        target: dBusAdaptor
-        onPleaseOpenUrl: {
-            var twitterRegex = /https\:\/\/\w*\.*twitter\.com\//;
-            if (url.match(twitterRegex)) {
-                console.log("Probably we have a Twitter link...");
-                var userRegex = /https\:\/\/\w*\.*twitter\.com\/(\w+)/;
-                var userResult = url.match(userRegex);
-                var statusRegex = /https\:\/\/\w*\.*twitter\.com\/[\w\/]+\/status\/(\w+)/;
-                var statusResult = url.match(statusRegex);
-                if (statusResult) {
-                    console.log("Opening tweet " + statusResult[1]);
-                    currentStatusInProgress = statusResult[1];
-                    twitterApi.showStatus(currentStatusInProgress);
-                } else if (userResult) {
-                    console.log("Opening profile for user " + userResult[1]);
-                    pageStack.push(Qt.resolvedUrl("pages/ProfilePage.qml"), {"profileName": userResult[1] });
-                } else {
-                    appWindow.errorParsingUrl("Unable to open URL!");
-                }
-            } else {
-                appWindow.errorParsingUrl("Unable to open URL!");
-            }
-            appWindow.activate();
-        }
-    }
+//    Connections {
+//        target: dBusAdaptor
+//        onPleaseOpenUrl: {
+//            var twitterRegex = /https\:\/\/\w*\.*twitter\.com\//;
+//            if (url.match(twitterRegex)) {
+//                console.log("Probably we have a Twitter link...");
+//                var userRegex = /https\:\/\/\w*\.*twitter\.com\/(\w+)/;
+//                var userResult = url.match(userRegex);
+//                var statusRegex = /https\:\/\/\w*\.*twitter\.com\/[\w\/]+\/status\/(\w+)/;
+//                var statusResult = url.match(statusRegex);
+//                if (statusResult) {
+//                    console.log("Opening tweet " + statusResult[1]);
+//                    currentStatusInProgress = statusResult[1];
+//                    twitterApi.showStatus(currentStatusInProgress);
+//                } else if (userResult) {
+//                    console.log("Opening profile for user " + userResult[1]);
+//                    pageStack.push(Qt.resolvedUrl("pages/ProfilePage.qml"), {"profileName": userResult[1] });
+//                } else {
+//                    appWindow.errorParsingUrl("Unable to open URL!");
+//                }
+//            } else {
+//                appWindow.errorParsingUrl("Unable to open URL!");
+//            }
+//            appWindow.activate();
+//        }
+//    }
 
     Connections {
         target: twitterApi
@@ -108,10 +110,10 @@ ApplicationWindow
         SettingsPage {}
     }
 
-    //initialPage: ( wagnis.isRegistered() && wagnis.hasFeature("contribution") ) ? (accountModel.isLinked() ? overviewPage : welcomePage) : registrationPage
-    initialPage: accountModel.isLinked() ? overviewPage : welcomePage
-    cover: Qt.resolvedUrl("pages/CoverPage.qml")
-    allowedOrientations: defaultAllowedOrientations
-
+    StackView {
+        id: pageStack
+        anchors.fill: parent
+        initialItem: accountModel.isLinked() ? overviewPage : welcomePage
+    }
 }
 

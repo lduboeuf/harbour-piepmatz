@@ -18,7 +18,7 @@
 */
 import QtQuick 2.5
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../js/twitter-text.js" as TwitterText
 import "../components"
 import "../js/functions.js" as Functions
@@ -26,7 +26,9 @@ import "../js/twemoji.js" as Emoji
 
 Page {
     id: newTweetPage
-    allowedOrientations: Orientation.All
+    title: replyToStatusId ? qsTr("Reply") : ( attachmentTweet ? qsTr("Retweet") : qsTr("New Tweet") )
+
+   // allowedOrientations: Orientation.All
 
     focus: true
     Keys.onLeftPressed: {
@@ -190,12 +192,12 @@ Page {
         }
     }
 
-    SilicaFlickable {
+    Flickable {
         id: aboutContainer
         contentHeight: column.height
         anchors.fill: parent
 
-        PullDownMenu {
+        Menu {
             MenuItem {
                 text: qsTr("Attach Images")
                 onClicked: pageStack.push(attachImagesPage)
@@ -252,9 +254,9 @@ Page {
             width: newTweetPage.width
             spacing: Theme.paddingSmall
 
-            PageHeader {
-                title: ( replyToStatusId ? qsTr("Reply") : ( attachmentTweet ? qsTr("Retweet") : qsTr("New Tweet") ) ) + " " + qsTr("@%1").arg(accountModel.getCurrentAccount().screen_name)
-            }
+//            PageHeader {
+//                title: ( replyToStatusId ? qsTr("Reply") : ( attachmentTweet ? qsTr("Retweet") : qsTr("New Tweet") ) ) + " " + qsTr("@%1").arg(accountModel.getCurrentAccount().screen_name)
+//            }
 
             Connections {
                 target: twitterApi
@@ -291,19 +293,19 @@ Page {
                     width: parent.width - remainingCircle.width
                     focus: true
                     font.pixelSize: Theme.fontSizeSmall
-                    labelVisible: false;
+                    //labelVisible: false;
                     onTextChanged: {
                         parseText(enterTweetTextArea.text);
                         atMentioningTimer.stop();
                         atMentioningTimer.start();
                     }
-                    errorHighlight: !newTweetPage.valid
+                   // errorHighlight: !newTweetPage.valid
                 }
 
                 ProgressCircle {
                     id: remainingCircle
-                    progressColor: Theme.highlightColor
-                    backgroundColor: Theme.highlightDimmerColor
+                    secondaryColor: Theme.highlightColor
+                    primaryColor: Theme.highlightDimmerColor
                     width: Theme.itemSizeExtraSmall
                     height: Theme.itemSizeExtraSmall
                     value: newTweetPage.progress
@@ -502,11 +504,11 @@ Page {
 
             }
 
-            IconTextSwitch {
+            Switch {
                 id: attachLocationTextSwitch
-                icon.source: "image://theme/icon-m-location"
+                //icon.source: "image://theme/icon-m-location"
                 visible: ( newTweetPage.place && newTweetPage.geoEnabled ) ? true : false
-                description: qsTr("Attach current location to this tweet")
+                text: qsTr("Attach current location to this tweet")
                 width: parent.width - ( 2 * Theme.horizontalPageMargin )
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -662,8 +664,8 @@ Page {
                     width: parent.width
                     font.pixelSize: Theme.fontSizeSmall
                     placeholderText: qsTr("Image Description")
-                    labelVisible: false
-                    errorHighlight: getRemainingDescriptionCharacters(imageDescriptionTextField.text) < 0
+                   // labelVisible: false
+                   // errorHighlight: getRemainingDescriptionCharacters(imageDescriptionTextField.text) < 0
                     text: attachedImagesSlideshow.currentIndex >= 0 ? imagesModel.getImageDescription(attachedImages[attachedImagesSlideshow.currentIndex]) : ""
                     onTextChanged: {
                         imageDescriptionTimer.stop();
@@ -681,7 +683,7 @@ Page {
                 }
             }
 
-            VerticalScrollDecorator {}
+            //VerticalScrollDecorator {}
         }
 
     }

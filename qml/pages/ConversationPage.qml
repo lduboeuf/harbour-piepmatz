@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-20 Sebastian J. Wolf
+    Copyright (C) 2017-19 Sebastian J. Wolf
 
     This file is part of Piepmatz.
 
@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../components"
 import "../js/functions.js" as Functions
 import "../js/twitter-text.js" as TwitterText
@@ -94,7 +94,7 @@ Page {
     }
 
 
-    SilicaFlickable {
+    Flickable {
         id: conversationContainer
         width: parent.width
         height: parent.height - profileHeader.height
@@ -115,7 +115,7 @@ Page {
             height: parent.height
             anchors.bottom: parent.bottom
 
-            SilicaListView {
+            ListView {
                 id: conversationListView
                 Component.onCompleted: positionViewAtEnd();
 

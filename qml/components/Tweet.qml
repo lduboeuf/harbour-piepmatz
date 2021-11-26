@@ -18,11 +18,11 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 
-ListItem {
+ItemDelegate {
 
     id: singleTweet
 
@@ -30,9 +30,8 @@ ListItem {
     property string userId : accountModel.getCurrentAccount().id_str;
     property bool isRetweetMention : false;
 
+    height: tweetElement.height
     width: parent.width
-    contentHeight: tweetElement.height
-    contentWidth: parent.width
 
     Connections {
         target: twitterApi
@@ -45,14 +44,15 @@ ListItem {
         }
     }
 
-    menu: ContextMenu {
-        MenuItem {
-            visible: ( tweetModel.retweeted_status ? false : ( tweetModel.user.id_str === singleTweet.userId ) )
-            onClicked: {
-                tweetRemorseItem.execute(singleTweet, qsTr("Deleting tweet"), function() { twitterApi.destroyTweet(tweetModel.id_str); } );
-            }
-            text: qsTr("Delete Tweet")
-        }
+    Menu {
+        //TODO
+//        MenuItem {
+//            visible: ( tweetModel.retweeted_status ? false : ( tweetModel.user.id_str === singleTweet.userId ) )
+//            onClicked: {
+//                tweetRemorseItem.execute(singleTweet, qsTr("Deleting tweet"), function() { twitterApi.destroyTweet(tweetModel.id_str); } );
+//            }
+//            text: qsTr("Delete Tweet")
+//        }
 
         MenuItem {
             onClicked: {
@@ -80,12 +80,13 @@ ListItem {
         }
     }
 
-    RemorseItem {
-        id: tweetRemorseItem
-    }
+//    RemorseItem {
+//        id: tweetRemorseItem
+//    }
 
     TweetElement {
         id: tweetElement
+        width: parent.width
         tweetModel: singleTweet.tweetModel
         isRetweetMention: singleTweet.isRetweetMention
     }

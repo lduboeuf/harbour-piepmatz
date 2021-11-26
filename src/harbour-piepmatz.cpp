@@ -20,12 +20,17 @@
 #include <QtQuick>
 #endif
 
+#ifdef Q_OS_SAILFISH
 #include <sailfishapp.h>
+#else
+#include <QGuiApplication>
+#endif
 #include <QScopedPointer>
 #include <QQuickView>
 #include <QtQml>
 #include <QQmlContext>
 #include <QGuiApplication>
+#include <QQuickView>
 
 #include "o1.h"
 #include "o1twitter.h"
@@ -43,15 +48,27 @@
 #include "ownlistsmodel.h"
 #include "membershiplistsmodel.h"
 #include "savedsearchesmodel.h"
+#include "theme.h"
 #include "dbusadaptor.h"
 //#include "wagnis/wagnis.h"
 
 int main(int argc, char *argv[])
 {
+
+#ifdef Q_OS_SAILFISH
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     QScopedPointer<QQuickView> view(SailfishApp::createView());
-
     QQmlContext *context = view.data()->rootContext();
+
+#else
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QGuiApplication app(argc, argv);
+    QQmlApplicationEngine engine;
+    QQmlContext *context = engine.rootContext();
+//    QQuickView *view = new QQuickView();
+//    QQmlContext *context = view->rootContext();
+#endif
+
     AccountModel accountModel;
     context->setContextProperty("accountModel", &accountModel);
 
@@ -97,8 +114,23 @@ int main(int argc, char *argv[])
 
     SavedSearchesModel savedSearchesModel(twitterApi);
     context->setContextProperty("savedSearchesModel", &savedSearchesModel);
+    Theme theme;
+    context->setContextProperty("Theme", &theme);
 
+#ifdef Q_OS_SAILFISH
     view->setSource(SailfishApp::pathTo("qml/harbour-piepmatz.qml"));
     view->show();
-    return app->exec();
+#else
+    //QQuickView *view = new QQuickView();
+//    view->setSource(QUrl("qrc:/qml/harbour-piepmatz.qml"));
+//    view->setResizeMode(QQuickView::SizeRootObjectToView);
+//    view->show();
+
+    engine.load(QUrl(QStringLiteral("qrc:/qml/harbour-piepmatz.qml")));
+    if (engine.rootObjects().isEmpty())
+        return -1;
+#endif
+    return app.exec();
+
+
 }

@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import QtMultimedia 5.0
 import "../components"
 import "../js/functions.js" as Functions
@@ -43,7 +43,7 @@ Page {
     property real screenSizeFactor: videoPage.width / videoPage.height;
     property real sizingFactor    : imageSizeFactor >= screenSizeFactor ? videoPage.width / videoWidth : videoPage.height / videoHeight;
 
-    SilicaFlickable {
+    Flickable {
         anchors.fill: parent
 
         PullDownMenu {

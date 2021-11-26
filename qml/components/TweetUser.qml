@@ -17,7 +17,7 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import "../pages"
 import "../js/functions.js" as Functions
 import "../js/twemoji.js" as Emoji
@@ -54,22 +54,25 @@ Row {
         textFormat: Text.StyledText
         elide: Text.ElideRight
         maximumLineCount: 1
+        width: if (tweetUser.name.length > 25) { parent.width / 2 }
         MouseArea {
             anchors.fill: parent
             onClicked: {
                 pageStack.push(Qt.resolvedUrl("../pages/ProfilePage.qml"), {"profileModel": tweetUser});
             }
         }
-        onPaintedWidthChanged: {
-            if ( parent.width > 0 && paintedWidth >= parent.width ) {
-                width = parent.width;
+        onTruncatedChanged: {
+            // There is obviously a bug in QML in truncating text with images.
+            // We simply remove Emojis then...
+            if (truncated) {
+                text = text.replace(/\<img [^>]+\/\>/g, "");
             }
         }
     }
 
     Image {
         id: tweetUserVerifiedImage
-        source: "image://theme/icon-s-installed"
+        source: "image://theme/ok"
         visible: tweetUser.verified
         width: iconFontSize
         height: iconFontSize
@@ -83,7 +86,7 @@ Row {
 
     Image {
         id: tweetUserProtectedImage
-        source: "image://theme/icon-s-secure"
+        source: "image://theme/lock"
         visible: tweetUser.protected
         width: iconFontSize
         height: iconFontSize

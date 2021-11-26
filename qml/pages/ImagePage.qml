@@ -17,14 +17,14 @@
     along with Piepmatz. If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 import QtMultimedia 5.0
 import "../components"
 import "../js/functions.js" as Functions
 
 Page {
     id: imagePage
-    allowedOrientations: Orientation.All
+    //allowedOrientations: Orientation.All
 
     focus: true
     Keys.onLeftPressed: {
@@ -50,14 +50,14 @@ Page {
     property real oldCenterX;
     property real oldCenterY;
 
-    SilicaFlickable {
+    Flickable {
         id: imageFlickable
         anchors.fill: parent
         contentWidth: imagePinchArea.width
         contentHeight: imagePinchArea.height
         clip: true
 
-        PullDownMenu {
+        Menu {
             visible: tweet ? true : false
             MenuItem {
                 text: qsTr("Download")

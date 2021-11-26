@@ -18,18 +18,24 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 
 Column {
     id: notificationsButton
     property bool isActive: false
 
     width: parent.width
-    IconButton {
+    ToolButton {
         id: notificationsButtonImage
-        icon.source: notificationsButton.isActive ? "image://theme/icon-m-alarm?" + Theme.highlightColor : "image://theme/icon-m-alarm?" + Theme.primaryColor
-        height: Theme.iconSizeMedium
-        width: Theme.iconSizeMedium
+        icon.name: "alarm"
+         enabled: notificationsButton.isActive
+//        Image {
+//            source:"image://theme/alarm"
+//            height: Theme.iconSizeMedium
+//            width: Theme.iconSizeMedium
+//        }
+        //icon.source: notificationsButton.isActive ? "image://theme/icon-m-alarm?" + Theme.highlightColor : "image://theme/icon-m-alarm?" + Theme.primaryColor
+
         anchors {
             horizontalCenter: parent.horizontalCenter
         }
@@ -42,10 +48,8 @@ Column {
         text: qsTr("Notifications")
         font.pixelSize: Theme.fontSizeTiny * 4 / 5
         color: notificationsButton.isActive ? Theme.highlightColor : Theme.primaryColor
-        truncationMode: TruncationMode.Elide
-        elide: Text.ElideRight
-        width: parent.width - Theme.paddingSmall
-        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Label.WordWrap
+        //runcationMode: TruncationMode.Fade
         anchors {
             horizontalCenter: parent.horizontalCenter
         }

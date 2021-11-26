@@ -18,18 +18,24 @@
 */
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Sailfish.Silica 1.0
+import QtQuick.Controls 2.2 //import Sailfish.Silica 1.0
 
 Column {
     id: listsButton
     property bool isActive: false
 
     width: parent.width
-    IconButton {
+    ToolButton {
         id: listsButtonImage
         height: Theme.iconSizeMedium
         width: Theme.iconSizeMedium
-        icon.source: listsButton.isActive ? "image://theme/icon-m-note?" + Theme.highlightColor : "image://theme/icon-m-note?" + Theme.primaryColor
+        enabled: listsButton.isActive
+        contentItem: Image {
+            source: "image://theme/note"
+
+        }
+
+        //icon.source: listsButton.isActive ? "image://theme/note?" + Theme.highlightColor : "image://theme/note?" + Theme.primaryColor
         anchors {
             horizontalCenter: parent.horizontalCenter
         }
@@ -42,10 +48,8 @@ Column {
         text: qsTr("Lists")
         font.pixelSize: Theme.fontSizeTiny * 4 / 5
         color: listsButton.isActive ? Theme.highlightColor : Theme.primaryColor
-        truncationMode: TruncationMode.Elide
-        elide: Text.ElideRight
-        width: parent.width - Theme.paddingSmall
-        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Label.WordWrap
+        //truncationMode: TruncationMode.Fade
         anchors {
             horizontalCenter: parent.horizontalCenter
         }
